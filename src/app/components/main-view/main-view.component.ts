@@ -89,7 +89,7 @@ export class MainViewComponent implements OnInit {
     return actualMethod(getUrl);
   }
 
-  protected showPopup(e: any = {}) {
+  public showPopup(e: any = {}) {
     this.popupState = e.state || null;
     switch (this.popupState) {
       case 'put':

@@ -1,0 +1,10 @@
+{
+  "name": "RESTool app",
+	"pages": [
+		{
+      "default": true,
+      "name": "Page1",
+			"id": "page1"
+		}
+	]
+}
