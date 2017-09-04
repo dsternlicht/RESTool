@@ -1,0 +1,82 @@
+<div class="pure-g header">
+  <div class="description pure-u-1-2" *ngIf="pageData && pageData.description">
+    {{pageData.description}}
+  </div>
+  <div class="create pure-u-1-2">
+    <button class="pure-button button-success button-xlarge" *ngIf="pageData && pageData.methods && pageData.methods.post" (click)="onClickNew()">+ Add Item</button>
+  </div>
+</div>
+
+<form *ngIf="queryParams.length" class="pure-form pure-form-stacked" [formGroup]="myForm" (ngSubmit)="getResults()">
+  <fieldset>
+    <div class="pure-control-group" *ngFor="let queryParam of queryParams" [ngSwitch]="queryParam.type">
+      <ng-template [ngSwitchCase]="'hidden'" ngSwitchDefault>
+        <input type="hidden" [formControlName]="queryParam.name" value="{{queryParam.value || ''}}" />
+      </ng-template>
+      <ng-template [ngSwitchCase]="'boolean'">
+        <label class="pure-checkbox">
+          <input type="checkbox" [formControlName]="queryParam.name" [ngModel]="queryParam.value" /> {{queryParam.label || queryParam.name}}
+        </label>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'select'">
+        <label>{{queryParam.label || queryParam.name}}</label>
+        <select [formControlName]="queryParam.name" [ngModel]="queryParam.value">
+          <option value="">-- Select --</option>
+          <option *ngFor="let option of (queryParam.options || [])" value="{{option}}">{{option}}</option>
+        </select>
+      </ng-template>
+      <div *ngSwitchDefault>
+        <label for="name">{{queryParam.label || queryParam.name}}</label>
+        <input id="name" type="text" placeholder="{{queryParam.label}}" [formControlName]="queryParam.name"/>
+      </div>
+    </div>
+
+    <div class="pure-controls">
+      <button type="submit" class="pure-button pure-button-primary">Submit</button>
+    </div>
+  </fieldset>
+</form>
+
+<app-loader [loading]="loading" [size]="'small'"></app-loader>
+
+<div *ngIf="!loading">
+
+  <table class="pure-table pure-table-horizontal">
+    <thead>
+    <tr>
+      <th *ngFor="let field of fields">{{field.label || field.name}}</th>
+      <th *ngIf="showActions()">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of data">
+      <td *ngFor="let field of fields">
+        <div [ngSwitch]="field.type">
+          <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
+            {{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}
+          </ng-template>
+          <ng-template [ngSwitchCase]="'url'">
+            <a target="_blank" href="{{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}">
+              {{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}
+            </a>
+          </ng-template>
+          <ng-template [ngSwitchCase]="'image'">
+            <div class="thumb" [ngStyle]="{backgroundImage: 'url(' + dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name) + ')'}"></div>
+          </ng-template>
+        </div>
+      </td>
+      <td *ngIf="showActions()">
+        <div class="pure-button-group">
+          <button class="pure-button" [ngClass]="{hide: !pageData.methods.put}" (click)="onClickEdit(row)">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+          </button>
+          <button class="pure-button" [ngClass]="{hide: !pageData.methods.delete}" (click)="delete(row)">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>

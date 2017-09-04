@@ -1,0 +1,67 @@
+@import "../../../../assets/vars";
+@import "../../../../assets/purecss/tables";
+@import "../../../../assets/purecss/forms";
+@import "../../../../assets/purecss/buttons";
+@import "../../../../assets/purecss/grids";
+@import "../../../../assets/purecss/grids-responsive";
+
+.header {
+  margin: 0 0 20px;
+  border-bottom: 1px solid #ddd;
+
+  > div {
+    &:first-child {
+      display: inline-block;
+    }
+    &:last-child {
+      text-align: right;
+    }
+  }
+}
+
+.description {
+  margin: 10px 0 20px;
+}
+
+.pure-table {
+  min-width: 100%;
+  background: #fff;
+
+  .pure-button {
+    margin-right: 9px;
+    border-radius: 2px;
+    border: none;
+
+    &.hide {
+      display: none;
+    }
+  }
+}
+
+.pure-form {
+  .pure-control-group {
+    display: inline-block;
+    padding: 0 10px 0 0;
+  }
+
+  .pure-controls {
+    display: block;
+    margin: 1em 0 0;
+  }
+
+  label {
+    margin-right: 5px;
+  }
+
+  fieldset {
+    margin: 0 0 20px;
+    padding: 0;
+  }
+}
+
+.thumb {
+  width: 200px;
+  height: 150px;
+  background: no-repeat center center;
+  background-size: cover;
+}

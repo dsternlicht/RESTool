@@ -1,0 +1,5 @@
+<nav>
+  <a *ngFor="let page of pages" [routerLink]="page.id" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    {{page.name}}
+  </a>
+</nav>

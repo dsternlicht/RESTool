@@ -1,0 +1,47 @@
+<div [@dialog] *ngIf="visible" class="dialog">
+  <h2>Add Item</h2>
+
+  <div class="inner">
+    <div class="form_wrapper">
+
+      <p *ngIf="!fields || !fields.length">No fields defined.</p>
+
+      <form *ngIf="fields && fields.length" class="pure-form pure-form-aligned" [formGroup]="myForm"
+            (ngSubmit)="submit($event);">
+        <fieldset>
+          <div class="pure-control-group" *ngFor="let field of fields" [ngSwitch]="field.type">
+            <ng-template [ngSwitchCase]="'hidden'" ngSwitchDefault>
+              <input type="hidden" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'text'">
+              <label>{{field.label || field.name}}</label>
+              <input type="text" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'email'">
+              <label>{{field.label || field.name}}</label>
+              <input type="email" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'array'">
+              <label>{{field.label || field.name}}</label>
+              <textarea placeholder="{{field.label}} (one per line)" [formControlName]="getFieldName(field)"></textarea>
+            </ng-template>
+            <div *ngSwitchDefault>
+              <label>{{field.label || field.name}}</label>
+              <input type="text" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
+            </div>
+          </div>
+
+          <div class="center">
+            <button type="submit" class="pure-button pure-button-primary button-large">Submit</button>
+          </div>
+
+          <app-loader [size]="'small'" [loading]="loading"></app-loader>
+        </fieldset>
+      </form>
+
+    </div>
+    <button *ngIf="closable" (click)="close()" aria-label="Close" class="dialog__close-btn"><i class="fa fa-times"></i></button>
+  </div>
+</div>
+
+<div *ngIf="visible" class="overlay" (click)="close()"></div>

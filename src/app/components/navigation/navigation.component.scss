@@ -1,0 +1,23 @@
+nav {
+  text-align: left;
+
+  a {
+    display: block;
+    color: #fff;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s background-color ease 0s;
+
+    &:hover {
+      background: #424479;
+    }
+
+    &.active {
+      background: #57578F;
+    }
+  }
+}
