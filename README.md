@@ -1,6 +1,6 @@
 # RESTool
 
-![RESTool Sample App](https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/restool.PNG | width=400)
+![RESTool Sample App](https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/restool_screenshot.png)
 
 The best tool in the neighborhood. Managing your RESTful APIs has never been so easy.
 RESTool gives you an out of the box UI that connects to your API with a simple configuration file.
