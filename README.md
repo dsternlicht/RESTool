@@ -4,7 +4,7 @@ RESTool gives you an out of the box UI that connects to your API with a simple c
 
 The idea behind it is simple. Given the fact that each entity in your API has a RESTful implementation, RESTool will help you to develop a tool for managing these entities in no time by simply edit a configuration file. No JavaScript. No CSS. No html. Just a pure JSON file.
 
-![RESTool Sample App](/screenshots/restool.png?raw=true "RESTool sample app")
+![RESTool Sample App](https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/restool.PNG)
 
 ## Getting started
 Clone RESTool repo to your machine, and run npm install.
