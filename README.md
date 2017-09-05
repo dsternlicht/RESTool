@@ -2,7 +2,7 @@
 Best tool in the neighborhood. Managing your RESTful APIs have never been so simple.
 RESTool gives you an out of the box UI that connects to your API with a simple configuration file. It makes the API available for all non-developers users as well.
 
-![RESTool Sample App](/screenshots/restool.jpg?raw=true "RESTool sample app")
+![RESTool Sample App](/screenshots/restool.png?raw=true "RESTool sample app")
 
 ## Getting started
 Clone RESTool repo to your machine, and run npm install.
