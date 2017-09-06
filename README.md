@@ -13,7 +13,7 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 Clone RESTool repo to your machine, and run npm install.
 
 ```
-git clone https://github.com/outbrain/RESTool.git
+git clone https://github.com/dsternlicht/RESTool.git
 
 cd RESTool
 
@@ -240,3 +240,8 @@ Before running the tests make sure you are serving the app via `ng serve`.
 * Replace the "config.json" file with yours.
 * Copy / deploy the "dist" folder to your servers.
 * Enjoy!
+
+## Created By
+* Daniel Sternlicht
+* Oreli Levi
+* Jonathan Sellam
