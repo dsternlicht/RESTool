@@ -7,11 +7,13 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class ConfigurationService {
 
+    private readonly filePath: string = "config.json";
     private configuration;
-    private configStream = this.http.get('config.json').map(res => res.json());
+    private configStream;
 
     constructor(private http: Http) {
         this.configuration = null;
+        this.configStream = this.http.get(this.filePath).map(res => res.json());
     }
 
     getConfiguration() {
@@ -19,11 +21,21 @@ export class ConfigurationService {
             return Observable.of(this.configuration);
         } else {
             this.configStream.subscribe(config => {
-                this.configuration = config;
+                this.configuration = this.checkLocalOrRemoteConfiguration(config);
             });
             return this.configStream;
         }
     }
 
+    private checkLocalOrRemoteConfiguration(config: any) {
+      if(config && config.hasOwnProperty("remoteUrl")) {
+        this.configStream = this.http.get(config.remoteUrl).map(res => res.json());
+        this.configStream.subscribe(remoteConfig => {
+          this.configuration = remoteConfig;
+        });
+      } else {
+        return config;
+      }
+    }
 
 }
