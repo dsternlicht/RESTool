@@ -14,6 +14,7 @@ export class DataPathUtils {
       return data;
     }
 
+	
     let extractedData = data;
     const digProps = dataPath.split('.');
 
@@ -25,7 +26,7 @@ export class DataPathUtils {
       }
     }
 
-    if (attr) {
+    if (extractedData != null && attr) {
       return extractedData[attr];
     }
     return extractedData;
@@ -33,7 +34,10 @@ export class DataPathUtils {
 
   public getFieldValueInPath(field, dataPath, data) {
     if (!dataPath) {
-      return data[field];
+		if(data != null)
+			return data[field];
+		else 
+			return null;
     }
 
     const dataObj = this.extractDataFromResponse(data, dataPath);
