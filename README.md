@@ -106,6 +106,8 @@ Your data path will be `data.items`.
 ##### `queryParams` (array)
 An array of query param objects you want to add to your GET request. 
 
+If your URL includes the ``name`` of the parameter inside of {:name} then it will be instead used as part of the path instead of as a query param. For example if your url is ``/api/contact/234/address`` you might make a paramter called ``contactId`` then set the URL like this ``/api/contact/{:contacId}/address``.
+
 #### Query Params
 
 Each query param item is an object and could have the following properties:
@@ -139,7 +141,7 @@ queryParams: {
   name: 'heroes',
   label: 'Select your hero',
   type: 'select',
-  options: ['Spiderman', 'Batman', 'Ironman']
+  options: ['Spiderman', 'Batman', {'display': 'Ironman', 'value': '324'}]
 }
 ```
 

@@ -22,7 +22,7 @@
         <label>{{queryParam.label || queryParam.name}}</label>
         <select [formControlName]="queryParam.name" [ngModel]="queryParam.value">
           <option value="">-- Select --</option>
-          <option *ngFor="let option of (queryParam.options || [])" value="{{option}}">{{option}}</option>
+          <option *ngFor="let option of (queryParam.options || [])" value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>
         </select>
       </ng-template>
       <div *ngSwitchDefault>
