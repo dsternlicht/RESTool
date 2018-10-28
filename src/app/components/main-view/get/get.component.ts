@@ -52,14 +52,14 @@ export class GetComponent {
 
   public formatSelectOption(option: any){
     let result:any = {
-      display: "",
-      value: ""
+      display: '',
+      value: ''
     };
-    if(typeof(option) === "string"){
+    
+    if (typeof(option) === 'string') {
       result.display = option;
       result.value = option;
-    }
-    else{
+    } else {
       result.display = option.display;
       result.value = option.value;
     }
