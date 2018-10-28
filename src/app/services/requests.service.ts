@@ -67,11 +67,10 @@ export class RequestsService {
 
     for (let param of queryParams) {
       if (param.name) {
-        let urlParamName = "{:"+param.name+"}";
-        if(urlWithParams.indexOf(urlParamName) >= 0){
+        let urlParamName = `:${param.name}`;
+        if (urlWithParams.indexOf(urlParamName) >= 0){
           urlWithParams = urlWithParams.replace(urlParamName, param.value);
-        }
-        else{
+        } else {
           params.push(`${param.name}=${param.value || ''}`);
         }
       }
