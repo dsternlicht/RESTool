@@ -50,6 +50,23 @@ export class GetComponent {
     });
   }
 
+  public formatSelectOption(option: any){
+    let result:any = {
+      display: '',
+      value: ''
+    };
+    
+    if (typeof(option) === 'string') {
+      result.display = option;
+      result.value = option;
+    } else {
+      result.display = option.display;
+      result.value = option.value;
+    }
+
+    return result;
+  }
+
   public firstRequest() {
     if (!this.pageData) {
       return;

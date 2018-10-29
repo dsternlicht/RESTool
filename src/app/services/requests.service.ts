@@ -67,7 +67,12 @@ export class RequestsService {
 
     for (let param of queryParams) {
       if (param.name) {
-        params.push(`${param.name}=${param.value || ''}`);
+        let urlParamName = `:${param.name}`;
+        if (urlWithParams.indexOf(urlParamName) >= 0){
+          urlWithParams = urlWithParams.replace(urlParamName, param.value);
+        } else {
+          params.push(`${param.name}=${param.value || ''}`);
+        }
       }
     }
 
