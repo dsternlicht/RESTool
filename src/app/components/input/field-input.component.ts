@@ -18,4 +18,12 @@ export class FieldInputComponent {
     }
     return `${this.field.dataPath}.${this.field.name}`;
   }
+
+  get labelVisible(): boolean {
+    return this.field.type !== 'hidden';
+  }
+
+  get label(): string {
+    return this.field.label || this.field.name;
+  }
 }
