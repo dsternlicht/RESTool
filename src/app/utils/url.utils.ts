@@ -14,7 +14,7 @@ export class UrlUtils {
     }
 
     public extractIdFieldName(url) {
-        const matcher = /http[s]?:\/\/.*\/:([a-zA-Z0-9_-]*)[\/|\?|#]?.*/;
+        const matcher = /:([a-zA-Z0-9_-]+)[\/?#&]?.*/;
         const extractArr = url.match(matcher);
         if (extractArr.length > 1) {
             return extractArr[1];
