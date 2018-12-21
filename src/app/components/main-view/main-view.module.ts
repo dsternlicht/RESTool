@@ -8,11 +8,12 @@ import { GetComponent } from './get/get.component';
 import { PutComponent } from './put/put.component';
 import { PostComponent } from './post/post.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FieldInputComponent } from '../input/field-input.component';
 
 @NgModule({
   imports: [CommonModule, Routing, ReactiveFormsModule, BrowserAnimationsModule],
   exports: [],
-  declarations: [MainViewComponent, LoaderComponent, GetComponent, PutComponent, PostComponent],
+  declarations: [MainViewComponent, LoaderComponent, GetComponent, PutComponent, PostComponent, FieldInputComponent],
   providers: [],
 })
 export class MainViewModule { }

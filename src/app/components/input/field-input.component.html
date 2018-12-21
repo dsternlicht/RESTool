@@ -1,0 +1,25 @@
+<div [ngSwitch]="field.type" [formGroup]="form" class="pure-control-group">
+  <ng-template [ngSwitchCase]="'hidden'" ngSwitchDefault>
+    <input type="hidden" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'text'">
+    <label>{{field.label || field.name}}</label>
+    <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'number'">
+    <label>{{field.label || field.name}}</label>
+    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'email'">
+    <label>{{field.label || field.name}}</label>
+    <input type="email" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'array'">
+    <label>{{field.label || field.name}}</label>
+    <textarea placeholder="{{field.label}}" [formControlName]="fieldName"></textarea>
+  </ng-template>
+  <div *ngSwitchDefault>
+    <label>{{field.label || field.name}}</label>
+    <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </div>
+</div>

@@ -85,13 +85,6 @@ export class PutComponent implements OnInit  {
     return obj;
   }
 
-  public getFieldName(field) {
-    if (!field.dataPath) {
-      return field.name;
-    }
-    return `${field.dataPath}.${field.name}`;
-  }
-
   public submit(e: Event) {
     e.preventDefault();
     const fields = this.buildFields();
