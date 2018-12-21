@@ -17,6 +17,10 @@
               <label>{{field.label || field.name}}</label>
               <input type="text" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
             </ng-template>
+            <ng-template [ngSwitchCase]="'number'">
+              <label>{{field.label || field.name}}</label>
+              <input type="number" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
+            </ng-template>
             <ng-template [ngSwitchCase]="'email'">
               <label>{{field.label || field.name}}</label>
               <input type="email" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>

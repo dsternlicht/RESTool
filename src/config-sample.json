@@ -88,6 +88,11 @@
               "dataPath": "phone"
             },
             {
+              "name": "favoriteNumber",
+              "label": "Favorite Number",
+              "type": "number"
+            },
+            {
               "name": "numbers",
               "label": "Numbers",
               "type": "array",
@@ -131,6 +136,11 @@
               "label": "Mobile Phone",
               "type": "text",
               "dataPath": "phone"
+            },
+            {
+              "name": "favoriteNumber",
+              "label": "Favorite Number",
+              "type": "number"
             },
             {
               "name": "numbers",
