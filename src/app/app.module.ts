@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { CommonModule } from '@angular/common';
+import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'toastr-ng2';
 import { ConfigurationService } from './services/configuraion.service';
@@ -30,6 +30,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     ToastrModule.forRoot()
   ],
   providers: [
+    { provide: APP_BASE_HREF, useValue: window.location.pathname },
     { provide: 'ConfigurationService', useClass: ConfigurationService },
     { provide: 'RequestsService', useClass: RequestsService },
     { provide: 'DataPathUtils', useClass: DataPathUtils },
