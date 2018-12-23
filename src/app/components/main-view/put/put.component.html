@@ -1,26 +1,17 @@
 <div [@dialog] *ngIf="visible" class="dialog">
-
   <h2>Edit Item</h2>
-
   <div class="inner">
     <div class="form_wrapper">
-
       <p *ngIf="!fields || !fields.length">No fields defined.</p>
-
-      <form *ngIf="fields && fields.length" class="pure-form pure-form-aligned" [formGroup]="myForm"
-            (ngSubmit)="submit($event);">
+      <form *ngIf="fields && fields.length" class="pure-form pure-form-aligned" [formGroup]="myForm" (ngSubmit)="submit($event);">
         <fieldset>
-          <field-input [field]="field" [form]="myForm" *ngFor="let field of fields" class="pure-control-group">
-          </field-input>
-
+          <field-input [field]="field" [form]="myForm" *ngFor="let field of fields" class="pure-control-group"></field-input>
           <div class="center">
             <button type="submit" class="pure-button pure-button-primary button-large">Submit</button>
           </div>
-
           <app-loader [size]="'small'" [loading]="loading"></app-loader>
         </fieldset>
       </form>
-
     </div>
     <button *ngIf="closable" (click)="close()" aria-label="Close" class="dialog__close-btn"><i class="fa fa-times"></i></button>
   </div>

@@ -220,6 +220,8 @@ since IE8 won't execute CSS that contains a CSS3 selector.
 
   .pure-control-group {
     margin-bottom: 0.5em;
+    display: flex;
+    align-items: center;
 
     label {
       text-align: right;
