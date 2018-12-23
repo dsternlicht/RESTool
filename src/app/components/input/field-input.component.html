@@ -1,0 +1,19 @@
+<label *ngIf="labelVisible">{{label}}</label>
+
+<span [ngSwitch]="field.type" [formGroup]="form">
+  <ng-template [ngSwitchCase]="'hidden'">
+    <input type="hidden" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
+    <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'number'">
+    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'email'">
+    <input type="email" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'array'">
+    <textarea placeholder="{{field.label}}" [formControlName]="fieldName"></textarea>
+  </ng-template>
+</span>

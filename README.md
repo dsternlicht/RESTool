@@ -128,6 +128,7 @@ Available options:
 ``text`` - A simple text input (if "type" is not defined, text will be the default).
 ``hidden`` - Set to true if you want the query param to be sent but not to be editable.
 ``boolean`` - This will render a checkbox.
+``number`` - A simple number input box that supports positive and negative integers.
 ``encode`` - If you want the value to be encoded before being sent, use this type.
 ``select`` - This will render a select box with predefined options.
 

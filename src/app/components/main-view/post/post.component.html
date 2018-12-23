@@ -9,27 +9,8 @@
       <form *ngIf="fields && fields.length" class="pure-form pure-form-aligned" [formGroup]="myForm"
             (ngSubmit)="submit($event);">
         <fieldset>
-          <div class="pure-control-group" *ngFor="let field of fields" [ngSwitch]="field.type">
-            <ng-template [ngSwitchCase]="'hidden'" ngSwitchDefault>
-              <input type="hidden" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
-            </ng-template>
-            <ng-template [ngSwitchCase]="'text'">
-              <label>{{field.label || field.name}}</label>
-              <input type="text" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
-            </ng-template>
-            <ng-template [ngSwitchCase]="'email'">
-              <label>{{field.label || field.name}}</label>
-              <input type="email" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
-            </ng-template>
-            <ng-template [ngSwitchCase]="'array'">
-              <label>{{field.label || field.name}}</label>
-              <textarea placeholder="{{field.label}} (one per line)" [formControlName]="getFieldName(field)"></textarea>
-            </ng-template>
-            <div *ngSwitchDefault>
-              <label>{{field.label || field.name}}</label>
-              <input type="text" placeholder="{{field.label}}" [formControlName]="getFieldName(field)"/>
-            </div>
-          </div>
+          <field-input [field]="field" [form]="myForm" *ngFor="let field of fields" class="pure-control-group">
+          </field-input>
 
           <div class="center">
             <button type="submit" class="pure-button pure-button-primary button-large">Submit</button>

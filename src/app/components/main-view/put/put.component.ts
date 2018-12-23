@@ -80,16 +80,9 @@ export class PutComponent implements OnInit  {
         }
         value = JSON.stringify(value, null, '\t');
       }
-      obj[fieldName] = new FormControl(value || '');
+      obj[fieldName] = new FormControl(value === undefined ? '' : value);
     }
     return obj;
-  }
-
-  public getFieldName(field) {
-    if (!field.dataPath) {
-      return field.name;
-    }
-    return `${field.dataPath}.${field.name}`;
   }
 
   public submit(e: Event) {
