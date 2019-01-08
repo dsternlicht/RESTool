@@ -36,6 +36,9 @@ The name of your app.
 ##### `pages` (array)
 A list of pages in your app, each page will be presented as a separated tab, and will have his own methods and properties.
 
+##### `errorMessageDataPath` (string, or array of strings)
+The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found.
+
 #### Pages
 
 Each 'page' is an object. And could have the following properties:
