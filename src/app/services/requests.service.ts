@@ -12,8 +12,8 @@ export class RequestsService {
   private errorMessageDataPaths: string[] = [];
 
   constructor(public http: Http,
-              @Inject("DataPathUtils") private readonly dataPathUtils: DataPathUtils,
-              @Inject("ConfigurationService") configurationService: ConfigurationService) {
+              @Inject('DataPathUtils') private readonly dataPathUtils: DataPathUtils,
+              @Inject('ConfigurationService') configurationService: ConfigurationService) {
     configurationService.getConfiguration().subscribe(configuration => {
       if (configuration.errorMessageDataPath) {
         if (Array.isArray(configuration.errorMessageDataPath)) {
