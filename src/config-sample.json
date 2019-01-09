@@ -1,5 +1,6 @@
 {
   "name": "RESTool sample app",
+  "errorMessageDataPath": "error",
   "pages": [
     {
       "default": true,
