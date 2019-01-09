@@ -88,7 +88,7 @@ export class RequestsService {
         let urlParamName = `:${param.name}`;
         if (outputUrl.indexOf(urlParamName) >= 0){
           outputUrl = outputUrl.replace(urlParamName, param.value);
-        } else {
+        } else if (!param.urlReplaceOnly) {
           params.push(`${param.name}=${param.value || ''}`);
         }
       }
@@ -104,7 +104,7 @@ export class RequestsService {
   private handleError(error: Response | any) {
     if (error instanceof Response && error.status === 401 && this.unauthorizedRedirectUrl) {
       const loginUrl = this.buildUrl(this.unauthorizedRedirectUrl, [
-        {name: 'returnUrl', value: encodeURIComponent(document.location.href)}
+        {name: 'returnUrl', value: encodeURIComponent(document.location.href), urlReplaceOnly: true}
       ]);
       document.location.href = loginUrl;
       return;
