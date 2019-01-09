@@ -10,6 +10,7 @@ import { DataPathUtils } from '../utils/dataPath.utils';
 @Injectable()
 export class RequestsService {
   private errorMessageDataPaths: string[] = [];
+  private unauthorizedRedirectUrl: string;
 
   constructor(public http: Http,
               @Inject('DataPathUtils') private readonly dataPathUtils: DataPathUtils,
@@ -22,6 +23,8 @@ export class RequestsService {
           this.errorMessageDataPaths = [configuration.errorMessageDataPath];
         }
       }
+
+      this.unauthorizedRedirectUrl = configuration.unauthorizedRedirectUrl;
     });
   }
 
@@ -95,6 +98,14 @@ export class RequestsService {
   }
 
   private handleError(error: Response | any) {
+    if (error instanceof Response && error.status === 401 && this.unauthorizedRedirectUrl) {
+      const loginUrl = this.buildUrl(this.unauthorizedRedirectUrl, [
+        {name: 'returnUrl', value: encodeURIComponent(document.location.href)}
+      ]);
+      document.location.href = loginUrl;
+      return;
+    }
+
     const errMsg = this.getErrorMessage(error);
     console.error(errMsg, error);
     return Observable.throw(errMsg);
