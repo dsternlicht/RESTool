@@ -80,21 +80,25 @@ export class RequestsService {
       return url;
     }
 
-    let urlWithParams = `${url}?`;
+    let outputUrl = url;
     const params = [];
 
     for (let param of queryParams) {
       if (param.name) {
         let urlParamName = `:${param.name}`;
-        if (urlWithParams.indexOf(urlParamName) >= 0){
-          urlWithParams = urlWithParams.replace(urlParamName, param.value);
+        if (outputUrl.indexOf(urlParamName) >= 0){
+          outputUrl = outputUrl.replace(urlParamName, param.value);
         } else {
           params.push(`${param.name}=${param.value || ''}`);
         }
       }
     }
 
-    return urlWithParams + params.join('&');
+    if (params.length) {
+      const firstSeparator = url.indexOf('?') >= 0 ? '&' : '?';
+      return outputUrl + firstSeparator + params.join('&');
+    }
+    return outputUrl;
   }
 
   private handleError(error: Response | any) {
