@@ -112,8 +112,7 @@ export class RequestsService {
         }
       } catch {}
       return `${error.status} - ${error.statusText || ''} ${error}`;
-    } else {
-      return error.message ? error.message : error.toString();
     }
+    return error.message ? error.message : error.toString();
   }
 }
