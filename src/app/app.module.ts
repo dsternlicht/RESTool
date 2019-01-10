@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
-import { ToastrModule } from 'toastr-ng2';
+import { ToastrModule } from 'ngx-toastr';
 import { ConfigurationService } from './services/configuraion.service';
 import { RequestsService } from './services/requests.service';
 import { MainViewModule } from './components/main-view/main-view.module';

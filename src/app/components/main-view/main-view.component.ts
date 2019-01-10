@@ -1,8 +1,8 @@
-import {Component, OnInit, Inject, ViewChild} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ToastrService} from "toastr-ng2";
-import {Observable} from "rxjs/Rx";
-import {GetComponent} from "./get/get.component";
+import {Component, OnInit, Inject, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import {Observable} from 'rxjs/Rx';
+import {GetComponent} from './get/get.component';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',

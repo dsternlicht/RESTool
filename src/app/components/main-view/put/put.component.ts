@@ -1,7 +1,7 @@
 import {Component, OnInit, Input, Inject, Output, EventEmitter} from '@angular/core';
 import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
-import {DataPathUtils} from "../../../utils/dataPath.utils";
-import { ToastrService } from 'toastr-ng2';
+import {DataPathUtils} from '../../../utils/dataPath.utils';
+import { ToastrService } from 'ngx-toastr';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
