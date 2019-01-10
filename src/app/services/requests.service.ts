@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+import { throwError } from 'rxjs';
 import { ConfigurationService } from './configuraion.service';
 import { DataPathUtils } from '../utils/dataPath.utils';
 
@@ -118,7 +117,7 @@ export class RequestsService {
 
     const errMsg = this.getErrorMessage(error);
     console.error(errMsg, error);
-    return Observable.throw(errMsg);
+    return throwError(errMsg);
   }
 
   private getErrorMessage(error: Response | any): string {
