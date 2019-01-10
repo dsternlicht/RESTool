@@ -45,7 +45,7 @@
     <thead>
     <tr>
       <th *ngFor="let field of fields">{{field.label || field.name}}</th>
-      <th *ngIf="showActions()">Actions</th>
+      <th *ngIf="showActions()"[ngStyle]="{width: '110px', textAlign: 'center'}">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -65,7 +65,7 @@
           </ng-template>
         </div>
       </td>
-      <td *ngIf="showActions()">
+      <td *ngIf="showActions()" [ngStyle]="{textAlign: 'center'}">
         <div class="pure-button-group">
           <button class="pure-button" [ngClass]="{hide: !pageData.methods.put}" (click)="onClickEdit(row)">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
