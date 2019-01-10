@@ -1,6 +1,6 @@
 <div class="pure-g header">
-  <div class="description pure-u-1-2" *ngIf="pageData && pageData.description">
-    {{pageData.description}}
+  <div class="description pure-u-1-2">
+    {{pageData ? pageData.description : ''}}
   </div>
   <div class="create pure-u-1-2">
     <button class="pure-button button-success button-xlarge" *ngIf="pageData && pageData.methods && pageData.methods.post" (click)="onClickNew()">+ Add Item</button>
