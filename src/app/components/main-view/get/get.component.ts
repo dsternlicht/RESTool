@@ -1,4 +1,4 @@
-import {Component, Input, Inject, Output, EventEmitter, ViewChild } from '@angular/core';
+import {Component, Input, Inject, Output, EventEmitter } from '@angular/core';
 import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -47,23 +47,6 @@ export class GetComponent {
       state: 'put',
       data: row
     });
-  }
-
-  public formatSelectOption(option: any){
-    let result:any = {
-      display: '',
-      value: ''
-    };
-    
-    if (typeof(option) === 'string') {
-      result.display = option;
-      result.value = option;
-    } else {
-      result.display = option.display;
-      result.value = option.value;
-    }
-
-    return result;
   }
 
   public firstRequest() {

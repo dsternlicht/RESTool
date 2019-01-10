@@ -20,10 +20,27 @@ export class FieldInputComponent {
   }
 
   get labelVisible(): boolean {
-    return this.field.type !== 'hidden';
+    return this.field.type !== 'hidden' && this.field.type !== 'boolean';
   }
 
   get label(): string {
     return this.field.label || this.field.name;
+  }
+
+  public formatSelectOption(option: any){
+    let result:any = {
+      display: '',
+      value: ''
+    };
+
+    if (typeof(option) === 'string') {
+      result.display = option;
+      result.value = option;
+    } else {
+      result.display = option.display;
+      result.value = option.value;
+    }
+
+    return result;
   }
 }

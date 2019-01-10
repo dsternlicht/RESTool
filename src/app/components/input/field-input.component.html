@@ -1,4 +1,6 @@
-<label *ngIf="labelVisible">{{label}}</label>
+<label>
+  {{labelVisible ? label : ''}}
+</label>
 
 <span [ngSwitch]="field.type" [formGroup]="form">
   <ng-template [ngSwitchCase]="'hidden'">
@@ -15,5 +17,18 @@
   </ng-template>
   <ng-template [ngSwitchCase]="'array'">
     <textarea placeholder="{{field.label}}" [formControlName]="fieldName"></textarea>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'select'">
+    <select [formControlName]="fieldName">
+      <option value="">-- Select --</option>
+      <option *ngFor="let option of (field.options || [])"
+              value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>
+    </select>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'boolean'">
+    <label class="pure-checkbox">
+      <input type="checkbox" [formControlName]="fieldName"/>
+      {{label}}
+    </label>
   </ng-template>
 </span>
