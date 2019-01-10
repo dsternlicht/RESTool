@@ -10,6 +10,7 @@ import { DataPathUtils } from '../utils/dataPath.utils';
 @Injectable()
 export class RequestsService {
   private errorMessageDataPaths: string[] = [];
+  private unauthorizedRedirectUrl: string;
 
   constructor(public http: Http,
               @Inject('DataPathUtils') private readonly dataPathUtils: DataPathUtils,
@@ -22,6 +23,8 @@ export class RequestsService {
           this.errorMessageDataPaths = [configuration.errorMessageDataPath];
         }
       }
+
+      this.unauthorizedRedirectUrl = configuration.unauthorizedRedirectUrl;
     });
   }
 
@@ -77,24 +80,36 @@ export class RequestsService {
       return url;
     }
 
-    let urlWithParams = `${url}?`;
+    let outputUrl = url;
     const params = [];
 
     for (let param of queryParams) {
       if (param.name) {
         let urlParamName = `:${param.name}`;
-        if (urlWithParams.indexOf(urlParamName) >= 0){
-          urlWithParams = urlWithParams.replace(urlParamName, param.value);
-        } else {
+        if (outputUrl.indexOf(urlParamName) >= 0){
+          outputUrl = outputUrl.replace(urlParamName, param.value);
+        } else if (!param.urlReplaceOnly) {
           params.push(`${param.name}=${param.value || ''}`);
         }
       }
     }
 
-    return urlWithParams + params.join('&');
+    if (params.length) {
+      const firstSeparator = url.indexOf('?') >= 0 ? '&' : '?';
+      return outputUrl + firstSeparator + params.join('&');
+    }
+    return outputUrl;
   }
 
   private handleError(error: Response | any) {
+    if (error instanceof Response && error.status === 401 && this.unauthorizedRedirectUrl) {
+      const loginUrl = this.buildUrl(this.unauthorizedRedirectUrl, [
+        {name: 'returnUrl', value: encodeURIComponent(document.location.href), urlReplaceOnly: true}
+      ]);
+      document.location.href = loginUrl;
+      return;
+    }
+
     const errMsg = this.getErrorMessage(error);
     console.error(errMsg, error);
     return Observable.throw(errMsg);

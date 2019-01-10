@@ -39,6 +39,9 @@ A list of pages in your app, each page will be presented as a separated tab, and
 ##### `errorMessageDataPath` (string, or array of strings)
 The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found.
 
+##### `unauthorizedRedirectUrl` (string)
+Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"`
+
 #### Pages
 
 Each 'page' is an object. And could have the following properties:
