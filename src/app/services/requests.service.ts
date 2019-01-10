@@ -52,6 +52,12 @@ export class RequestsService {
       .catch(error => this.handleError(error));
   }
 
+  public patch(url, data, headers = null) {
+    return this.http.patch(url, data, { headers: this.buildHeaders(headers) })
+      .map(this.extractData)
+      .catch(error => this.handleError(error));
+  }
+
   private buildHeaders(heads) {
     let headers = new Headers();
 
