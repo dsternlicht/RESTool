@@ -3,6 +3,7 @@ import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import {DataPathUtils} from '../../../utils/dataPath.utils';
 import { ToastrService } from 'ngx-toastr';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { RequestHeaders } from '../../../services/config.model';
 
 @Component({
   selector: 'put-dialog',
@@ -92,12 +93,14 @@ export class PutComponent implements OnInit  {
     this.request(data);
   }
 
+  get requestHeaders(): RequestHeaders {
+    return this.methodData.requestHeaders || this.pageData.requestHeaders || {};
+  }
+
   private request(data = {}) {
     this.loading = true;
 
     console.log('Making put request with data', data);
-
-    const requestHeaders = this.methodData.requestHeaders || this.pageData.requestHeaders || {};
 
     let actualMethod = this.requestsService.put.bind(this.requestsService);
     const actualMethodType = this.methodData.actualMethod;
@@ -109,7 +112,7 @@ export class PutComponent implements OnInit  {
     const dataPath = this.methodData.dataPath;
     putUrl = this.urlUtils.getParsedUrl(putUrl, this.rowData, dataPath);
 
-    actualMethod(putUrl, data, requestHeaders).subscribe(data => {
+    actualMethod(putUrl, data, this.requestHeaders).subscribe(data => {
       this.loading = false;
       this.toastrService.success('Successfully updated item', 'Success');
       this.close(true);

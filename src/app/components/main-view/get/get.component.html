@@ -9,7 +9,10 @@
 
 <form *ngIf="queryParams.length" class="pure-form pure-form-stacked" [formGroup]="myForm" (ngSubmit)="getResults()">
   <fieldset>
-    <field-input [field]="field" [form]="myForm" *ngFor="let field of queryParams" class="pure-control-group"></field-input>
+    <field-input [field]="field" [form]="myForm" [requestHeaders]="requestHeaders"
+                 *ngFor="let field of queryParams"
+                 class="pure-control-group">
+    </field-input>
 
     <div class="pure-controls">
       <button type="submit" class="pure-button pure-button-primary">Submit</button>

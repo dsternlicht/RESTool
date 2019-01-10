@@ -1,6 +1,7 @@
 import {Component, Input, Inject, Output, EventEmitter } from '@angular/core';
 import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { RequestHeaders } from '../../../services/config.model';
 
 @Component({
   selector: 'app-get',
@@ -70,12 +71,15 @@ export class GetComponent {
     this.getRequest();
   }
 
+  get requestHeaders(): RequestHeaders {
+    return this.activeGetRequest.requestHeaders || this.pageData.requestHeaders || {};;
+  }
+
   private getRequest(queryParams = null) {
     if (this.activeGetRequest) {
       this.loading = true;
 
-      const requestHeaders = this.activeGetRequest.requestHeaders || this.pageData.requestHeaders || {};
-      this.requestsService.get(this.activeGetRequest.url, requestHeaders, queryParams || this.queryParams).subscribe(data => {
+      this.requestsService.get(this.activeGetRequest.url, this.requestHeaders, queryParams || this.queryParams).subscribe(data => {
         this.loading = false;
         this.data = this.dataPathUtils.extractDataFromResponse(data, this.activeGetRequest.dataPath);
 

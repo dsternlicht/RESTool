@@ -3,6 +3,7 @@ import {FormGroup, FormControl, FormBuilder, FormArray} from '@angular/forms';
 import {DataPathUtils} from '../../../utils/dataPath.utils';
 import { ToastrService } from 'ngx-toastr';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { RequestHeaders } from '../../../services/config.model';
 
 @Component({
   selector: 'post-dialog',
@@ -86,12 +87,14 @@ export class PostComponent implements OnInit {
     this.request(data);
   }
 
+  get requestHeaders(): RequestHeaders {
+    return this.methodData.requestHeaders || this.pageData.requestHeaders || {};
+  }
+
   private request(data = {}) {
     this.loading = true;
 
     console.log('Making post request with data', data);
-
-    const requestHeaders = this.methodData.requestHeaders || this.pageData.requestHeaders || {};
 
     let actualMethod = this.requestsService.post.bind(this.requestsService);
     const actualMethodType = this.methodData.actualMethod;
@@ -99,7 +102,7 @@ export class PostComponent implements OnInit {
       actualMethod = this.requestsService[actualMethodType].bind(this.requestsService);
     }
 
-    actualMethod(this.methodData.url, data, requestHeaders).subscribe(data => {
+    actualMethod(this.methodData.url, data, this.requestHeaders).subscribe(data => {
       this.loading = false;
       this.toastrService.success('Successfully created an item', 'Success');
       this.close(true);

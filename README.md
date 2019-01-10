@@ -198,7 +198,7 @@ Available options:
 * ``encode`` - If you want the value to be encoded before being sent, use this type. GET All page only.
 * ``number`` - A simple number input box that supports positive and negative integers.
 * ``boolean`` - This will render a checkbox.
-* ``select`` - This will render a select box. See [options property](#options-array)
+* ``select`` - This will render a select box. See [options](#options-array) and [optionsSource](#optionssource-object) properties
 * ``array`` - Enter multiple values. POST and PUT page only.
 * ``hidden`` - Set to true if you want the value to be sent but not to be editable.
 
@@ -213,6 +213,31 @@ queryParams: {
   label: 'Select your hero',
   type: 'select',
   options: ['Spiderman', 'Batman', { display: 'Ironman', value: '324'}]
+}
+```
+
+###### ``optionSource`` (object)
+Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api.
+
+You can use the following properties on the `optionSource` object:
+* `url` - url to fetch data from
+* `dataPath` - let us know where we should take the data from
+* `displayPath` - property of the object to take the display value from
+* `valuePath` - property of the object to take the option value from
+
+For example:
+
+```
+fields: {
+  name: 'bestFriend',
+  label: 'Best Friend',
+  type: 'select',
+  optionSource: {
+    url: '//restool-sample-app.herokuapp.com/api/contacts',
+    dataPath: null,
+    displayPath: 'name',
+    valuePath: 'id'
+  }
 }
 ```
 

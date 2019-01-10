@@ -21,7 +21,7 @@
   <ng-template [ngSwitchCase]="'select'">
     <select [formControlName]="fieldName">
       <option value="">-- Select --</option>
-      <option *ngFor="let option of (field.options || [])"
+      <option *ngFor="let option of combinedOptions"
               value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>
     </select>
   </ng-template>
