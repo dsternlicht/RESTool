@@ -198,7 +198,7 @@ Available options:
 * ``encode`` - If you want the value to be encoded before being sent, use this type. GET All page only.
 * ``number`` - A simple number input box that supports positive and negative integers.
 * ``boolean`` - This will render a checkbox.
-* ``select`` - This will render a select box. See [options](#options-array) and [optionsSource](#optionssource-object) properties
+* ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
 * ``array`` - Enter multiple values. POST and PUT page only.
 * ``hidden`` - Set to true if you want the value to be sent but not to be editable.
 
