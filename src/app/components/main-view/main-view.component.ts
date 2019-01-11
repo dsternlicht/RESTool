@@ -1,8 +1,9 @@
 import {Component, OnInit, Inject, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import {Observable} from 'rxjs/Rx';
+import {of} from 'rxjs';
 import {GetComponent} from './get/get.component';
+
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
@@ -66,13 +67,13 @@ export class MainViewComponent implements OnInit {
 
   private getRowData(defaultData = {}) {
     if (!this.pageData.methods.getSingle) {
-      return Observable.of(defaultData);
+      return of(defaultData);
     }
 
     const getMethod = this.pageData.methods.getSingle;
     let getUrl = getMethod.url;
     if (!getUrl) {
-      return Observable.of(defaultData);
+      return of(defaultData);
     }
 
     const dataPath = getMethod.dataPath;
