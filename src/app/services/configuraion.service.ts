@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs';
 import 'rxjs/add/observable/of';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class ConfigurationService {
 
     getConfiguration() {
         if (this.configuration) {
-            return Observable.of(this.configuration);
+            return of(this.configuration);
         } else {
             this.configStream.subscribe(config => {
                 this.configuration = this.checkLocalOrRemoteConfiguration(config);
