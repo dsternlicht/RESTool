@@ -114,44 +114,7 @@ An array of query param objects you want to add to your GET request.
 
 If your URL includes the name of the parameter, it will be used as part of the path rathen than as a query param. For example if your url is ``/api/contact/234/address`` you might make a paramter called ``contactId`` then set the URL as follows: ``/api/contact/:contactId/address``.
 
-#### Query Params
-
-Each query param item is an object and could have the following properties:
-
-###### ``name`` (string)
-The key / name of the parameter that should be sent.
-
-###### ``value`` (string)
-A default value.
-
-###### ``label`` (string)
-Query params will be editable in RESTool UI. This is the label the user will see in the form.
-
-###### ``type`` (string)
-In order to render the query params form, we allow you to add the "type" field where you could define the type of the field.
-Available options:
- 
-``text`` - A simple text input (if "type" is not defined, text will be the default).
-``hidden`` - Set to true if you want the query param to be sent but not to be editable.
-``boolean`` - This will render a checkbox.
-``number`` - A simple number input box that supports positive and negative integers.
-``encode`` - If you want the value to be encoded before being sent, use this type.
-``select`` - This will render a select box with predefined options.
-
-###### ``options`` (array)
-Add the `options` field if you chose a `select` as a type. This field should contain an array of options to be displayed in the select box.
-
-For example:
-
-```
-queryParams: {
-  name: 'heroes',
-  label: 'Select your hero',
-  type: 'select',
-  options: ['Spiderman', 'Batman', { display: 'Ironman', value: '324'}]
-}
-```
-
+Each query param item is an object. See [Input fields](#input-fields)
 
 ##### `display` (object)
 RESTool is going to present the data somehow. This is the object that defines how. It contains the following properties:
@@ -201,16 +164,13 @@ The properties a "get single" request could have are `url`, `dataPath`, `request
 The list of fields you want us to send as the body of the request.
 Each one is an object and could have the following properties:
 
-#### Fields
+#### Input fields
 
-###### `name` (string)
-The name of the field to be sent.
+###### ``name`` (string)
+The name of the field/parameter to be sent.
 
-###### `type` (string | 'text', 'array')
-The type of the field (will change the UI in the form accordingly).
-
-###### `label` (string)
-A label that describes the field. Will be presented as a label in the editor form.
+###### ``label`` (string)
+A label that describes the field. This is the label the user will see in the form.
 
 ###### `dataPath` (string)
 Use this field to let us know what is the path to set to the field value. For example, if the body of the request looks like below:
@@ -228,8 +188,65 @@ Use this field to let us know what is the path to set to the field value. For ex
 
 So the field name will be `url`, the type will be `text`, and the data path will be `details.thumbnail`.
 
+For POST and PUT pages only.
+
+###### ``type`` (string)
+Use the "type" field to define the type of the field.
+Available options:
+
+* ``text`` - A simple text input (if "type" is not defined, text will be the default).
+* ``encode`` - If you want the value to be encoded before being sent, use this type. GET All page only.
+* ``number`` - A simple number input box that supports positive and negative integers.
+* ``boolean`` - This will render a checkbox.
+* ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
+* ``array`` - Enter multiple values. POST and PUT page only.
+* ``hidden`` - Set to true if you want the value to be sent but not to be editable.
+
+###### ``options`` (array)
+Add the `options` field if you chose a `select` as a type. This field should contain an array of options to be displayed in the select box.
+
+For example:
+
+```
+queryParams: {
+  name: 'heroes',
+  label: 'Select your hero',
+  type: 'select',
+  options: ['Spiderman', 'Batman', { display: 'Ironman', value: '324'}]
+}
+```
+
+###### ``optionSource`` (object)
+Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api.
+
+You can use the following properties on the `optionSource` object:
+* `url` - url to fetch data from
+* `dataPath` - let us know where we should take the data from
+* `displayPath` - property of the object to take the display value from
+* `valuePath` - property of the object to take the option value from
+
+For example:
+
+```
+fields: {
+  name: 'bestFriend',
+  label: 'Best Friend',
+  type: 'select',
+  optionSource: {
+    url: '//restool-sample-app.herokuapp.com/api/contacts',
+    dataPath: null,
+    displayPath: 'name',
+    valuePath: 'id'
+  }
+}
+```
+
 ###### `arrayType` (string | 'text', 'object')
-For 'array' field type, you should specify another property called `arrayType` so we'll how to present & send the data in the POST and PUT forms.
+For 'array' field type, you should specify another property called `arrayType` so we'll how to present & send the data in the POST and PUT pages.
+
+###### ``value`` (string)
+A default value. For GET All page only.
+
 
 ## Build
 When you're feeling your project is ready, just run `ng build -prod` to build the project. The build artifacts will be stored in the `dist/` directory.

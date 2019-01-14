@@ -1,6 +1,6 @@
 <div class="pure-g header">
-  <div class="description pure-u-1-2" *ngIf="pageData && pageData.description">
-    {{pageData.description}}
+  <div class="description pure-u-1-2">
+    {{pageData ? pageData.description : ''}}
   </div>
   <div class="create pure-u-1-2">
     <button class="pure-button button-success button-xlarge" *ngIf="pageData && pageData.methods && pageData.methods.post" (click)="onClickNew()">+ Add Item</button>
@@ -9,27 +9,10 @@
 
 <form *ngIf="queryParams.length" class="pure-form pure-form-stacked" [formGroup]="myForm" (ngSubmit)="getResults()">
   <fieldset>
-    <div class="pure-control-group" *ngFor="let queryParam of queryParams" [ngSwitch]="queryParam.type">
-      <ng-template [ngSwitchCase]="'hidden'" ngSwitchDefault>
-        <input type="hidden" [formControlName]="queryParam.name" value="{{queryParam.value || ''}}" />
-      </ng-template>
-      <ng-template [ngSwitchCase]="'boolean'">
-        <label class="pure-checkbox">
-          <input type="checkbox" [formControlName]="queryParam.name" [ngModel]="queryParam.value" /> {{queryParam.label || queryParam.name}}
-        </label>
-      </ng-template>
-      <ng-template [ngSwitchCase]="'select'">
-        <label>{{queryParam.label || queryParam.name}}</label>
-        <select [formControlName]="queryParam.name" [ngModel]="queryParam.value">
-          <option value="">-- Select --</option>
-          <option *ngFor="let option of (queryParam.options || [])" value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>
-        </select>
-      </ng-template>
-      <div *ngSwitchDefault>
-        <label for="name">{{queryParam.label || queryParam.name}}</label>
-        <input id="name" type="text" placeholder="{{queryParam.label}}" [formControlName]="queryParam.name"/>
-      </div>
-    </div>
+    <field-input [field]="field" [form]="myForm" [requestHeaders]="requestHeaders"
+                 *ngFor="let field of queryParams"
+                 class="pure-control-group">
+    </field-input>
 
     <div class="pure-controls">
       <button type="submit" class="pure-button pure-button-primary">Submit</button>
