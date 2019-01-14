@@ -50,9 +50,9 @@ export class PostComponent implements OnInit {
     this.initForm();
   }
 
-    ngOnChanges() {
-        this.initForm();
-    }
+  ngOnChanges() {
+    this.initForm();
+  }
 
   private initForm() {
     try {

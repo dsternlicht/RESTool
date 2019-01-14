@@ -10,7 +10,7 @@
                        class="pure-control-group">
           </field-input>
           <div class="center">
-            <button type="submit" class="pure-button pure-button-primary button-large">Submit</button>
+            <button type="submit" class="pure-button pure-button-primary button-large" [disabled]="myForm.invalid">Submit</button>
           </div>
           <app-loader [size]="'small'" [loading]="loading"></app-loader>
         </fieldset>

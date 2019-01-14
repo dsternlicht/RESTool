@@ -5,3 +5,7 @@
 @import 'purecss/grids-responsive';
 @import 'purecss/menus';
 @import 'purecss/tables';
+
+.pure-control-group label.required {
+  font-weight: bolder;
+}

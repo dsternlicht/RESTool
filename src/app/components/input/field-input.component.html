@@ -1,4 +1,4 @@
-<label>
+<label [ngClass]="{'required': field.required}">
   {{labelVisible ? label : ''}}
 </label>
 
@@ -7,22 +7,22 @@
     <input type="hidden" placeholder="{{field.label}}" [formControlName]="fieldName"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
-    <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+    <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'integer'">
-    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'number'">
-    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" step="any"/>
+    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" step="any" [required]="field.required"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'email'">
-    <input type="email" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+    <input type="email" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'array'">
-    <textarea placeholder="{{field.label}}" [formControlName]="fieldName"></textarea>
+    <textarea placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"></textarea>
   </ng-template>
   <ng-template [ngSwitchCase]="'select'">
-    <select [formControlName]="fieldName">
+    <select [formControlName]="fieldName" [required]="field.required">
       <option value="">-- Select --</option>
       <option *ngFor="let option of combinedOptions"
               value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>

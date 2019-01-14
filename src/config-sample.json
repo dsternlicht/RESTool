@@ -64,7 +64,8 @@
             {
               "name": "name",
               "label": "Name",
-              "type": "text"
+              "type": "text",
+              "required": true
             },
             {
               "name": "email",
@@ -113,7 +114,8 @@
             {
               "name": "name",
               "label": "Name",
-              "type": "text"
+              "type": "text",
+              "required": true
             },
             {
               "name": "email",
