@@ -71,7 +71,7 @@ export class PostComponent implements OnInit {
     }
     for (const field of fields) {
       const fieldName = field.dataPath ? `${field.dataPath}.${field.name}` : field.name;
-      let value = field.default || '';
+      let value = field.default === undefined ? '' : field.default;
       if (field.type === 'array') {
         value = JSON.stringify(value || []);
       }
