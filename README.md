@@ -245,8 +245,8 @@ fields: {
 ###### `arrayType` (string | 'text', 'object')
 For 'array' field type, you should specify another property called `arrayType` so we'll how to present & send the data in the POST and PUT pages.
 
-###### ``value`` (string)
-A default value. For GET All page only.
+###### ``default`` (string)
+A default value. For GET All query params and post pages only.
 
 
 ## Build

@@ -129,7 +129,11 @@ export class GetComponent {
       return obj;
     }
     for (const param of this.queryParams) {
-      obj[param.name] = new FormControl(param.value || '');
+      const value =
+        param.default !== undefined ? param.default :
+          param.value !== undefined ? param.value :
+            '';
+      obj[param.name] = new FormControl(value);
     }
     return obj;
   }
