@@ -196,7 +196,8 @@ Available options:
 
 * ``text`` - A simple text input (if "type" is not defined, text will be the default).
 * ``encode`` - If you want the value to be encoded before being sent, use this type. GET All page only.
-* ``number`` - A simple number input box that supports positive and negative integers.
+* ``integer`` - A text box for positive and negative integers.
+* ``number`` - A text box for positive and negative floating point numbers.
 * ``boolean`` - This will render a checkbox.
 * ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
 * ``array`` - Enter multiple values. POST and PUT page only.

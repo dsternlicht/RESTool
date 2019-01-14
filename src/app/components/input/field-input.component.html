@@ -9,8 +9,11 @@
   <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
     <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName"/>
   </ng-template>
-  <ng-template [ngSwitchCase]="'number'">
+  <ng-template [ngSwitchCase]="'integer'">
     <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName"/>
+  </ng-template>
+  <ng-template [ngSwitchCase]="'number'">
+    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" step="any"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'email'">
     <input type="email" placeholder="{{field.label}}" [formControlName]="fieldName"/>
