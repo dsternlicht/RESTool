@@ -127,7 +127,7 @@ export class PutComponent implements OnInit  {
     for (const param in this.myForm.controls) {
       const paramArr = param.split('.');
       const dataPath = paramArr.slice(0, -1).join('.');
-      let value = this.myForm.controls[param].value || '';
+      let value = this.myForm.controls[param].value;
       if (typeof value === 'string' && value.indexOf('[') === 0 && value.indexOf(']') === value.length - 1) {
         value = JSON.parse(value);
       }
