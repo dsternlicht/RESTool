@@ -117,9 +117,13 @@ export class PostComponent implements OnInit {
     for (const param in this.myForm.controls) {
       const paramArr = param.split('.');
       const dataPath = paramArr.slice(0, -1).join('.');
+      var value = this.myForm.controls[param].value;
+      if (typeof value === 'string' && value.length ===0) {
+        value = null;
+      }
       fields.push({
         name: paramArr[paramArr.length - 1],
-        value: this.myForm.controls[param].value,
+        value: value,
         dataPath
       });
     }
