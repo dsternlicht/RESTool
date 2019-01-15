@@ -4,6 +4,7 @@ import {DataPathUtils} from '../../../utils/dataPath.utils';
 import { ToastrService } from 'ngx-toastr';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { RequestHeaders } from '../../../services/config.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'post-dialog',
@@ -94,7 +95,9 @@ export class PostComponent implements OnInit {
   private request(data = {}) {
     this.loading = true;
 
-    console.log('Making post request with data', data);
+    if (environment.logApiData) {
+      console.log('Making post request with data', data);
+    }
 
     let actualMethod = this.requestsService.post.bind(this.requestsService);
     const actualMethodType = this.methodData.actualMethod;

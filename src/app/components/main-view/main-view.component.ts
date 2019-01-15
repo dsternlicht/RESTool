@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import {of} from 'rxjs';
 import {GetComponent} from './get/get.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-main-view',
@@ -79,7 +80,9 @@ export class MainViewComponent implements OnInit {
     const dataPath = getMethod.dataPath;
     getUrl = this.urlUtils.getParsedUrl(getUrl, defaultData, dataPath);
 
-    console.log('Get single url', getUrl);
+    if (environment.logApiData) {
+      console.log('Get single url', getUrl);
+    }
 
     let actualMethod = this.requestsService.get.bind(this.requestsService);
     const actualMethodType = this.pageData.methods.getSingle.actualMethod;
@@ -95,7 +98,9 @@ export class MainViewComponent implements OnInit {
     switch (this.popupState) {
       case 'put':
         this.getRowData(e.data || {}).subscribe((res) => {
-          console.log('Single item data', res);
+          if (environment.logApiData) {
+            console.log('Single item data', res);
+          }
           this.selectedRow = res;
         }, (e) => {
           console.error(e);

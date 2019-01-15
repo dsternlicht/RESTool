@@ -2,6 +2,7 @@ import {Component, Input, Inject, Output, EventEmitter } from '@angular/core';
 import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RequestHeaders } from '../../../services/config.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-get',
@@ -83,7 +84,9 @@ export class GetComponent {
         this.loading = false;
         this.data = this.dataPathUtils.extractDataFromResponse(data, this.activeGetRequest.dataPath);
 
-        console.log('Got data after dataPath: ', this.data);
+        if (environment.logApiData) {
+          console.log('Got data after dataPath: ', this.data);
+        }
       }, error => {
         this.loading = false;
         this.toastrService.error(error, 'Error');
@@ -164,7 +167,9 @@ export class GetComponent {
     const dataPath = deleteMethod.dataPath;
     deleteUrl = this.urlUtils.getParsedUrl(deleteUrl, row, dataPath);
 
-    console.log('Delete url', deleteUrl);
+    if (environment.logApiData) {
+      console.log('Delete url', deleteUrl);
+    }
 
     let actualMethod = this.requestsService.delete.bind(this.requestsService);
     const actualMethodType = this.pageData.methods.delete.actualMethod;
