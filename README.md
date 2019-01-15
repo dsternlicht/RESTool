@@ -251,6 +251,9 @@ A default value. For GET All query params and POST pages only.
 ###### ``required`` (boolean)
 If true, a field will be marked as required on PUT and POST pages.
 
+###### ``readonly`` (boolean)
+If true, a field will be displayed, but not editable. It's data will still be added to the PUT request.
+
 
 ## Build
 When you're feeling your project is ready, just run `ng build -prod` to build the project. The build artifacts will be stored in the `dist/` directory.

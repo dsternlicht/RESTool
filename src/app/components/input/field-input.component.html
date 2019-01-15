@@ -7,19 +7,19 @@
     <input type="hidden" placeholder="{{field.label}}" [formControlName]="fieldName"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
-    <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"/>
+    <input type="text" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'integer'">
-    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"/>
+    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'number'">
-    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" step="any" [required]="field.required"/>
+    <input type="number" placeholder="{{field.label}}" [formControlName]="fieldName" step="any" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'email'">
-    <input type="email" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"/>
+    <input type="email" placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>
   <ng-template [ngSwitchCase]="'array'">
-    <textarea placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required"></textarea>
+    <textarea placeholder="{{field.label}}" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"></textarea>
   </ng-template>
   <ng-template [ngSwitchCase]="'select'">
     <select [formControlName]="fieldName" [required]="field.required">
@@ -30,7 +30,7 @@
   </ng-template>
   <ng-template [ngSwitchCase]="'boolean'">
     <label class="pure-checkbox">
-      <input type="checkbox" [formControlName]="fieldName"/>
+      <input type="checkbox" [formControlName]="fieldName" [readOnly]="field.readonly"/>
       {{label}}
     </label>
   </ng-template>
