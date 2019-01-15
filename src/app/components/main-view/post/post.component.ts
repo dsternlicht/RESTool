@@ -51,9 +51,9 @@ export class PostComponent implements OnInit {
     this.initForm();
   }
 
-    ngOnChanges() {
-        this.initForm();
-    }
+  ngOnChanges() {
+    this.initForm();
+  }
 
   private initForm() {
     try {
@@ -72,7 +72,7 @@ export class PostComponent implements OnInit {
     }
     for (const field of fields) {
       const fieldName = field.dataPath ? `${field.dataPath}.${field.name}` : field.name;
-      let value = field.default || '';
+      let value = field.default === undefined ? '' : field.default;
       if (field.type === 'array') {
         value = JSON.stringify(value || []);
       }
@@ -120,9 +120,13 @@ export class PostComponent implements OnInit {
     for (const param in this.myForm.controls) {
       const paramArr = param.split('.');
       const dataPath = paramArr.slice(0, -1).join('.');
+      var value = this.myForm.controls[param].value;
+      if (typeof value === 'string' && value.length ===0) {
+        value = null;
+      }
       fields.push({
         name: paramArr[paramArr.length - 1],
-        value: this.myForm.controls[param].value,
+        value: value,
         dataPath
       });
     }

@@ -196,7 +196,8 @@ Available options:
 
 * ``text`` - A simple text input (if "type" is not defined, text will be the default).
 * ``encode`` - If you want the value to be encoded before being sent, use this type. GET All page only.
-* ``number`` - A simple number input box that supports positive and negative integers.
+* ``integer`` - A text box for positive and negative integers.
+* ``number`` - A text box for positive and negative floating point numbers.
 * ``boolean`` - This will render a checkbox.
 * ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
 * ``array`` - Enter multiple values. POST and PUT page only.
@@ -244,8 +245,14 @@ fields: {
 ###### `arrayType` (string | 'text', 'object')
 For 'array' field type, you should specify another property called `arrayType` so we'll how to present & send the data in the POST and PUT pages.
 
-###### ``value`` (string)
-A default value. For GET All page only.
+###### ``default`` (string)
+A default value. For GET All query params and POST pages only.
+
+###### ``required`` (boolean)
+If true, a field will be marked as required on PUT and POST pages.
+
+###### ``readonly`` (boolean)
+If true, a field will be displayed, but not editable. It's data will still be added to the PUT request.
 
 
 ## Build
