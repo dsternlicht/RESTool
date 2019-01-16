@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { RequestsService } from '../../services/requests.service';
 import { OptionSource, RequestHeaders } from '../../services/config.model';
 import { ToastrService } from 'ngx-toastr';
@@ -41,19 +41,21 @@ export class FieldInputComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.workingRowData$.next(this.workingRowData);
 
-    if (this.field.type === 'select') {
-      this.combinedOptions = this.field.options || [];
-      if (this.field.optionSource) {
-        const url = this.field.optionSource.url;
-        if (this.urlUtils.urlIsClearOfParams(url)) {
-          this.fetchOptionsFromSource(url);
-        } else {
-          this.workingRowData$.pipe(
-            map(rowData => this.urlUtils.getParsedUrl(url, rowData, this.methodDataPath)),
-            distinctUntilChanged())
-            .subscribe(resolvedUrl => this.fetchOptionsFromSource(resolvedUrl));
+    switch (this.field.type) {
+      case 'select':
+        this.combinedOptions = this.field.options || [];
+        if (this.field.optionSource) {
+          const url = this.field.optionSource.url;
+          if (this.urlUtils.urlIsClearOfParams(url)) {
+            this.fetchOptionsFromSource(url);
+          } else {
+            this.workingRowData$.pipe(
+              map(rowData => this.urlUtils.getParsedUrl(url, rowData, this.methodDataPath)),
+              distinctUntilChanged())
+              .subscribe(resolvedUrl => this.fetchOptionsFromSource(resolvedUrl));
+          }
         }
-      }
+        break;
     }
   }
 
