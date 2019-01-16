@@ -84,6 +84,15 @@ export class GetComponent {
         this.loading = false;
         this.data = this.dataPathUtils.extractDataFromResponse(data, this.activeGetRequest.dataPath);
 
+        const sortBy = this.activeGetRequest.display.sortBy;
+        if (sortBy) {
+          this.data.sort((a, b) => {
+            const aProperty = this.dataPathUtils.extractDataFromResponse(a, null, sortBy);
+            const bProperty = this.dataPathUtils.extractDataFromResponse(b, null, sortBy);
+            return aProperty < bProperty ? -1 : aProperty > bProperty ? 1 : 0;
+          })
+        }
+
         if (environment.logApiData) {
           console.log('Got data after dataPath: ', this.data);
         }

@@ -48,7 +48,8 @@
                 "label": "Phone #",
                 "dataPath": "phone"
               }
-            ]
+            ],
+            "sortBy": "name"
           }
         },
         "getSingle": {
