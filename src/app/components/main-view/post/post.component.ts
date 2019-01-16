@@ -42,6 +42,8 @@ export class PostComponent implements OnInit {
 
   methodData: any = {};
 
+  workingRowData: any;
+
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
               private _fb: FormBuilder,
@@ -62,7 +64,10 @@ export class PostComponent implements OnInit {
     } catch (e) {
       this.fields = [];
     }
+
     this.myForm = this._fb.group(this.buildFormFields(this.fields));
+    this.myForm.valueChanges.subscribe(() => this.updateWorkingRowData());
+    this.updateWorkingRowData();
   }
 
   private buildFormFields(fields = []) {
@@ -81,11 +86,14 @@ export class PostComponent implements OnInit {
     return obj;
   }
 
+  private updateWorkingRowData() {
+    const fields = this.buildFields();
+    this.workingRowData = this.dataPathUtils.extractModelFromFields(fields);
+  }
+
   public submit(e: Event) {
     e.preventDefault();
-    const fields = this.buildFields();
-    const data = this.dataPathUtils.extractModelFromFields(fields);
-    this.request(data);
+    this.request(this.workingRowData);
   }
 
   get requestHeaders(): RequestHeaders {

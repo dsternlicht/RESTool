@@ -1,8 +1,11 @@
-import { Component, Inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RequestsService } from '../../services/requests.service';
 import { OptionSource, RequestHeaders } from '../../services/config.model';
 import { ToastrService } from 'ngx-toastr';
+import { UrlUtils } from '../../utils/url.utils';
+import { BehaviorSubject } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 export interface SelectOption {
   display: string;
@@ -15,26 +18,48 @@ export interface SelectOption {
   templateUrl: './field-input.component.html',
   styleUrls: ['./field-input.component.scss']
 })
-export class FieldInputComponent implements OnInit {
+export class FieldInputComponent implements OnInit, OnChanges {
   @Input() field: any;
 
   @Input() form: FormGroup;
 
   @Input() requestHeaders?: RequestHeaders;
 
+  @Input() workingRowData: any;
+  private workingRowData$ = new BehaviorSubject<any>({});
+
+  @Input() methodDataPath: any;
+
   combinedOptions: any[] = [];
 
   constructor(@Inject('RequestsService') private readonly requestsService: RequestsService,
               @Inject('DataPathUtils') private readonly dataPathUtils,
+              @Inject('UrlUtils') private readonly urlUtils: UrlUtils,
               private readonly toastrService: ToastrService) {
   }
 
   ngOnInit(): void {
+    this.workingRowData$.next(this.workingRowData);
+
     if (this.field.type === 'select') {
       this.combinedOptions = this.field.options || [];
       if (this.field.optionSource) {
-        this.fetchOptionsFromSource(this.field.optionSource);
+        const url = this.field.optionSource.url;
+        if (this.urlUtils.urlIsClearOfParams(url)) {
+          this.fetchOptionsFromSource(url);
+        } else {
+          this.workingRowData$.pipe(
+            map(rowData => this.urlUtils.getParsedUrl(url, rowData, this.methodDataPath)),
+            distinctUntilChanged())
+            .subscribe(resolvedUrl => this.fetchOptionsFromSource(resolvedUrl));
+        }
       }
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.hasOwnProperty('workingRowData')) {
+      this.workingRowData$.next(changes.workingRowData.currentValue);
     }
   }
 
@@ -70,10 +95,11 @@ export class FieldInputComponent implements OnInit {
     return result;
   }
 
-  private fetchOptionsFromSource(optionSource: OptionSource) {
+  private fetchOptionsFromSource(resolvedUrl: string) {
+    const optionSource: OptionSource = this.field.optionSource;
     const requestHeaders = optionSource.requestHeaders || this.requestHeaders || {};
 
-    this.requestsService.get(optionSource.url, requestHeaders).subscribe(result => {
+    this.requestsService.get(resolvedUrl, requestHeaders).subscribe(result => {
       const data = this.dataPathUtils.extractDataFromResponse(result, optionSource.dataPath);
       const rows: SelectOption[] = data.map(row => ({
         display: this.dataPathUtils.extractDataFromResponse(row, null, optionSource.displayPath),
