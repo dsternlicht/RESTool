@@ -43,6 +43,8 @@ export class PutComponent implements OnInit  {
 
   methodData: any = {};
 
+  workingRowData: any;
+
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
               @Inject('UrlUtils') private urlUtils,
@@ -65,6 +67,9 @@ export class PutComponent implements OnInit  {
       this.fields = [];
     }
     this.myForm = this._fb.group(this.buildFormFields());
+
+    this.myForm.valueChanges.subscribe(() => this.updateWorkingRowData());
+    this.updateWorkingRowData();
   }
 
   private buildFormFields() {
@@ -87,11 +92,14 @@ export class PutComponent implements OnInit  {
     return obj;
   }
 
+  private updateWorkingRowData() {
+    const fields = this.buildFields();
+    this.workingRowData = this.dataPathUtils.extractModelFromFields(fields);
+  }
+
   public submit(e: Event) {
     e.preventDefault();
-    const fields = this.buildFields();
-    const data = this.dataPathUtils.extractModelFromFields(fields);
-    this.request(data);
+    this.request(this.workingRowData);
   }
 
   get requestHeaders(): RequestHeaders {
