@@ -245,7 +245,7 @@ fields: {
 }
 ```
 
-###### `arrayType` (string | 'text', 'object')
+###### `arrayType` (string)
 For 'array' field type, you should specify another property called `arrayType` so we'll how to present & send the data in the POST and PUT pages.
 
 ###### ``default`` (string)

@@ -78,15 +78,8 @@ export class PutComponent implements OnInit  {
       return obj;
     }
     for (const field of this.fields) {
-      let value = this.dataPathUtils.getFieldValueInPath(field.name, field.dataPath, this.rowData)
+      const value = this.dataPathUtils.getFieldValueInPath(field.name, field.dataPath, this.rowData)
       const fieldName = field.dataPath ? `${field.dataPath}.${field.name}` : field.name;
-      if (field.type === 'array') {
-        // value = value.map((i) => field.arrayType === 'object' ? JSON.stringify(i) : i);
-        if (!value) {
-          value = [];
-        }
-        value = JSON.stringify(value, null, '\t');
-      }
       obj[fieldName] = new FormControl(value === undefined ? '' : value);
     }
     return obj;
@@ -139,12 +132,8 @@ export class PutComponent implements OnInit  {
       const paramArr = param.split('.');
       const dataPath = paramArr.slice(0, -1).join('.');
       let value = this.myForm.controls[param].value;
-      if (typeof value === 'string') {
-        if (value.length === 0) {
-          value = null;
-        } else if (value.indexOf('[') === 0 && value.indexOf(']') === value.length - 1) {
-          value = JSON.parse(value);
-        }
+      if (typeof value === 'string' && value.length === 0) {
+        value = null;
       }
       fields.push({
         name: paramArr[paramArr.length - 1],

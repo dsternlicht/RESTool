@@ -1,0 +1,17 @@
+@import "../../../styles/purecss";
+
+.array-item {
+  .pure-button-group {
+    padding-left: 6px;
+    display: inline-block;
+    vertical-align: middle;
+
+    .hide {
+      display: none;
+    }
+  }
+
+  & div {
+    padding: 1px 0;
+  }
+}
