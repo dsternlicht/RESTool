@@ -125,6 +125,9 @@ How would you like to present the data (at the moment we only support table view
 ###### `fields` (array)
 The list of fields you want to present in your main view. Each one is an object and could have the following properties:
 
+###### `sortBy` (string)
+The path to a property in the results to sort the list by.
+
 #### Display fields
 
 ###### `name` (string)
