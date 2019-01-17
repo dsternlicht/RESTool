@@ -80,6 +80,13 @@ export class FieldInputComponent implements OnInit, OnChanges {
     return this.field.label || this.field.name;
   }
 
+  get placeholder(): string {
+    if (this.field.readonly) {
+      return '';
+    }
+    return this.label;
+  }
+
   public formatSelectOption(option: any): SelectOption {
     let result: any = {
       display: '',
