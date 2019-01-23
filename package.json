@@ -30,6 +30,7 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/store": "^7.0.0",
     "core-js": "^2.6.2",
+    "natural-orderby": "^2.0.0",
     "ngx-toastr": "^9.1.1",
     "rxjs": "6.3.3",
     "rxjs-compat": "^6.3.3",
