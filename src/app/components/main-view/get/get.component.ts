@@ -87,9 +87,6 @@ export class GetComponent {
 
         let sortBy = this.activeGetRequest.display.sortBy;
         if (sortBy) {
-          if (typeof sortBy === 'string') {
-            sortBy = [sortBy];
-          }
           this.data = orderBy(this.data, sortBy);
         }
 

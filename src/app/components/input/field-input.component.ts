@@ -113,9 +113,6 @@ export class FieldInputComponent implements OnInit, OnChanges {
       let data = this.dataPathUtils.extractDataFromResponse(result, optionSource.dataPath);
       let sortBy = optionSource.sortBy;
       if (sortBy) {
-        if (typeof sortBy === 'string') {
-          sortBy = [sortBy];
-        }
         data = orderBy(data, sortBy);
       }
       const rows: SelectOption[] = data.map(row => ({
