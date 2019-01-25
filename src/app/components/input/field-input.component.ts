@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UrlUtils } from '../../utils/url.utils';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+import { orderBy } from 'natural-orderby';
 
 export interface SelectOption {
   display: string;
@@ -109,7 +110,11 @@ export class FieldInputComponent implements OnInit, OnChanges {
     const requestHeaders = optionSource.requestHeaders || this.requestHeaders || {};
 
     this.requestsService.get(resolvedUrl, requestHeaders).subscribe(result => {
-      const data = this.dataPathUtils.extractDataFromResponse(result, optionSource.dataPath);
+      let data = this.dataPathUtils.extractDataFromResponse(result, optionSource.dataPath);
+      let sortBy = optionSource.sortBy;
+      if (sortBy) {
+        data = orderBy(data, sortBy);
+      }
       const rows: SelectOption[] = data.map(row => ({
         display: this.dataPathUtils.extractDataFromResponse(row, null, optionSource.displayPath),
         value: this.dataPathUtils.extractDataFromResponse(row, null, optionSource.valuePath)

@@ -125,8 +125,8 @@ How would you like to present the data (at the moment we only support table view
 ###### `fields` (array)
 The list of fields you want to present in your main view. Each one is an object and could have the following properties:
 
-###### `sortBy` (string)
-The path to a property in the results to sort the list by.
+###### `sortBy` (string | array)
+One or more paths to properties in the result object to sort the list by.
 
 #### Display fields
 
@@ -228,6 +228,7 @@ You can use the following properties on the `optionSource` object:
 * `dataPath` - let us know where we should take the data from
 * `displayPath` - property of the object to take the display value from
 * `valuePath` - property of the object to take the option value from
+* `sortBy` - one or more properties to sort the objects by 
 
 For example:
 
@@ -240,7 +241,8 @@ fields: {
     url: '//restool-sample-app.herokuapp.com/api/contacts',
     dataPath: null,
     displayPath: 'name',
-    valuePath: 'id'
+    valuePath: 'id',
+    sortBy: ['name']
   }
 }
 ```

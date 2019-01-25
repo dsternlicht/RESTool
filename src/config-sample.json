@@ -49,7 +49,7 @@
                 "dataPath": "phone"
               }
             ],
-            "sortBy": "name"
+            "sortBy": ["name"]
           }
         },
         "getSingle": {
