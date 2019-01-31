@@ -67,16 +67,17 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.json",
-            "karmaConfig": "./karma.conf.js",
-            "scripts": [],
+            "karmaConfig": "src/karma.conf.js",
             "styles": [
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css"
             ],
+            "scripts": [],
             "assets": [
-              "src/assets",
               "src/favicon.ico",
+              "src/assets",
               "src/config.json"
             ]
           }
