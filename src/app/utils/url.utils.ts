@@ -6,11 +6,8 @@ export class UrlUtils {
   constructor(@Inject('DataPathUtils') private dataPathUtils) {
   }
 
-  public urlIsClearOfParams(url) {
-    if (url.indexOf(':') >= 0) {
-      return false;
-    }
-    return url;
+  public urlIsClearOfParams(url): boolean {
+    return this.extractIdFieldName(url) === null;
   }
 
   public extractIdFieldName(url) {
