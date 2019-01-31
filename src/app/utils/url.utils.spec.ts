@@ -18,6 +18,8 @@ describe('UrlUtils', () => {
       '/dir/search:potato?vegetable=tomato',
       '/dir/search?vegetable=:potato&color=brown',
       '/dir/search?vegetable=:potato#color=brown',
+      'http://mywebsite.foo:1234/dir/:potato?color=brown',
+      '//mywebsite.foo:1234/vegetable=:potato',
     ]) {
       describe(input, () => {
         it(`extractIdFieldName() returns 'potato'`, () => {
@@ -38,6 +40,7 @@ describe('UrlUtils', () => {
       '//mywebsite.foo/potato',
       '/rootdir/potato',
       'dir/potato',
+      'http://mywebsite.foo:1234/potato',
     ]) {
       describe(input, () => {
         it (`extractIdFieldName() returns null`, () => {
@@ -49,5 +52,11 @@ describe('UrlUtils', () => {
         });
       });
     }
+  });
+
+  describe('extractIdFieldName()', () => {
+    it('returns _id for http://localhost:3000/admin/profiles/:_id', () => {
+      expect(urlUtils.extractIdFieldName('http://localhost:3000/admin/profiles/:_id')).toBe('_id');
+    });
   });
 });
