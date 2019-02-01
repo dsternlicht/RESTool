@@ -6,15 +6,12 @@ export class UrlUtils {
   constructor(@Inject('DataPathUtils') private dataPathUtils) {
   }
 
-  public urlIsClearOfParams(url) {
-    if (url.indexOf(':') >= 0) {
-      return false;
-    }
-    return url;
+  public urlIsClearOfParams(url): boolean {
+    return this.extractIdFieldName(url) === null;
   }
 
   public extractIdFieldName(url) {
-    const matcher = /:([a-zA-Z0-9_-]+)[\/?#&]?.*/;
+    const matcher = /(?:\/\/[^\/]+)?:([a-zA-Z_-][a-zA-Z0-9_-]*)[\/?#&]?.*/;
     const extractArr = url.match(matcher);
     if (extractArr && extractArr.length > 1) {
       return extractArr[1];
