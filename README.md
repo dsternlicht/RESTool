@@ -133,8 +133,10 @@ One or more paths to properties in the result object to sort the list by.
 ###### `name` (string)
 The name of the field that contains the value in the results.
 
-###### `type` (string | 'text', 'url', 'image')
+###### `type` (string | 'text', 'url', 'image', 'colorbox')
 The type of the returning value.
+
+A `colorbox` type will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string.
 
 ###### `label` (string)
 A label that describes the field. Will be presented as table headers in RESTool.
@@ -202,6 +204,8 @@ Available options:
 * ``integer`` - A text box for positive and negative integers.
 * ``number`` - A text box for positive and negative floating point numbers.
 * ``boolean`` - This will render a checkbox.
+* ``email`` - A text box for [an email address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email). Falls back to a simple text input on unsupported browsers.
+* ``color`` - A [color selector](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color) yielding #RRGGBB hex value strings. Falls back to a simple text input on unsupported browsers.
 * ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
 * ``array`` - Enter multiple values. POST and PUT page only.
 * ``hidden`` - Set to true if you want the value to be sent but not to be editable.

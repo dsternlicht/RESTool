@@ -46,6 +46,13 @@
           <ng-template [ngSwitchCase]="'image'">
             <div class="thumb" [ngStyle]="{backgroundImage: 'url(' + dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name) + ')'}"></div>
           </ng-template>
+          <ng-template [ngSwitchCase]="'colorbox'">
+            <div class="colorbox"
+                [style.backgroundColor]="dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)"
+                [style.color]="xorHexColor(dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name))">
+                {{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}
+            </div>
+          </ng-template>
         </div>
       </td>
       <td *ngIf="showActions()" [ngStyle]="{textAlign: 'center'}">
