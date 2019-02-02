@@ -194,5 +194,9 @@ export class GetComponent {
       this.toastrService.error(error, 'Error');
     });
   }
+  
+  protected xorHexColor(hexColor) {
+    return '#' + (0xffffff ^ parseInt(hexColor.substring(1), 16)).toString(16)
+  }
 
 }
