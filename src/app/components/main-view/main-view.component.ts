@@ -90,7 +90,12 @@ export class MainViewComponent implements OnInit {
       actualMethod = this.requestsService[actualMethodType].bind(this.requestsService);
     }
 
-    return actualMethod(getUrl, getMethod.requestHeaders);
+    let requestHeaders = getMethod.requestHeaders;
+    if (!requestHeaders) {
+      requestHeaders = this.pageData.requestHeaders;
+    }
+
+    return actualMethod(getUrl, requestHeaders);
   }
 
   public showPopup(e: any = {}) {
