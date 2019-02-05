@@ -15,13 +15,11 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.json",
-            "assets": [
-              "src/assets",
-              "src/favicon.ico",
-              "src/config.json"
-            ],
+            "assets": ["src/assets", "src/favicon.ico", "src/config.json"],
             "styles": [
               "src/styles.scss",
+              "node_modules/purecss/build/pure-min.css",
+              "node_modules/purecss/build/grids-responsive-min.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
@@ -72,14 +70,12 @@
             "karmaConfig": "src/karma.conf.js",
             "styles": [
               "src/styles.scss",
+              "node_modules/purecss/build/grids-responsive-min.css",
+              "node_modules/purecss/build/pure-min.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/config.json"
-            ]
+            "assets": ["src/favicon.ico", "src/assets", "src/config.json"]
           }
         },
         "lint": {

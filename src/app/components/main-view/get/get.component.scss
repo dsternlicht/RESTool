@@ -1,9 +1,6 @@
 @import "../../../../styles/vars";
-@import "../../../../styles/purecss/tables";
-@import "../../../../styles/purecss/forms";
-@import "../../../../styles/purecss/buttons";
-@import "../../../../styles/purecss/grids";
-@import "../../../../styles/purecss/grids-responsive";
+@import "../../../../../node_modules/purecss/build/pure-min.css";
+@import "../../../../../node_modules/purecss/build/grids-responsive-min.css";
 
 .header {
   margin: 0 0 20px;
@@ -75,4 +72,18 @@
   width: 80px;
   height: 20px;
   padding: 0 1em 0;
+}
+
+.pure-button.button-xlarge {
+  font-size: 125%;
+}
+
+.pure-button.button-success {
+  background: #1cb841;
+}
+
+.pure-button.button-success, .pure-button.button-error, .pure-button.button-warning, .pure-button.button-secondary {
+  color: white;
+  border-radius: 4px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }

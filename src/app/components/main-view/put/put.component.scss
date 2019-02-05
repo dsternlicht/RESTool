@@ -1,6 +1,3 @@
 @import "../../../../styles/vars";
-@import "../../../../styles/purecss/forms";
-@import "../../../../styles/purecss/buttons";
-@import "../../../../styles/purecss/grids";
-@import "../../../../styles/purecss/grids-responsive";
-
+@import "../../../../../node_modules/purecss/build/pure-min.css";
+@import "../../../../../node_modules/purecss/build/grids-responsive-min.css";
