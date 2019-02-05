@@ -1,5 +1,5 @@
 <main>
   <app-get [pageData]="pageData" (stateChanged)="showPopup($event)"></app-get>
-  <put-dialog [visible]="popupState === 'put'" (stateChanged)="showPopup($event)" [(rowData)]="selectedRow" [pageData]="pageData"></put-dialog>
+  <put-dialog [visible]="popupState === 'put' && !loading" (stateChanged)="showPopup($event)" [(rowData)]="selectedRow" [pageData]="pageData"></put-dialog>
   <post-dialog [visible]="popupState === 'post'" (stateChanged)="showPopup($event)" [pageData]="pageData"></post-dialog>
 </main>

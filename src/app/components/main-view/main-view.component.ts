@@ -21,6 +21,8 @@ export class MainViewComponent implements OnInit {
 
   selectedRow: any = {};
 
+  loading: boolean = false;
+
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('ConfigurationService') private configurationService,
               @Inject('DataPathUtils') private dataPathUtils,
@@ -102,15 +104,18 @@ export class MainViewComponent implements OnInit {
     this.popupState = e.state || null;
     switch (this.popupState) {
       case 'put':
+        this.loading = true;
         this.getRowData(e.data || {}).subscribe((res) => {
           if (environment.logApiData) {
             console.log('Single item data', res);
           }
           this.selectedRow = res;
+          this.loading = false;
         }, (e) => {
           console.error(e);
           this.toastrService.error(e, 'Error');
           this.selectedRow = e.data || {};
+          this.loading = false;
         });
         break;
       case 'afterChange':
