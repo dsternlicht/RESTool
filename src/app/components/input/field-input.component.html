@@ -24,8 +24,7 @@
   <ng-template [ngSwitchCase]="'select'">
     <select [formControlName]="fieldName" [required]="field.required">
       <option value="">-- Select --</option>
-      <option *ngFor="let option of combinedOptions"
-              value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>
+      <option *ngFor="let option of combinedOptions" value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>
     </select>
   </ng-template>
   <ng-template [ngSwitchCase]="'boolean'">
@@ -35,8 +34,6 @@
     </label>
   </ng-template>
   <ng-template [ngSwitchCase]="'array'">
-    <array-input [field]="field" [form]="form" [requestHeaders]="requestHeaders"
-                 [workingRowData]="workingRowData" [methodDataPath]="methodDataPath">
-    </array-input>
+    <array-input [field]="field" [form]="form" [requestHeaders]="requestHeaders" [workingRowData]="workingRowData" [methodDataPath]="methodDataPath"></array-input>
   </ng-template>
 </span>

@@ -1,8 +1,6 @@
 <form [formGroup]="arrayForm" class="pure-form">
   <div *ngFor="let itemField of arrayFields" class="array-item">
-    <field-input [field]="itemField" [form]="arrayForm" [requestHeaders]="requestHeaders"
-                 [workingRowData]="workingRowData" [methodDataPath]="methodDataPath">
-    </field-input>
+    <field-input [field]="itemField" [form]="arrayForm" [requestHeaders]="requestHeaders" [workingRowData]="workingRowData" [methodDataPath]="methodDataPath"></field-input>
     <div class="pure-button-group">
       <button class="pure-button" [ngClass]="{hide: !canDeleteItem(itemField)}" (click)="deleteItem(itemField)">
         <i class="fa fa-times" aria-hidden="true"></i>
