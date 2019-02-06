@@ -32,6 +32,7 @@
     "core-js": "^2.6.2",
     "natural-orderby": "^2.0.0",
     "ngx-toastr": "^9.1.1",
+    "purecss": "^1.0.0",
     "rxjs": "6.3.3",
     "rxjs-compat": "^6.3.3",
     "ts-helpers": "^1.1.1",

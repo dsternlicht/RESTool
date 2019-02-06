@@ -4,7 +4,7 @@ nav {
   a {
     display: block;
     color: #fff;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
     text-decoration: none;
     padding: 10px 20px;
     margin: 0;
@@ -17,7 +17,15 @@ nav {
     }
 
     &.active {
-      background: #57578F;
+      background: #57578f;
     }
   }
+}
+
+.pure-button.button-xlarge {
+  font-size: 125%;
+}
+
+.pure-button.button-success {
+  background: #1cb841;
 }

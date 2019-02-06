@@ -1,5 +1,34 @@
-@import "../../../styles/purecss";
+@import "../../../../node_modules/purecss/build/pure-min.css";
 
 input[type="color"] {
-	height: 40px;
+  height: 40px;
+}
+
+.pure-form-aligned .pure-control-group {
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+}
+
+input[type="text"],
+.pure-form input[type="password"],
+.pure-form input[type="email"],
+.pure-form input[type="url"],
+.pure-form input[type="date"],
+.pure-form input[type="month"],
+.pure-form input[type="time"],
+.pure-form input[type="datetime"],
+.pure-form input[type="datetime-local"],
+.pure-form input[type="week"],
+.pure-form input[type="number"],
+.pure-form input[type="search"],
+.pure-form input[type="tel"],
+.pure-form input[type="color"] {
+  padding: 9px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  width: 270px;
 }
