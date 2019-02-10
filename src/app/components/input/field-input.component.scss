@@ -10,6 +10,12 @@ input[type="color"] {
   align-items: center;
 }
 
+label.pure-checkbox.ng-star-inserted {
+  text-align: left;
+  width: auto;
+  padding: 1px;
+}
+
 input[type="text"],
 .pure-form input[type="password"],
 .pure-form input[type="email"],
