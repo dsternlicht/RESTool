@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, Inject, Output, EventEmitter} from '@angular/core';
 import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import {DataPathUtils} from '../../../utils/dataPath.utils';
+import {MultipartFormUtils} from '../../../utils/multipartForm.utils';
 import { ToastrService } from 'ngx-toastr';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { RequestHeaders } from '../../../services/config.model';
@@ -47,6 +48,7 @@ export class PutComponent implements OnInit  {
 
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
+              @Inject('MultipartFormUtils') private multipartFormUtils,
               @Inject('UrlUtils') private urlUtils,
               private toastrService: ToastrService,
               private _fb: FormBuilder) { }
@@ -104,6 +106,10 @@ export class PutComponent implements OnInit  {
 
     if (environment.logApiData) {
       console.log('Making put request with data', data);
+    }
+
+    if (this.multipartFormUtils.isMultipartForm(this.fields)) {
+      data = this.multipartFormUtils.extractMultipartFormData(this.fields, this.myForm);
     }
 
     let actualMethod = this.requestsService.put.bind(this.requestsService);

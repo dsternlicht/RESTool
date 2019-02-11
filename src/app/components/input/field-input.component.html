@@ -21,6 +21,9 @@
   <ng-template [ngSwitchCase]="'color'">
     <input type="color" [placeholder]="placeholder" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>
+  <ng-template [ngSwitchCase]="'file'">
+    <input type="file" [placeholder]="placeholder" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
+  </ng-template>
   <ng-template [ngSwitchCase]="'select'">
     <select [formControlName]="fieldName" [required]="field.required">
       <option value="">-- Select --</option>

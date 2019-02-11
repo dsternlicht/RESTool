@@ -11,6 +11,7 @@ import { MainViewModule } from './components/main-view/main-view.module';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { Routing } from './app.routes';
 import {DataPathUtils} from './utils/dataPath.utils';
+import {MultipartFormUtils} from './utils/multipartForm.utils';
 import {UrlUtils} from './utils/url.utils';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -33,6 +34,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     { provide: 'ConfigurationService', useClass: ConfigurationService },
     { provide: 'RequestsService', useClass: RequestsService },
     { provide: 'DataPathUtils', useClass: DataPathUtils },
+    { provide: 'MultipartFormUtils', useClass: MultipartFormUtils },
     { provide: 'UrlUtils', useClass: UrlUtils }
   ],
   bootstrap: [AppComponent]
