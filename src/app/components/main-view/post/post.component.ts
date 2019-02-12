@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, Inject, Output, EventEmitter} from '@angular/core';
 import {FormGroup, FormControl, FormBuilder, FormArray} from '@angular/forms';
 import {DataPathUtils} from '../../../utils/dataPath.utils';
+import {MultipartFormUtils} from '../../../utils/multipartForm.utils';
 import { ToastrService } from 'ngx-toastr';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { RequestHeaders } from '../../../services/config.model';
@@ -46,6 +47,7 @@ export class PostComponent implements OnInit {
 
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
+              @Inject('MultipartFormUtils') private multipartFormUtils,
               private _fb: FormBuilder,
               private toastrService: ToastrService) { }
 
@@ -102,6 +104,10 @@ export class PostComponent implements OnInit {
 
     if (environment.logApiData) {
       console.log('Making post request with data', data);
+    }
+
+    if (this.multipartFormUtils.isMultipartForm(this.fields)) {
+      data = this.multipartFormUtils.extractMultipartFormData(this.fields, this.myForm);
     }
 
     let actualMethod = this.requestsService.post.bind(this.requestsService);

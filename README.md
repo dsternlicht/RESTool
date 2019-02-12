@@ -208,6 +208,7 @@ Available options:
 * ``color`` - A [color selector](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color) yielding #RRGGBB hex value strings. Falls back to a simple text input on unsupported browsers.
 * ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
 * ``array`` - Enter multiple values. POST and PUT page only.
+* ``file`` - A file-input form element, to upload files as `Content-Type: multipart/form-data`. All non-file form inputs will be sent as individual string values. The current implementation supports only one file input per form.
 * ``hidden`` - Set to true if you want the value to be sent but not to be editable.
 
 ###### ``options`` (array)
@@ -262,6 +263,20 @@ If true, a field will be marked as required on PUT and POST pages.
 
 ###### ``readonly`` (boolean)
 If true, a field will be displayed, but not editable. It's data will still be added to the PUT request.
+
+###### ``accept`` (string)
+An optional setting for `type="file"` POST and PUT inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files.
+
+For example:
+
+```
+"post": {
+  "url": "/images",
+  "fields": [
+	{"name": "File", "label": "Upload your image", "type": "file", "required": true, "accept": ".png,.jpeg,image/*"}
+  ]
+},
+```
 
 
 ## Build
