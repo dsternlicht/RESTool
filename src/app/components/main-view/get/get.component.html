@@ -7,22 +7,28 @@
   </div>
 </div>
 
-<form *ngIf="queryParams.length" class="pure-form pure-form-stacked" [formGroup]="myForm" (ngSubmit)="getResults()">
-  <fieldset>
-    <field-input [field]="field" [form]="myForm" [requestHeaders]="requestHeaders"
-                 *ngFor="let field of queryParams"
-                 class="pure-control-group">
-    </field-input>
-
-    <div class="pure-controls">
-      <button type="submit" class="pure-button pure-button-primary">Submit</button>
-    </div>
-  </fieldset>
-</form>
-
 <app-loader [loading]="loading" [size]="'small'"></app-loader>
 
 <div *ngIf="!loading">
+
+  <form *ngIf="queryParams.length" class="pure-form pure-form-stacked" [formGroup]="queryForm" (ngSubmit)="getResults()">
+    <fieldset>
+      <field-input [field]="field" [form]="queryForm" [requestHeaders]="requestHeaders"
+                  *ngFor="let field of queryParams"
+                  class="pure-control-group">
+      </field-input>
+
+      <div class="pure-controls">
+        <button type="submit" class="pure-button pure-button-primary">Submit</button>
+      </div>
+    </fieldset>
+  </form>
+
+  <form *ngIf="filterableFields.length" class="pure-form form-group filter-form" #filterForm="ngForm">
+    <fieldset>
+      <input type="text" placeholder="Filter" class="form-control pure-input-1" [(ngModel)]="filterText" name="filterText"/>
+    </fieldset>
+  </form>
 
   <table class="pure-table pure-table-horizontal">
     <thead>
@@ -32,7 +38,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let row of data">
+    <tr *ngFor="let row of (data | rowFilter:filterableFields:filterText)">
       <td *ngFor="let field of fields">
         <div [ngSwitch]="field.type">
           <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>

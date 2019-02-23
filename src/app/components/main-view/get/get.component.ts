@@ -1,5 +1,5 @@
 import {Component, Input, Inject, Output, EventEmitter } from '@angular/core';
-import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RequestHeaders } from '../../../services/config.model';
 import { environment } from '../../../../environments/environment';
@@ -20,13 +20,17 @@ export class GetComponent {
 
   data: Array<Object> = [];
 
-  myForm: FormGroup = this._fb.group(this.getQueryParamsObj());
+  queryForm: FormGroup = this._fb.group(this.getQueryParamsObj());
 
   activeGetRequest: any = {};
 
   fields: any = [];
 
+  filterableFields: any = [];
+
   queryParams: any = [];
+
+  filterText: string = "";
 
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
@@ -64,10 +68,12 @@ export class GetComponent {
 
     this.activeGetRequest = this.pageData.methods.getAll;
     this.fields = this.getDisplayFields(this.activeGetRequest);
+    this.filterableFields = this.getFilterableFields(this.fields);
     this.queryParams = this.activeGetRequest.queryParams || [];
+    this.filterText = "";
 
     if (this.queryParams.length) {
-      this.myForm = this._fb.group(this.getQueryParamsObj());
+      this.queryForm = this._fb.group(this.getQueryParamsObj());
     }
 
     this.getRequest();
@@ -102,9 +108,9 @@ export class GetComponent {
 
   public getResults() {
     const queryParams = [];
-    for (const param in this.myForm.controls) {
+    for (const param in this.queryForm.controls) {
       const type = this.getQueryParamType(param);
-      let value = this.myForm.controls[param].value || '';
+      let value = this.queryForm.controls[param].value || '';
 
       if (type === 'encode') {
         value = encodeURIComponent(value);
@@ -153,6 +159,10 @@ export class GetComponent {
       return [];
     }
     return params.display.fields;
+  }
+
+  private getFilterableFields(fields: Array<any>): Array<any> {
+    return fields.filter(field => field.filterable);
   }
 
   protected showActions() {
