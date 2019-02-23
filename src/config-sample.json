@@ -30,23 +30,27 @@
               {
                 "name": "id",
                 "type": "text",
-                "label": "ID"
+                "label": "ID",
+                "filterable": true
               },
               {
                 "name": "name",
                 "type": "text",
-                "label": "Name"
+                "label": "Name",
+                "filterable": true
               },
               {
                 "name": "email",
                 "type": "text",
-                "label": "Email"
+                "label": "Email",
+                "filterable": true
               },
               {
                 "name": "work",
                 "type": "text",
                 "label": "Phone #",
-                "dataPath": "phone"
+                "dataPath": "phone",
+                "filterable": true
               }
             ],
             "sortBy": ["name"]
