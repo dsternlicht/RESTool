@@ -122,11 +122,11 @@ RESTool is going to present the data somehow. This is the object that defines ho
 ###### `type` (string | 'table')
 How would you like to present the data (at the moment we only support table view).
 
-###### `fields` (array)
-The list of fields you want to present in your main view. Each one is an object and could have the following properties:
-
 ###### `sortBy` (string | array)
 One or more paths to properties in the result object to sort the list by.
+
+###### `fields` (array)
+The list of fields you want to present in your main view. Each one is an object and could have the following properties:
 
 #### Display fields
 
@@ -159,6 +159,9 @@ Use this field to let us know what is the path to get to the field value. For ex
 ```
 
 And you want to present the `numberOfChildrens` field in the display view, your data path for this field is `details`, and the `name` should be `numberOfChildrens`.
+
+###### `filterable` (bool)
+Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields.
 
 #### GET SINGLE (getSingle)
 We'll use this type of get request to get a single item. By default, if you won't config this request, when editing an item we'll take the row data from the original "get all" request.
