@@ -29,7 +29,8 @@ input[type="text"],
 .pure-form input[type="number"],
 .pure-form input[type="search"],
 .pure-form input[type="tel"],
-.pure-form input[type="color"] {
+.pure-form input[type="color"],
+.pure-form textarea {
   padding: 9px;
   display: inline-block;
   border: 1px solid #ccc;
@@ -37,4 +38,8 @@ input[type="text"],
   vertical-align: middle;
   box-sizing: border-box;
   width: 270px;
+}
+
+.pure-form textarea {
+  height: 100px;
 }

@@ -37,7 +37,8 @@ export class ArrayInputComponent implements OnInit {
     for (const itemValue of this.arrayValue) {
       const itemField = this.createField();
       arrayFields.push(itemField);
-      formControls[itemField.name] = new FormControl(itemValue);
+      const value = itemField.arrayType === 'object' ? JSON.stringify(itemValue) : itemValue;
+      formControls[itemField.name] = new FormControl(value);
     }
     this.arrayForm = new FormGroup(formControls);
     this.arrayFields = arrayFields;

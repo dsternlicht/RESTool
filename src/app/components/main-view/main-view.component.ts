@@ -79,8 +79,8 @@ export class MainViewComponent implements OnInit {
       return of(defaultData);
     }
 
-    const dataPath = getMethod.dataPath;
-    getUrl = this.urlUtils.getParsedUrl(getUrl, defaultData, dataPath);
+    const paramsPath = getMethod.paramsPath;
+    getUrl = this.urlUtils.getParsedUrl(getUrl, defaultData, paramsPath);
 
     if (environment.logApiData) {
       console.log('Get single url', getUrl);
@@ -101,6 +101,7 @@ export class MainViewComponent implements OnInit {
   }
 
   public showPopup(e: any = {}) {
+    const getMethod = this.pageData.methods.getSingle;
     this.popupState = e.state || null;
     switch (this.popupState) {
       case 'put':
@@ -109,7 +110,7 @@ export class MainViewComponent implements OnInit {
           if (environment.logApiData) {
             console.log('Single item data', res);
           }
-          this.selectedRow = res;
+          this.selectedRow = this.dataPathUtils.extractDataFromResponse(res, getMethod.dataPath || '');
           this.loading = false;
         }, (e) => {
           console.error(e);

@@ -9,6 +9,9 @@
   <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
     <input type="text" [placeholder]="placeholder" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>
+  <ng-template [ngSwitchCase]="'object'">
+    <textarea [placeholder]="placeholder" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"></textarea>
+  </ng-template>
   <ng-template [ngSwitchCase]="'integer'">
     <input type="number" [placeholder]="placeholder" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>

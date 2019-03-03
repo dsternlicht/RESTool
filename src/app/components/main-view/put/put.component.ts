@@ -80,7 +80,10 @@ export class PutComponent implements OnInit  {
       return obj;
     }
     for (const field of this.fields) {
-      const value = this.dataPathUtils.getFieldValueInPath(field.name, field.dataPath, this.rowData)
+      let value = this.dataPathUtils.getFieldValueInPath(field.name, field.dataPath, this.rowData)
+      if (field.type === 'object') {
+        value = JSON.stringify(value);
+      }
       const fieldName = field.dataPath ? `${field.dataPath}.${field.name}` : field.name;
       obj[fieldName] = new FormControl(value === undefined ? '' : value);
     }
