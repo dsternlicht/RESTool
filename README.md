@@ -203,6 +203,7 @@ Use the "type" field to define the type of the field.
 Available options:
 
 * ``text`` - A simple text input (if "type" is not defined, text will be the default).
+* ``object`` - An object type of field (will use JSON.stringify() to present it, and will parse on update).
 * ``encode`` - If you want the value to be encoded before being sent, use this type. GET All page only.
 * ``integer`` - A text box for positive and negative integers.
 * ``number`` - A text box for positive and negative floating point numbers.
