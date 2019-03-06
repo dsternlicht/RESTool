@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import {of} from 'rxjs';
 import {GetComponent} from './get/get.component';
 import { environment } from '../../../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-view',
@@ -97,7 +98,8 @@ export class MainViewComponent implements OnInit {
       requestHeaders = this.pageData.requestHeaders;
     }
 
-    return actualMethod(getUrl, requestHeaders);
+    return actualMethod(getUrl, requestHeaders)
+      .pipe(map(res => this.dataPathUtils.extractDataFromResponse(res, getMethod.dataPath || '')));
   }
 
   public showPopup(e: any = {}) {
@@ -110,7 +112,7 @@ export class MainViewComponent implements OnInit {
           if (environment.logApiData) {
             console.log('Single item data', res);
           }
-          this.selectedRow = this.dataPathUtils.extractDataFromResponse(res, getMethod.dataPath || '');
+          this.selectedRow = res;
           this.loading = false;
         }, (e) => {
           console.error(e);
