@@ -213,6 +213,7 @@ Available options:
 * ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
 * ``array`` - Enter multiple values. POST and PUT page only.
 * ``file`` - A file-input form element, to upload files as `Content-Type: multipart/form-data`. All non-file form inputs will be sent as individual string values. The current implementation supports only one file input per form.
+* ``password`` - A password text box
 * ``hidden`` - Set to true if you want the value to be sent but not to be editable.
 
 ###### ``options`` (array)
