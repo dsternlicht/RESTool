@@ -112,7 +112,7 @@ Your data path will be `data.items`.
 ##### `queryParams` (array)
 An array of query param objects you want to add to your GET request. 
 
-If your URL includes the name of the parameter, it will be used as part of the path rathen than as a query param. For example if your url is ``/api/contact/234/address`` you might make a paramter called ``contactId`` then set the URL as follows: ``/api/contact/:contactId/address``.
+If your URL includes the name of the parameter, it will be used as part of the path rather than as a query param. For example if your url is ``/api/contact/234/address`` you might make a parameter called ``contactId`` then set the URL as follows: ``/api/contact/:contactId/address``.
 
 Each query param item is an object. See [Input fields](#input-fields)
 
@@ -285,7 +285,7 @@ For example:
 
 
 ## Build
-When you're feeling your project is ready, just run `ng build -prod` to build the project. The build artifacts will be stored in the `dist/` directory.
+When you're feeling your project is ready, just run `ng build --prod` to build the project. The build artifacts will be stored in the `dist/` directory.
 This is the directory you want to deploy to your server.
 
 ## Running unit tests
