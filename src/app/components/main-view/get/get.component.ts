@@ -197,7 +197,7 @@ export class GetComponent {
       actualMethod = this.requestsService[actualMethodType].bind(this.requestsService);
     }
 
-    actualMethod(deleteUrl).subscribe(res => {
+    actualMethod(deleteUrl, this.requestHeaders).subscribe(res => {
       this.toastrService.success('Successfully deleted item', 'Success');
       this.getResults();
     }, (error) => {
