@@ -10,6 +10,10 @@ input[type="color"] {
   align-items: center;
 }
 
+.pure-control-group label.required {
+  font-weight: bolder;
+}
+
 label.pure-checkbox.ng-star-inserted {
   text-align: left;
   width: auto;
