@@ -45,7 +45,7 @@
             {{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}
           </ng-template>
           <ng-template [ngSwitchCase]="'url'">
-            <a target="_blank" href="{{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}">
+            <a target="_blank" href="{{extractFieldUrl(field, dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name))}}">
               {{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}
             </a>
           </ng-template>

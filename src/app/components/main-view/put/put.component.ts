@@ -125,6 +125,12 @@ export class PutComponent implements OnInit  {
     const dataPath = this.methodData.dataPath;
     putUrl = this.urlUtils.getParsedUrl(putUrl, this.rowData, dataPath);
 
+    this.fields.map((field) => {
+      if (field.type === 'object' || field.type === 'json') {
+        data[field.name] = JSON.parse(data[field.name]);
+      }
+    });
+
     actualMethod(putUrl, data, this.requestHeaders).subscribe(data => {
       this.loading = false;
       this.toastrService.success('Successfully updated item', 'Success');

@@ -116,6 +116,12 @@ export class PostComponent implements OnInit {
       actualMethod = this.requestsService[actualMethodType].bind(this.requestsService);
     }
 
+    this.fields.map((field) => {
+      if (field.type === 'object' || field.type === 'json') {
+        data[field.name] = JSON.parse(data[field.name]);
+      }
+    });
+
     actualMethod(this.methodData.url, data, this.requestHeaders).subscribe(data => {
       this.loading = false;
       this.toastrService.success('Successfully created an item', 'Success');

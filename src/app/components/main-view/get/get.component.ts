@@ -124,6 +124,14 @@ export class GetComponent {
     this.getRequest(queryParams);
   }
 
+  public extractFieldUrl(field, value) {
+    if (!field.url) {
+      return value;
+    }
+
+    return field.url.replace(`:${field.name}`, value);
+  }
+
   private getQueryParamType(name = '') {
     if (!name || !this.queryParams || !this.queryParams.length) {
       return null;
