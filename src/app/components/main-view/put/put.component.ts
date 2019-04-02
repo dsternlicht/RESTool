@@ -42,6 +42,10 @@ export class PutComponent implements OnInit  {
 
   fields: Array<any> = [];
 
+  actionNames: Array<any> = [];
+
+  actionSelection: number = 0;
+
   methodData: any = {};
 
   workingRowData: any;
@@ -61,10 +65,24 @@ export class PutComponent implements OnInit  {
     this.initForm();
   }
 
+  actionSelectionOnChange(i) {
+    this.actionSelection = i;
+    this.initForm();
+  }
+
   private initForm() {
+    if(this.pageData && this.pageData.extraMethods){
+      this.actionNames = ["Edit"].concat(this.pageData.extraMethods.map( x => x.name))
+    }else{
+      this.actionNames = ["Edit"]
+    }
     try {
-      this.methodData = this.pageData.methods.put;
-      this.fields = this.pageData.methods.put.fields;
+      if(this.actionSelection == 0){
+        this.methodData = this.pageData.methods.put;
+      }else{
+        this.methodData = this.pageData.extraMethods[this.actionSelection - 1];
+      }
+      this.fields = this.methodData.fields;
     } catch (e) {
       this.fields = [];
     }
