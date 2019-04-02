@@ -67,6 +67,15 @@ A list of all methods which are available in your RESTfull API. Available method
 * put
 * post
 
+##### `extraMethods` (array)
+A list of extra (non RESTfull) endpoints available in your ~RESTfull~ API. Specifically `extraMethods` is a list of PUT or POST method objects. For example this could enable an endpoint like: ``PUT http://website.com/users/:id/disable``
+
+> These use the same format as the method objects defined below.
+
+> The default HTTP method used is PUT but this can be overidden using the `actualMethod` parameter. 
+
+> If `extraMethods` is not empty then a drop down apears in the Edit Item dialog which allows users to select the action they want to perform.
+
 #### Methods
 
 Each method has the following common properties:
