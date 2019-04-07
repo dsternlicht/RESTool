@@ -10,6 +10,7 @@ import { DataPathUtils } from '../utils/dataPath.utils';
 export class RequestsService {
   private errorMessageDataPaths: string[] = [];
   private unauthorizedRedirectUrl: string;
+  private baseUrl: string;
 
   constructor(public http: Http,
               @Inject('DataPathUtils') private readonly dataPathUtils: DataPathUtils,
@@ -22,37 +23,38 @@ export class RequestsService {
           this.errorMessageDataPaths = [configuration.errorMessageDataPath];
         }
       }
-
+      this.baseUrl = configuration.baseUrl || "";
       this.unauthorizedRedirectUrl = configuration.unauthorizedRedirectUrl;
     });
   }
 
   public get(url, headers = null, queryParams = null) {
-    return this.http.get(this.buildUrl(url, queryParams), { headers: this.buildHeaders(headers) })
+
+    return this.http.get(this.buildUrl(this.baseUrl + url, queryParams), { headers: this.buildHeaders(headers) })
       .map(this.extractData)
       .catch(error => this.handleError(error));
   }
 
   public post(url, data, headers = null) {
-    return this.http.post(url, data, { headers: this.buildHeaders(headers) })
+    return this.http.post(this.baseUrl + url, data, { headers: this.buildHeaders(headers) })
       .map(this.extractData)
       .catch(error => this.handleError(error));
   }
 
   public put(url, data, headers = null) {
-    return this.http.put(url, data, { headers: this.buildHeaders(headers) })
+    return this.http.put(this.baseUrl + url, data, { headers: this.buildHeaders(headers) })
       .map(this.extractData)
       .catch(error => this.handleError(error));
   }
 
   public delete(url, headers = null) {
-    return this.http.delete(url, { headers: this.buildHeaders(headers) })
+    return this.http.delete(this.baseUrl + url, { headers: this.buildHeaders(headers) })
       .map(this.extractData)
       .catch(error => this.handleError(error));
   }
 
   public patch(url, data, headers = null) {
-    return this.http.patch(url, data, { headers: this.buildHeaders(headers) })
+    return this.http.patch(this.baseUrl + url, data, { headers: this.buildHeaders(headers) })
       .map(this.extractData)
       .catch(error => this.handleError(error));
   }

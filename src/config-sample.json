@@ -1,6 +1,7 @@
 {
   "name": "RESTool sample app",
   "errorMessageDataPath": "error",
+  "baseUrl":"https://restool-sample-app.herokuapp.com/api",
   "pages": [
     {
       "default": true,
@@ -10,7 +11,7 @@
       "methods": {
         "getAll": {
           "label": "Get Contacts",
-          "url": "https://restool-sample-app.herokuapp.com/api/contacts",
+          "url": "/contacts",
           "dataPath": null,
           "queryParams": [
             {
@@ -57,13 +58,13 @@
           }
         },
         "getSingle": {
-          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id",
+          "url": "/contacts/:id",
           "dataPath": null,
           "queryParams": [],
           "requestHeaders": {}
         },
         "put": {
-          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id",
+          "url": "/contacts/:id",
           "actualMethod": null,
           "fields": [
             {
@@ -114,7 +115,7 @@
           ]
         },
         "post": {
-          "url": "https://restool-sample-app.herokuapp.com/api/contacts",
+          "url": "/contacts",
           "fields": [
             {
               "name": "name",
@@ -165,7 +166,7 @@
           ]
         },
         "delete": {
-          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id"
+          "url": "/contacts/:id"
         }
       }
     }

@@ -42,6 +42,10 @@ The path within an error response object to look for an error message. If multip
 ##### `unauthorizedRedirectUrl` (string)
 Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"`
 
+##### `baseUrl` (string)
+Base url of the api. This will prefix the url of all the api methods defined for all pages.  This is normally the domain plus a base path. For example: `"https://restool-sample-app.herokuapp.com/api"`
+> If different pages use different base urls this should not be used. Instead expliclty define full urls for each method.
+
 #### Pages
 
 Each 'page' is an object. And could have the following properties:
@@ -72,7 +76,7 @@ A list of all methods which are available in your RESTfull API. Available method
 Each method has the following common properties:
 
 ##### `url` (string)
-The url for making the request. The url could contain parameters that we'll extract if needed. For example: ``http://website.com/users/:id``. Note that the parameter name in the url should match the one you're returning in your API.
+The url for making the request. The url could contain parameters that we'll extract if needed. For example: ``http://website.com/users/:id``. Note that the parameter name in the url should match the one you're returning in your API. If ``baseUrl`` is defined then only provide the api path. For example: ``/users/:id``
 
 ##### `actualMethod` (string | 'get', 'post', 'put', 'delete')
 We aware that not everyone implements REST as they should. So if for some reason you need to make a 'post' request in order to update an exiting document, you may use this property.
