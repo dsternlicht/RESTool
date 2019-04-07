@@ -123,7 +123,15 @@ export class PutComponent implements OnInit  {
 
     let putUrl = this.methodData.url;
     const dataPath = this.methodData.dataPath;
-    putUrl = this.urlUtils.getParsedUrl(putUrl, this.rowData, dataPath);
+
+    const extraUrlData = {};
+    this.fields.map((field) => {
+      if (field.useInUrl) {
+        extraUrlData[field.name] = data[field.name];
+      }
+    });
+
+    putUrl = this.urlUtils.getParsedUrl(putUrl, Object.assign(this.rowData, extraUrlData), dataPath);
 
     this.fields.map((field) => {
       if (field.type === 'object' || field.type === 'json') {

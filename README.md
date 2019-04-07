@@ -273,6 +273,9 @@ If true, a field will be marked as required on PUT and POST pages.
 ###### ``readonly`` (boolean)
 If true, a field will be displayed, but not editable. It's data will still be added to the PUT request.
 
+###### ``useInUrl`` (boolean)
+If true, a field can be used as a paramter in a PUT url. Otherwise only fields retreived in the original GET can be used as paramters. It's data will still be added to the PUT request body.
+
 ###### ``accept`` (string)
 An optional setting for `type="file"` POST and PUT inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files.
 
