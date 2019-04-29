@@ -311,6 +311,6 @@ Before running the tests make sure you are serving the app via `ng serve`.
 * Enjoy!
 
 ## Created By
-* Daniel Sternlicht
+* [Daniel Sternlicht](http://danielsternlicht.com/)
 * Oreli Levi
 * Jonathan Sellam
