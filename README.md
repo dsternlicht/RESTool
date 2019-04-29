@@ -1,13 +1,13 @@
 # RESTool
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots//restool_screenshot.png?raw=true" alt="RESTool Sample App"/>
+  <img src="https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/restool_screenshot.png?raw=true" alt="RESTool Sample App"/>
 </p>
 
 The best tool in the neighborhood. Managing your RESTful APIs has never been so easy.
-RESTool gives you an out of the box UI that connects to your API with a simple configuration file.
+RESTool gives you an out of the box UI that connects to your RESTful API with a simple configuration file.
 
-The idea behind it is simple. Given the fact that each entity in your API has a RESTful implementation, RESTool will help you to develop a tool for managing these entities in no time by simply edit a configuration file. No JavaScript. No CSS. No html. Just a pure JSON file.
+The idea behind it is simple. Given the fact that each entity in your API has a RESTful implementation, RESTool will provide you UI tool for managing these entities in no time by simply editing a configuration file. No front end engineers, no JavaScript,  no CSS, no html. Just a simple JSON file.
 
 ## Getting started
 Clone RESTool repo to your machine, and run npm install.
@@ -20,7 +20,7 @@ cd RESTool
 npm install
 ```
 
-We used Angular 2 for developing this awesome tool, so make sure to install Angular CLI by running `npm install -g @angular/cli`.
+We used Angular for developing this awesome tool, so make sure to install Angular CLI by running `npm install -g @angular/cli`.
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
