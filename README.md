@@ -9,6 +9,8 @@ RESTool gives you an out of the box UI that connects to your RESTful API with a 
 
 The idea behind it is simple. Given the fact that each entity in your API has a RESTful implementation, RESTool will provide you UI tool for managing these entities in no time by simply editing a configuration file. No front end engineers, no JavaScript,  no CSS, no html. Just a simple JSON file.
 
+**Live Demo**: [https://restool-sample-app.herokuapp.com/](https://restool-sample-app.herokuapp.com/)
+
 ## Getting started
 Clone RESTool repo to your machine, and run npm install.
 
