@@ -34,7 +34,8 @@ input[type="text"],
 .pure-form input[type="search"],
 .pure-form input[type="tel"],
 .pure-form input[type="color"],
-.pure-form textarea {
+.pure-form textarea,
+select {
   padding: 9px;
   display: inline-block;
   border: 1px solid #ccc;
@@ -46,4 +47,9 @@ input[type="text"],
 
 .pure-form textarea {
   height: 100px;
+}
+
+select {
+  line-height: 1em;
+  min-height: 24px;
 }
