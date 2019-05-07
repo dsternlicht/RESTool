@@ -39,6 +39,9 @@
       <option *ngFor="let option of combinedOptions" value="{{formatSelectOption(option).value}}">{{formatSelectOption(option).display}}</option>
     </select>
   </ng-template>
+  <ng-template [ngSwitchCase]="'note'">
+    <div class="input-note">{{field.note}}</div>
+  </ng-template>
   <ng-template [ngSwitchCase]="'boolean'">
     <label class="pure-checkbox">
       <input type="checkbox" [formControlName]="fieldName" [readOnly]="field.readonly"/>

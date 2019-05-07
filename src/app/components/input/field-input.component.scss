@@ -50,6 +50,13 @@ select {
   resize: vertical;
 }
 
+div.input-note {
+  display: inline-block;
+  vertical-align: middle;
+  box-sizing: border-box;
+  width: 270px;
+}
+
 select {
   line-height: 1em;
   min-height: 24px;
