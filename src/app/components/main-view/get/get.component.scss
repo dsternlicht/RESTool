@@ -33,6 +33,13 @@
       display: none;
     }
   }
+
+  td.truncate {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 1px;
+  }
 }
 
 .pure-form {

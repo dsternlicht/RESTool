@@ -169,6 +169,9 @@ And you want to present the `numberOfChildrens` field in the display view, your 
 ###### `filterable` (bool)
 Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields.
 
+###### `truncate` (bool)
+Causes long values to be truncated. By default, truncation is not enabled for fields.
+
 #### GET SINGLE (getSingle)
 We'll use this type of get request to get a single item. By default, if you won't config this request, when editing an item we'll take the row data from the original "get all" request.
 The properties a "get single" request could have are `url`, `dataPath`, `requestHeaders`, and `queryParams`.
