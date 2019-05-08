@@ -9,7 +9,7 @@
   <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
     <input type="text" [placeholder]="placeholder" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"/>
   </ng-template>
-  <ng-template [ngSwitchCase]="'textarea'">
+  <ng-template [ngSwitchCase]="'long-text'">
     <textarea [placeholder]="placeholder" [formControlName]="fieldName" [required]="field.required" [readOnly]="field.readonly"></textarea>
   </ng-template>
   <ng-template [ngSwitchCase]="'object'">
