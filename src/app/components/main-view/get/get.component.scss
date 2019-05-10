@@ -33,6 +33,13 @@
       display: none;
     }
   }
+
+  td.truncate {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 1px;
+  }
 }
 
 .pure-form {
@@ -81,6 +88,10 @@
   color: white;
   border-radius: 4px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.pure-button-group {
+  white-space: nowrap;
 }
 
 .filter-form {

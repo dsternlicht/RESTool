@@ -169,6 +169,9 @@ And you want to present the `numberOfChildrens` field in the display view, your 
 ###### `filterable` (bool)
 Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields.
 
+###### `truncate` (bool)
+Causes long values to be truncated. By default, truncation is not enabled for fields.
+
 #### GET SINGLE (getSingle)
 We'll use this type of get request to get a single item. By default, if you won't config this request, when editing an item we'll take the row data from the original "get all" request.
 The properties a "get single" request could have are `url`, `dataPath`, `requestHeaders`, and `queryParams`.
@@ -209,6 +212,7 @@ Use the "type" field to define the type of the field.
 Available options:
 
 * ``text`` - A simple text input (if "type" is not defined, text will be the default).
+* ``long-text`` - A larger text input
 * ``object`` - An object type of field (will use JSON.stringify() to present it, and will parse on update).
 * ``encode`` - If you want the value to be encoded before being sent, use this type. GET All page only.
 * ``integer`` - A text box for positive and negative integers.
@@ -220,6 +224,7 @@ Available options:
 * ``array`` - Enter multiple values. POST and PUT page only.
 * ``file`` - A file-input form element, to upload files as `Content-Type: multipart/form-data`. All non-file form inputs will be sent as individual string values. The current implementation supports only one file input per form.
 * ``password`` - A password text box
+* ``note`` - A plain text note within the other fields. Use ``note`` property for text. ``label`` is optional.
 * ``hidden`` - Set to true if you want the value to be sent but not to be editable.
 
 ###### ``options`` (array)

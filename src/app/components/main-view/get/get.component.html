@@ -34,12 +34,12 @@
     <thead>
     <tr>
       <th *ngFor="let field of fields">{{field.label || field.name}}</th>
-      <th *ngIf="showActions()"[ngStyle]="{width: '110px', textAlign: 'center'}">Actions</th>
+      <th *ngIf="showActions()" [ngStyle]="{width: '110px', textAlign: 'center'}">Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let row of (data | rowFilter:filterableFields:filterText)">
-      <td *ngFor="let field of fields">
+      <td *ngFor="let field of fields" [ngClass]="{'truncate': field.truncate}">
         <div [ngSwitch]="field.type">
           <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
             {{dataPathUtils.extractDataFromResponse(row, field.dataPath, field.name)}}

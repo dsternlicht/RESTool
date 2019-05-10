@@ -47,6 +47,14 @@ select {
 
 .pure-form textarea {
   height: 100px;
+  resize: vertical;
+}
+
+div.input-note {
+  display: inline-block;
+  vertical-align: middle;
+  box-sizing: border-box;
+  width: 270px;
 }
 
 select {
