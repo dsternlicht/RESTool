@@ -1,41 +1,32 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import 'rxjs/add/operator/map';
-import {of} from 'rxjs';
-import 'rxjs/add/observable/of';
+import {AsyncSubject, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class ConfigurationService {
+  private readonly filePath: string = "config.json";
+  private readonly configuration$ = new AsyncSubject<any>();
 
-    private readonly filePath: string = "config.json";
-    private configuration;
-    private configStream;
-
-    constructor(private http: Http) {
-        this.configuration = null;
-        this.configStream = this.http.get(this.filePath).map(res => res.json());
-    }
-
-    getConfiguration() {
-        if (this.configuration) {
-            return of(this.configuration);
-        } else {
-            this.configStream.subscribe(config => {
-                this.configuration = this.checkLocalOrRemoteConfiguration(config);
-            });
-            return this.configStream;
-        }
-    }
-
-    private checkLocalOrRemoteConfiguration(config: any) {
-      if(config && config.hasOwnProperty("remoteUrl")) {
-        this.configStream = this.http.get(config.remoteUrl).map(res => res.json());
-        this.configStream.subscribe(remoteConfig => {
-          this.configuration = remoteConfig;
+  constructor(private http: Http) {
+    this.http.get(this.filePath).pipe(map(res => res.json())).subscribe(config => {
+      if (config && config.hasOwnProperty("remoteUrl")) {
+        this.http.get(config.remoteUrl).pipe(map(res => res.json())).subscribe(remoteConfig => {
+          this.publishConfiguration(remoteConfig);
         });
-      } else {
-        return config;
       }
-    }
+      else {
+        this.publishConfiguration(config)
+      }
+    });
+  }
 
+  getConfiguration(): Observable<any> {
+    return this.configuration$;
+  }
+
+  private publishConfiguration(config: any) {
+    this.configuration$.next(config);
+    this.configuration$.complete();
+  }
 }

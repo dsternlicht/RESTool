@@ -39,7 +39,7 @@ export class MainViewComponent implements OnInit {
         return;
       }
       this.config = config;
-      this.route.params.map((p: any) => p.pageId).subscribe(pageId => {
+      this.route.params.pipe(map((p: any) => p.pageId)).subscribe(pageId => {
         this.getPageData(pageId);
       });
     });
