@@ -1,16 +1,16 @@
 import { Inject, Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import { throwError } from 'rxjs';
+import { AsyncSubject, Observable, throwError } from 'rxjs';
 import { ConfigurationService } from './configuraion.service';
 import { DataPathUtils } from '../utils/dataPath.utils';
+import { catchError, flatMap, map } from 'rxjs/operators';
 
 @Injectable()
 export class RequestsService {
   private errorMessageDataPaths: string[] = [];
   private unauthorizedRedirectUrl: string;
   private baseUrl: string;
+  private initialized$ = new AsyncSubject();
 
   constructor(public http: Http,
               @Inject('DataPathUtils') private readonly dataPathUtils: DataPathUtils,
@@ -25,38 +25,44 @@ export class RequestsService {
       }
       this.baseUrl = configuration.baseUrl || "";
       this.unauthorizedRedirectUrl = configuration.unauthorizedRedirectUrl;
+
+      this.initialized$.next(undefined);
+      this.initialized$.complete();
     });
   }
 
   public get(url, headers = null, queryParams = null) {
-
-    return this.http.get(this.buildUrl(this.baseUrl + url, queryParams), { headers: this.buildHeaders(headers) })
-      .map(this.extractData)
-      .catch(error => this.handleError(error));
+    return this.executeRequestAndHandleErrors(() =>
+      this.http.get(this.buildUrl(this.baseUrl + url, queryParams), { headers: this.buildHeaders(headers) }));
   }
 
   public post(url, data, headers = null) {
-    return this.http.post(this.baseUrl + url, data, { headers: this.buildHeaders(headers) })
-      .map(this.extractData)
-      .catch(error => this.handleError(error));
+    return this.executeRequestAndHandleErrors(() =>
+      this.http.post(this.baseUrl + url, data, {headers: this.buildHeaders(headers)}));
   }
 
   public put(url, data, headers = null) {
-    return this.http.put(this.baseUrl + url, data, { headers: this.buildHeaders(headers) })
-      .map(this.extractData)
-      .catch(error => this.handleError(error));
+    return this.executeRequestAndHandleErrors(() =>
+      this.http.put(this.baseUrl + url, data, { headers: this.buildHeaders(headers) }));
   }
 
   public delete(url, headers = null) {
-    return this.http.delete(this.baseUrl + url, { headers: this.buildHeaders(headers) })
-      .map(this.extractData)
-      .catch(error => this.handleError(error));
+    return this.executeRequestAndHandleErrors(() =>
+      this.http.delete(this.baseUrl + url, { headers: this.buildHeaders(headers) }));
   }
 
   public patch(url, data, headers = null) {
-    return this.http.patch(this.baseUrl + url, data, { headers: this.buildHeaders(headers) })
-      .map(this.extractData)
-      .catch(error => this.handleError(error));
+    return this.executeRequestAndHandleErrors(() =>
+      this.http.patch(this.baseUrl + url, data, { headers: this.buildHeaders(headers) }));
+  }
+
+  private executeRequestAndHandleErrors(invokeRequest: () => Observable<Response>): Observable<{}> {
+    return this.initialized$.pipe(flatMap(() => {
+      return invokeRequest().pipe(
+        map(this.extractData),
+        catchError(error => this.handleError(error))
+      );
+    }));
   }
 
   private buildHeaders(heads) {
