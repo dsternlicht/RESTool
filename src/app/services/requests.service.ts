@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { AsyncSubject, Observable, throwError } from 'rxjs';
-import { ConfigurationService } from './configuraion.service';
+import { ConfigurationService } from './configuration.service';
 import { DataPathUtils } from '../utils/dataPath.utils';
 import { catchError, flatMap, map } from 'rxjs/operators';
 
