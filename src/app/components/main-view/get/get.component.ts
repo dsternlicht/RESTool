@@ -80,7 +80,7 @@ export class GetComponent {
   }
 
   get requestHeaders(): RequestHeaders {
-    return this.activeGetRequest.requestHeaders || this.pageData.requestHeaders || {};;
+    return this.activeGetRequest.requestHeaders || this.pageData.requestHeaders || {};
   }
 
   private getRequest(queryParams = null) {

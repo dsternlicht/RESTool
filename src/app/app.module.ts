@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
-import { ConfigurationService } from './services/configuraion.service';
+import { ConfigurationService } from './services/configuration.service';
 import { RequestsService } from './services/requests.service';
 import { MainViewModule } from './components/main-view/main-view.module';
 import { NavigationComponent } from './components/navigation/navigation.component';
