@@ -122,7 +122,7 @@ export class MainViewComponent implements OnInit {
         });
         break;
       case 'afterChange':
-        this.getComponent.firstRequest();
+        this.getComponent.reload();
         break;
       default:
         this.selectedRow = {};

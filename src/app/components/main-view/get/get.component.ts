@@ -57,6 +57,11 @@ export class GetComponent {
   }
 
   public firstRequest() {
+    this.filterText = "";
+    this.reload();
+  }
+
+  public reload() {
     if (!this.pageData) {
       return;
     }
@@ -70,7 +75,6 @@ export class GetComponent {
     this.fields = this.getDisplayFields(this.activeGetRequest);
     this.filterableFields = this.getFilterableFields(this.fields);
     this.queryParams = this.activeGetRequest.queryParams || [];
-    this.filterText = "";
 
     if (this.queryParams.length) {
       this.queryForm = this._fb.group(this.getQueryParamsObj());
