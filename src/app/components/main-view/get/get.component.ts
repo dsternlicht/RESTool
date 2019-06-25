@@ -1,10 +1,12 @@
-import {Component, Input, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Inject, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RequestHeaders } from '../../../services/config.model';
 import { environment } from '../../../../environments/environment';
 import { orderBy } from 'natural-orderby';
 import { RowFilterPipe } from '../row-filter.pipe';
+import { Subscription } from 'rxjs';
+import 'rxjs/add/operator/debounceTime';
 
 @Component({
   selector: 'app-get',
@@ -34,6 +36,8 @@ export class GetComponent {
   queryParams: any = [];
 
   filterText: string = "";
+  filterTextFormControl = new FormControl();
+  filterTextFormControlSubscription: Subscription;
 
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
@@ -41,6 +45,17 @@ export class GetComponent {
               private rowFilterPipe: RowFilterPipe,
               private _fb: FormBuilder,
               private toastrService: ToastrService) {
+  }
+
+  ngOnInit() {
+    this.subscribeToFilterTextFormControl();
+  }
+
+  subscribeToFilterTextFormControl() {
+    const filterTextDebounceMilliseconds = 350;
+    this.filterTextFormControlSubscription = this.filterTextFormControl.valueChanges
+      .debounceTime(filterTextDebounceMilliseconds)
+      .subscribe(newValue => this.onFilterTextChange(newValue));
   }
 
   ngOnChanges() {
@@ -60,7 +75,8 @@ export class GetComponent {
     });
   }
 
-  onFilterTextChange() {
+  onFilterTextChange(newValue: string) {
+    this.filterText = newValue;
     this.filterRows();
   }
 

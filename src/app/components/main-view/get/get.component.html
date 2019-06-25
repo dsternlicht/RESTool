@@ -26,8 +26,8 @@
 
   <form *ngIf="filterableFields.length" class="pure-form" #filterForm="ngForm">
     <fieldset>
-      <input type="text" name="filterText" placeholder="Filter" [(ngModel)]="filterText"
-        (ngModelChange)="onFilterTextChange()" class="filter-form-input" />
+      <input type="text" name="filterText" placeholder="Filter" [value]="filterText" [formControl]="filterTextFormControl"
+        class="filter-form-input" />
       <i *ngIf="filterText.length" (click)="clearFilterText()" aria-label="Clear"
         class="filter-form-clear fa fa-times"></i>
     </fieldset>
