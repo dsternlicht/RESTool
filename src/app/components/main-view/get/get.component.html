@@ -24,7 +24,7 @@
     </fieldset>
   </form>
 
-  <form *ngIf="filterableFields.length" class="pure-form" #filterForm="ngForm">
+  <form *ngIf="filterableFields.length && data.length" class="pure-form" #filterForm="ngForm">
     <fieldset>
       <input type="text" name="filterText" placeholder="Filter" [value]="filterText" [formControl]="filterTextFormControl"
         class="filter-form-input" />
