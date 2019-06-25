@@ -94,8 +94,14 @@
   white-space: nowrap;
 }
 
-.filter-form {
+.filter-form-input {
   width: 20em;
+}
+.filter-form-clear {
+  position: relative;
+  right: 20px;
+  cursor: pointer;
+  vertical-align: middle;
 }
 
 .empty-page-notice {

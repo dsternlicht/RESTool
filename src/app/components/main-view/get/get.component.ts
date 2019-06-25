@@ -68,6 +68,11 @@ export class GetComponent {
     this.filteredData = this.rowFilterPipe.transform(this.data, this.filterableFields, this.filterText);
   }
 
+  clearFilterText() {
+    this.filterText = "";
+    this.filterRows();
+  }
+
   public firstRequest() {
     this.filterText = "";
     this.reload();

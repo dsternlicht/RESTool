@@ -24,9 +24,12 @@
     </fieldset>
   </form>
 
-  <form *ngIf="filterableFields.length" class="pure-form form-group filter-form" #filterForm="ngForm">
+  <form *ngIf="filterableFields.length" class="pure-form" #filterForm="ngForm">
     <fieldset>
-      <input type="text" placeholder="Filter" class="form-control pure-input-1" [(ngModel)]="filterText" name="filterText" (ngModelChange)="onFilterTextChange()"/>
+      <input type="text" name="filterText" placeholder="Filter" [(ngModel)]="filterText"
+        (ngModelChange)="onFilterTextChange()" class="filter-form-input" />
+      <i *ngIf="filterText.length" (click)="clearFilterText()" aria-label="Clear"
+        class="filter-form-clear fa fa-times"></i>
     </fieldset>
   </form>
 
