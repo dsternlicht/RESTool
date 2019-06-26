@@ -24,13 +24,16 @@
     </fieldset>
   </form>
 
-  <form *ngIf="filterableFields.length" class="pure-form form-group filter-form" #filterForm="ngForm">
+  <form *ngIf="filterableFields.length && data.length" class="pure-form" #filterForm="ngForm">
     <fieldset>
-      <input type="text" placeholder="Filter" class="form-control pure-input-1" [(ngModel)]="filterText" name="filterText"/>
+      <input type="text" name="filterText" placeholder="Filter" [value]="filterText" [formControl]="filterTextFormControl"
+        class="filter-form-input" />
+      <i *ngIf="filterText.length" (click)="clearFilterText()" aria-label="Clear"
+        class="filter-form-clear fa fa-times"></i>
     </fieldset>
   </form>
 
-  <table class="pure-table pure-table-horizontal">
+  <table *ngIf="filteredData.length" class="pure-table pure-table-horizontal">
     <thead>
     <tr>
       <th *ngFor="let field of fields">{{field.label || field.name}}</th>
@@ -38,7 +41,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let row of (data | rowFilter:filterableFields:filterText)">
+    <tr *ngFor="let row of filteredData">
       <td *ngFor="let field of fields" [ngClass]="{'truncate': field.truncate}">
         <div [ngSwitch]="field.type">
           <ng-template [ngSwitchCase]="'text'" ngSwitchDefault>
@@ -74,5 +77,7 @@
     </tr>
     </tbody>
   </table>
+
+  <p *ngIf="!filteredData.length" class="empty-page-notice">No items to display</p>
 
 </div>

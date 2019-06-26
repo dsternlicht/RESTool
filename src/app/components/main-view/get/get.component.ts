@@ -1,9 +1,12 @@
-import {Component, Input, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Inject, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RequestHeaders } from '../../../services/config.model';
 import { environment } from '../../../../environments/environment';
 import { orderBy } from 'natural-orderby';
+import { RowFilterPipe } from '../row-filter.pipe';
+import { Subscription } from 'rxjs';
+import 'rxjs/add/operator/debounceTime';
 
 @Component({
   selector: 'app-get',
@@ -20,6 +23,8 @@ export class GetComponent {
 
   data: Array<Object> = [];
 
+  filteredData: Array<Object> = [];
+
   queryForm: FormGroup = this._fb.group(this.getQueryParamsObj());
 
   activeGetRequest: any = {};
@@ -31,12 +36,26 @@ export class GetComponent {
   queryParams: any = [];
 
   filterText: string = "";
+  filterTextFormControl = new FormControl();
+  filterTextFormControlSubscription: Subscription;
 
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
               @Inject('UrlUtils') private urlUtils,
+              private rowFilterPipe: RowFilterPipe,
               private _fb: FormBuilder,
               private toastrService: ToastrService) {
+  }
+
+  ngOnInit() {
+    this.subscribeToFilterTextFormControl();
+  }
+
+  subscribeToFilterTextFormControl() {
+    const filterTextDebounceMilliseconds = 350;
+    this.filterTextFormControlSubscription = this.filterTextFormControl.valueChanges
+      .debounceTime(filterTextDebounceMilliseconds)
+      .subscribe(newValue => this.onFilterTextChange(newValue));
   }
 
   ngOnChanges() {
@@ -56,7 +75,26 @@ export class GetComponent {
     });
   }
 
+  onFilterTextChange(newValue: string) {
+    this.filterText = newValue;
+    this.filterRows();
+  }
+
+  filterRows() {
+    this.filteredData = this.rowFilterPipe.transform(this.data, this.filterableFields, this.filterText);
+  }
+
+  clearFilterText() {
+    this.filterText = "";
+    this.filterRows();
+  }
+
   public firstRequest() {
+    this.filterText = "";
+    this.reload();
+  }
+
+  public reload() {
     if (!this.pageData) {
       return;
     }
@@ -70,7 +108,6 @@ export class GetComponent {
     this.fields = this.getDisplayFields(this.activeGetRequest);
     this.filterableFields = this.getFilterableFields(this.fields);
     this.queryParams = this.activeGetRequest.queryParams || [];
-    this.filterText = "";
 
     if (this.queryParams.length) {
       this.queryForm = this._fb.group(this.getQueryParamsObj());
@@ -95,6 +132,8 @@ export class GetComponent {
         if (sortBy) {
           this.data = orderBy(this.data, sortBy);
         }
+
+        this.filterRows();
 
         if (environment.logApiData) {
           console.log('Got data after dataPath: ', this.data);

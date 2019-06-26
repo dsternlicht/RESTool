@@ -16,6 +16,6 @@ import { RowFilterPipe } from './row-filter.pipe';
   imports: [CommonModule, Routing, FormsModule, ReactiveFormsModule, BrowserAnimationsModule],
   exports: [],
   declarations: [MainViewComponent, LoaderComponent, GetComponent, PutComponent, PostComponent, FieldInputComponent, ArrayInputComponent, RowFilterPipe],
-  providers: [],
+  providers: [RowFilterPipe],
 })
 export class MainViewModule { }
