@@ -299,7 +299,7 @@ For example:
 
 
 ## Build
-When you're feeling your project is ready, just run `ng build --prod` to build the project. The build artifacts will be stored in the `dist/` directory.
+When you're feeling your project is ready, just run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
 This is the directory you want to deploy to your server.
 
 ## Running unit tests
