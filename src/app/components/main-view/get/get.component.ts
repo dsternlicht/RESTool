@@ -90,11 +90,11 @@ export class GetComponent {
   }
 
   public firstRequest() {
-    this.filterText = "";
-    this.reload();
+    this.filterText = '';
+    this.reload(true);
   }
 
-  public reload() {
+  public reload(setQueryForm: boolean = false) {
     if (!this.pageData) {
       return;
     }
@@ -109,11 +109,16 @@ export class GetComponent {
     this.filterableFields = this.getFilterableFields(this.fields);
     this.queryParams = this.activeGetRequest.queryParams || [];
 
+    let queryParams = [];
     if (this.queryParams.length) {
-      this.queryForm = this._fb.group(this.getQueryParamsObj());
+      queryParams = this.getQueryParamsValues();
+
+      if (setQueryForm) {
+        this.queryForm = this._fb.group(this.getQueryParamsObj());
+      }
     }
 
-    this.getRequest();
+    this.getRequest(queryParams);
   }
 
   get requestHeaders(): RequestHeaders {
@@ -146,6 +151,19 @@ export class GetComponent {
   }
 
   public getResults() {
+    const queryParams = this.getQueryParamsValues();
+    this.getRequest(queryParams);
+  }
+
+  public extractFieldUrl(field, value) {
+    if (!field.url) {
+      return value;
+    }
+
+    return field.url.replace(`:${field.name}`, value);
+  }
+
+  private getQueryParamsValues() {
     const queryParams = [];
     for (const param in this.queryForm.controls) {
       const type = this.getQueryParamType(param);
@@ -160,15 +178,7 @@ export class GetComponent {
         value
       });
     }
-    this.getRequest(queryParams);
-  }
-
-  public extractFieldUrl(field, value) {
-    if (!field.url) {
-      return value;
-    }
-
-    return field.url.replace(`:${field.name}`, value);
+    return queryParams;
   }
 
   private getQueryParamType(name = '') {
