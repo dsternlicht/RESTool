@@ -1,5 +1,6 @@
 import { Component, Input, Inject, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RequestHeaders } from '../../../services/config.model';
 import { environment } from '../../../../environments/environment';
@@ -35,13 +36,17 @@ export class GetComponent {
 
   queryParams: any = [];
 
-  filterText: string = "";
+  filterText: string = '';
+
   filterTextFormControl = new FormControl();
+
   filterTextFormControlSubscription: Subscription;
 
   constructor(@Inject('RequestsService') private requestsService,
               @Inject('DataPathUtils') private dataPathUtils,
               @Inject('UrlUtils') private urlUtils,
+              private router: Router,
+              private route: ActivatedRoute,
               private rowFilterPipe: RowFilterPipe,
               private _fb: FormBuilder,
               private toastrService: ToastrService) {
@@ -49,6 +54,7 @@ export class GetComponent {
 
   ngOnInit() {
     this.subscribeToFilterTextFormControl();
+    this.subscribeToFilterQueryParam();
   }
 
   subscribeToFilterTextFormControl() {
@@ -56,6 +62,16 @@ export class GetComponent {
     this.filterTextFormControlSubscription = this.filterTextFormControl.valueChanges
       .debounceTime(filterTextDebounceMilliseconds)
       .subscribe(newValue => this.onFilterTextChange(newValue));
+  }
+
+  subscribeToFilterQueryParam() {
+    this.route.queryParamMap
+      .subscribe(queryParamMap => {
+        const filterParam = queryParamMap.get('filter') || '';
+        if (filterParam !== this.filterText) {
+          this.onFilterTextChange(filterParam, false);
+        }
+      });
   }
 
   ngOnChanges() {
@@ -75,9 +91,23 @@ export class GetComponent {
     });
   }
 
-  onFilterTextChange(newValue: string) {
+  onFilterTextChange(newValue: string, updateQueryParam: boolean = true) {
     this.filterText = newValue;
     this.filterRows();
+    if (updateQueryParam) {
+      this.updateFilterQueryParam();
+    }
+  }
+
+  updateFilterQueryParam() {
+    let navigationOptions = {
+      replaceUrl: true,
+      queryParams: {}
+    };
+    if (this.filterText) {
+      navigationOptions.queryParams = {filter: this.filterText};
+    }
+    this.router.navigate([], navigationOptions);
   }
 
   filterRows() {
@@ -85,12 +115,10 @@ export class GetComponent {
   }
 
   clearFilterText() {
-    this.filterText = "";
-    this.filterRows();
+    this.onFilterTextChange('');
   }
 
   public firstRequest() {
-    this.filterText = '';
     this.reload(true);
   }
 
