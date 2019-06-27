@@ -1,4 +1,4 @@
-# RESTool - [demo](https://restool-sample-app.herokuapp.com/)
+# RESTool ([demo](https://restool-sample-app.herokuapp.com/))
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/restool_screenshot.png?raw=true" alt="RESTool Sample App"/>
