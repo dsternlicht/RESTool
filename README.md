@@ -1,10 +1,10 @@
-# RESTool
+# RESTool - [demo](https://restool-sample-app.herokuapp.com/)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/restool_screenshot.png?raw=true" alt="RESTool Sample App"/>
 </p>
 
-The best tool in the neighborhood. Managing your RESTful APIs has never been so easy.
+The best tool in the neighborhood. Managing your **RESTful APIs** has never been so easy.
 RESTool gives you an out of the box UI that connects to your RESTful API with a simple configuration file.
 
 The idea behind it is simple. Given the fact that each entity in your API has a RESTful implementation, RESTool will provide you UI tool for managing these entities in no time by simply editing a configuration file. No front end engineers, no JavaScript,  no CSS, no html. Just a simple JSON file.
@@ -22,10 +22,7 @@ cd RESTool
 npm install
 ```
 
-We used Angular for developing this awesome tool, so make sure to install Angular CLI by running `npm install -g @angular/cli`.
-
-## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+If you only interesed of using RESTool on its latest version as a management tool for your RESTful API, read the docs about [configuration](https://github.com/dsternlicht/RESTool#configuration) and [deployment](https://github.com/dsternlicht/RESTool#deploy). Else, if you want to extend RESTool's functionallity and develop on top of it, please jump to the [development](https://github.com/dsternlicht/RESTool#development) section.
 
 ## Configuration
 One of the best things about RESTool (and the reason we actually we built it) is that you don't need to develop anything. Everything is configurable and may be set simply by editing the `config.json` file under the `/src` folder.
@@ -233,12 +230,15 @@ Add the `options` field if you chose a `select` as a type. This field should con
 For example:
 
 ```
-queryParams: {
-  name: 'heroes',
-  label: 'Select your hero',
-  type: 'select',
-  options: ['Spiderman', 'Batman', { display: 'Ironman', value: '324'}]
-}
+fields: [
+  {
+    name: 'heroes',
+    label: 'Select your hero',
+    type: 'select',
+    options: ['Spiderman', 'Batman', { display: 'Ironman', value: '324'}]
+  },
+  // ...
+]
 ```
 
 ###### ``optionSource`` (object)
@@ -254,18 +254,21 @@ You can use the following properties on the `optionSource` object:
 For example:
 
 ```
-fields: {
-  name: 'bestFriend',
-  label: 'Best Friend',
-  type: 'select',
-  optionSource: {
-    url: '//restool-sample-app.herokuapp.com/api/contacts',
-    dataPath: null,
-    displayPath: 'name',
-    valuePath: 'id',
-    sortBy: ['name']
-  }
-}
+fields: [
+  {
+    name: 'bestFriend',
+    label: 'Best Friend',
+    type: 'select',
+    optionSource: {
+      url: 'https://restool-sample-app.herokuapp.com/api/character',
+      dataPath: null,
+      displayPath: 'name',
+      valuePath: 'id',
+      sortBy: ['name']
+    }
+  },
+  // ...
+]
 ```
 
 ###### `arrayType` (string)
@@ -292,15 +295,35 @@ For example:
 "post": {
   "url": "/images",
   "fields": [
-	{"name": "File", "label": "Upload your image", "type": "file", "required": true, "accept": ".png,.jpeg,image/*"}
+	  {
+      "name": "File", 
+      "label": "Upload your image", 
+      "type": "file", 
+      "required": true, 
+      "accept": ".png,.jpeg,image/*"
+    }
   ]
 },
 ```
 
+## Development
+
+We used Angular for developing this awesome tool, so make sure to install Angular CLI by running `npm install -g 
+@angular/cli`.
+
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change source files.
+
 
 ## Build
-When you're feeling your project is ready, just run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
-This is the directory you want to deploy to your server.
+Once you're ready, run `npm run build` to build the project. The build artifacts will be stored in the `dist/` folder.
+
+**The `dist` folder is the one you want to deploy to your server.**
+
+## Deploy
+* Copy the `dist` folder with all of its content.
+* Edit the `config.json` file, and add your configuration.
+* Deploy the `dist` folder to your servers, and make sure you serve the `index.html` file.
+* Enjoy!
 
 ## Running unit tests
 
@@ -310,12 +333,6 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 Before running the tests make sure you are serving the app via `ng serve`.
-
-## Deploy
-* Use the "dist" folder that been created after the build, or just clone the "dist" folder in this project.
-* Replace the "config.json" file with yours.
-* Copy / deploy the "dist" folder to your servers.
-* Enjoy!
 
 ## Created By
 * [Daniel Sternlicht](http://danielsternlicht.com/)
