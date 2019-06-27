@@ -12,17 +12,19 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 **Live Demo**: [https://restool-sample-app.herokuapp.com/](https://restool-sample-app.herokuapp.com/)
 
 ## Getting started
-Clone RESTool repo to your machine, and run npm install.
+Clone RESTool repository to get started.
 
 ```
+
 git clone https://github.com/dsternlicht/RESTool.git
 
 cd RESTool
 
-npm install
 ```
 
-If you only interesed of using RESTool on its latest version as a management tool for your RESTful API, read the docs about [configuration](https://github.com/dsternlicht/RESTool#configuration) and [deployment](https://github.com/dsternlicht/RESTool#deploy). Else, if you want to extend RESTool's functionallity and develop on top of it, please jump to the [development](https://github.com/dsternlicht/RESTool#development) section.
+If you only interesed of using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](https://github.com/dsternlicht/RESTool#configuration) and [deployment](https://github.com/dsternlicht/RESTool#deploy). 
+
+If you wish to extend RESTool's functionallity and develop on top of it, please go to the [development](https://github.com/dsternlicht/RESTool#development) section.
 
 ## Configuration
 One of the best things about RESTool (and the reason we actually we built it) is that you don't need to develop anything. Everything is configurable and may be set simply by editing the `config.json` file under the `/src` folder.
@@ -308,10 +310,14 @@ For example:
 
 ## Development
 
-We used Angular for developing this awesome tool, so make sure to install Angular CLI by running `npm install -g 
+If you haven't done it already, install all of the project's dependencies by running `npm i`.
+
+We used Angular for developing this awesome tool, so make sure you install Angular CLI by running `npm install -g 
 @angular/cli`.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change source files.
+* In order to start the development server, run `ng serve`. 
+* Browse to `http://localhost:4200/`. 
+* The app will automatically reload if you change source files.
 
 
 ## Build
