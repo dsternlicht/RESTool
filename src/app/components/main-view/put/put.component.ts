@@ -138,6 +138,11 @@ export class PutComponent implements OnInit  {
         data[field.name] = JSON.parse(data[field.name]);
       }
     });
+    this.fields.map((field) => {
+      if (field.omitFromPayload) {
+        delete data[field.name];
+      }
+    });
 
     actualMethod(putUrl, data, this.requestHeaders).subscribe(data => {
       this.loading = false;
