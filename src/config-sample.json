@@ -66,6 +66,13 @@
           "actualMethod": null,
           "fields": [
             {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "readOnly": true,
+                "omitFromPayload": true
+            },
+            {
               "name": "location",
               "label": "Location",
               "type": "select",
