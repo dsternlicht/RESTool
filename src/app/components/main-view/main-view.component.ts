@@ -107,6 +107,7 @@ export class MainViewComponent implements OnInit {
     this.popupState = e.state || null;
     switch (this.popupState) {
       case 'put':
+      case 'customActions':
         this.loading = true;
         this.getRowData(e.data || {}).subscribe((res) => {
           if (environment.logApiData) {

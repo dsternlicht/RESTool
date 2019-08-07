@@ -1,5 +1,12 @@
 <div [@dialog] *ngIf="visible" class="dialog">
-  <h2>Edit Item</h2>
+  <h2 *ngIf="customActionNames.length > 1">Select action:
+    <select (change)="customActionSelectionOnChange($event.target.value)" [value]='customActionSelection'>
+      <option *ngFor="let customAction of customActionNames; let i = index" [value]="i">
+        {{customAction}}
+      </option>
+    </select>
+  </h2>
+  <h2 *ngIf="customActionNames.length == 1">Edit Item</h2>
   <div class="inner">
     <div class="form_wrapper">
       <p *ngIf="!fields || !fields.length">No fields defined.</p>

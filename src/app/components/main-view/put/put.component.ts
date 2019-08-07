@@ -28,6 +28,8 @@ export class PutComponent implements OnInit  {
 
   @Input() visible: boolean;
 
+  @Input() state: string;
+
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Output() stateChanged = new EventEmitter();
@@ -41,6 +43,10 @@ export class PutComponent implements OnInit  {
   myForm: FormGroup = this._fb.group(this.buildFormFields());
 
   fields: Array<any> = [];
+
+  customActionNames: Array<any> = [];
+
+  customActionSelection: number = 0;
 
   methodData: any = {};
 
@@ -61,10 +67,21 @@ export class PutComponent implements OnInit  {
     this.initForm();
   }
 
+  customActionSelectionOnChange(i) {
+    this.customActionSelection = i;
+    this.initForm();
+  }
+
   private initForm() {
     try {
-      this.methodData = this.pageData.methods.put;
-      this.fields = this.pageData.methods.put.fields;
+      if(this.state == "customActions"){
+        this.customActionNames = this.pageData.customActions.map( x => x.name)
+        this.methodData = this.pageData.customActions[this.customActionSelection];
+      }else{
+        this.customActionNames = ["Edit"]
+        this.methodData = this.pageData.methods.put;
+      }
+      this.fields = this.methodData.fields;
     } catch (e) {
       this.fields = [];
     }
