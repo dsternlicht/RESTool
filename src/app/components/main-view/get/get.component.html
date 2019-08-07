@@ -69,6 +69,9 @@
           <button class="pure-button" [ngClass]="{hide: !pageData.methods.put}" (click)="onClickEdit(row)">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </button>
+          <button class="pure-button" [ngClass]="{hide: !pageData.customActions}" (click)="onClickCustomActions(row)">
+            <i class="fa fa-cogs" aria-hidden="true"></i>
+          </button>
           <button class="pure-button" [ngClass]="{hide: !pageData.methods.delete}" (click)="delete(row)">
             <i class="fa fa-times" aria-hidden="true"></i>
           </button>

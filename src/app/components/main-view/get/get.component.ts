@@ -91,6 +91,13 @@ export class GetComponent {
     });
   }
 
+  onClickCustomActions(row) {
+    this.stateChanged.emit({
+      state: 'customActions',
+      data: row
+    });
+  }
+
   onFilterTextChange(newValue: string, updateQueryParam: boolean = true) {
     this.filterText = newValue;
     this.filterRows();
