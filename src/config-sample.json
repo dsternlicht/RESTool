@@ -112,7 +112,46 @@
         "delete": {
           "url": "/character/:id"
         }
-      }
+      },
+      "customActions": [{
+          "name":"Send Email",
+          "url": "/character/:id/sendEmail",
+          "actualMethod": "post",
+          "fields": [
+            {
+              "name": "id",
+              "type": "text",
+              "label": "ID",
+              "readonly": true
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Email Title",
+              "required": true
+            },
+            {
+              "name": "body",
+              "type": "text",
+              "label": "Email Body",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name":"Disable Character",
+          "url": "/character/:id/disable",
+          "actualMethod": "post",
+          "fields": [
+            {
+              "name": "id",
+              "type": "text",
+              "label": "Contact ID",
+              "readonly": true
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Employees",
@@ -351,46 +390,7 @@
         "delete": {
           "url": "/extra/:id"
         }
-      },
-      "customActions":[{
-          "name":"Send Fan Mail",
-          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id/send-fan-mail",
-          "actualMethod": "post",
-          "fields": [
-            {
-              "name": "id",
-              "type": "text",
-              "label": "Contact ID",
-              "readonly": true
-            },
-            {
-              "name": "title",
-              "type": "text",
-              "label": "Email Title",
-              "required": true
-            },
-            {
-              "name": "body",
-              "type": "text",
-              "label": "Email Body",
-              "required": true
-            }
-          ]
-        },
-        {
-          "name":"Disable Contact",
-          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id/disable",
-          "actualMethod": "post",
-          "fields": [
-            {
-              "name": "id",
-              "type": "text",
-              "label": "Contact ID",
-              "readonly": true
-            }
-          ]
-        }
-      ]
+      }
     }
   ]
 }

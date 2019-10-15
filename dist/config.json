@@ -1,22 +1,21 @@
 {
-  "name": "RESTool for GOT",
-  "baseUrl": "https://restool-sample-app.herokuapp.com/api",
+  "name": "RESTool sample app",
   "pages": [
     {
       "default": true,
-      "name": "Cast & Characters",
-      "id": "characters",
-      "description": "Manage GOT characters location and budget.",
+      "name": "Contacts",
+      "id": "contacts",
+      "description": "An example of RESTool configuration file usage with a simple mocking server",
       "methods": {
         "getAll": {
-          "label": "Get All",
-          "url": "/character",
+          "label": "Get Contacts",
+          "url": "https://restool-sample-app.herokuapp.com/api/contacts",
           "dataPath": null,
           "queryParams": [
             {
-              "name": "search",
+              "name": "q",
               "value": "",
-              "label": "Search"
+              "label": "Query"
             }
           ],
           "display": {
@@ -35,158 +34,80 @@
               {
                 "name": "name",
                 "type": "text",
-                "label": "Name",
-                "filterable": true
+                "label": "Name"
               },
               {
-                "name": "realName",
+                "name": "email",
                 "type": "text",
-                "label": "Real Name"
+                "label": "Email"
               },
               {
-                "name": "location",
+                "name": "work",
                 "type": "text",
-                "label": "Current Location"
-              },
-              {
-                "name": "isAlive",
-                "type": "boolean",
-                "label": "Alive?"
+                "label": "Phone #",
+                "dataPath": "phone"
               }
             ]
           }
         },
         "getSingle": {
-          "url": "/character/:id",
+          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id",
           "dataPath": null,
           "queryParams": [],
           "requestHeaders": {}
         },
         "put": {
-          "url": "/character/:id",
+          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id",
           "actualMethod": null,
           "fields": [
             {
-              "name": "location",
-              "label": "Location",
-              "type": "select",
-              "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
+              "name": "name",
+              "label": "Name",
+              "type": "text"
             },
             {
-              "name": "isAlive",
-              "label": "Alive?",
-              "type": "boolean"
-            }
-          ]
-        },
-        "post": {
-          "url": "/character",
-          "fields": [
+              "name": "email",
+              "label": "Email",
+              "type": "email"
+            },
             {
               "name": "thumbnail",
               "label": "Thumbnail",
               "type": "text"
             },
             {
-              "name": "name",
-              "label": "Name",
-              "type": "text"
+              "name": "work",
+              "label": "Work Phone",
+              "type": "text",
+              "dataPath": "phone"
             },
             {
-              "name": "realName",
-              "label": "Real Name",
-              "type": "text"
+              "name": "mobile",
+              "label": "Mobile Phone",
+              "type": "text",
+              "dataPath": "phone"
             },
             {
-              "name": "location",
-              "label": "Location",
-              "type": "select",
-              "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
+              "name": "favoriteNumber",
+              "label": "Favorite Number",
+              "type": "number"
             },
             {
-              "name": "isAlive",
-              "label": "Alive?",
-              "type": "boolean"
-            }
-          ]
-        },
-        "delete": {
-          "url": "/character/:id"
-        }
-      }
-    },
-    {
-      "name": "Employees",
-      "id": "employees",
-      "description": "Manage GOT employees, people and employees.",
-      "methods": {
-        "getAll": {
-          "label": "Get All",
-          "url": "/employee",
-          "dataPath": null,
-          "queryParams": [
-            {
-              "name": "search",
-              "value": "",
-              "label": "Search"
-            }
-          ],
-          "display": {
-            "type": "table",
-            "fields": [
-              {
-                "name": "id",
-                "type": "text",
-                "label": "ID"
-              },
-              {
-                "name": "name",
-                "type": "text",
-                "label": "Name"
-              },
-              {
-                "name": "jobTitle",
-                "type": "text",
-                "label": "Job Title"
-              },
-              {
-                "name": "isFired",
-                "type": "boolean",
-                "label": "Fired?"
-              }
-            ]
-          }
-        },
-        "getSingle": {
-          "url": "/employee/:id",
-          "dataPath": null,
-          "queryParams": [],
-          "requestHeaders": {}
-        },
-        "put": {
-          "url": "/employee/:id",
-          "actualMethod": null,
-          "fields": [
-            {
-              "name": "name",
-              "label": "Name",
-              "type": "text"
+              "name": "numbers",
+              "label": "Numbers",
+              "type": "array",
+              "arrayType": "text"
             },
             {
-              "name": "jobTitle",
-              "type": "select",
-              "label": "Job Title",
-              "options": ["Executive Producer", "Co-Executive Producer", "RESTool creator 😎", "A Knows nothing dude."]
-            },
-            {
-              "name": "isFired",
-              "type": "boolean",
-              "label": "Fired?"
+              "name": "friends",
+              "label": "Friends",
+              "type": "array",
+              "arrayType": "object"
             }
           ]
         },
         "post": {
-          "url": "/employee",
+          "url": "https://restool-sample-app.herokuapp.com/api/contacts",
           "fields": [
             {
               "name": "name",
@@ -194,163 +115,49 @@
               "type": "text"
             },
             {
-              "name": "jobTitle",
-              "type": "select",
-              "label": "Job Title",
-              "options": ["Executive Producer", "Co-Executive Producer", "RESTool creator 😎", "A Knows nothing dude."]
+              "name": "email",
+              "label": "Email",
+              "type": "email"
             },
             {
-              "name": "isFired",
-              "type": "boolean",
-              "label": "Fired?"
+              "name": "thumbnail",
+              "label": "Thumbnail",
+              "type": "text"
+            },
+            {
+              "name": "work",
+              "label": "Work Phone",
+              "type": "text",
+              "dataPath": "phone"
+            },
+
+            {
+              "name": "mobile",
+              "label": "Mobile Phone",
+              "type": "text",
+              "dataPath": "phone"
+            },
+            {
+              "name": "favoriteNumber",
+              "label": "Favorite Number",
+              "type": "number"
+            },
+            {
+              "name": "numbers",
+              "label": "Numbers",
+              "type": "array",
+              "arrayType": "text"
+            },
+            {
+              "name": "friends",
+              "label": "Friends",
+              "type": "array",
+              "arrayType": "object"
             }
           ]
         },
         "delete": {
-          "url": "/employee/:id"
-        }
-      }
-    },
-    {
-      "name": "Deads",
-      "id": "deads",
-      "description": "Manage GOT deads 😵",
-      "methods": {
-        "getAll": {
-          "label": "Get All",
-          "url": "/dead",
-          "dataPath": null,
-          "queryParams": [
-            {
-              "name": "search",
-              "value": "",
-              "label": "Search"
-            }
-          ],
-          "display": {
-            "type": "table",
-            "fields": [
-              {
-                "name": "id",
-                "type": "text",
-                "label": "ID"
-              },
-              {
-                "name": "name",
-                "type": "text",
-                "label": "Name"
-              },
-              {
-                "name": "reason",
-                "type": "text",
-                "label": "Death Reason"
-              }
-            ]
-          }
-        },
-        "getSingle": {
-          "url": "/dead/:id",
-          "dataPath": null,
-          "queryParams": [],
-          "requestHeaders": {}
-        },
-        "put": {
-          "url": "/dead/:id",
-          "actualMethod": null,
-          "fields": [
-            {
-              "name": "name",
-              "label": "Name",
-              "type": "text"
-            },
-            {
-              "name": "reason",
-              "label": "Reason",
-              "type": "text"
-            }
-          ]
-        },
-        "post": {
-          "url": "/dead",
-          "fields": [
-            {
-              "name": "name",
-              "label": "Name",
-              "type": "text"
-            },
-            {
-              "name": "reason",
-              "label": "Reason",
-              "type": "text"
-            }
-          ]
-        },
-        "delete": {
-          "url": "/dead/:id"
-        }
-      }
-    },
-    {
-      "name": "Extras",
-      "id": "extras",
-      "description": "Manage GOT extras location and budget.",
-      "methods": {
-        "getAll": {
-          "label": "Get All",
-          "url": "/extra",
-          "dataPath": null,
-          "queryParams": [
-            {
-              "name": "search",
-              "value": "",
-              "label": "Search"
-            }
-          ],
-          "display": {
-            "type": "table",
-            "fields": [
-              {
-                "name": "id",
-                "type": "text",
-                "label": "ID"
-              },
-              {
-                "name": "name",
-                "type": "text",
-                "label": "Name"
-              }
-            ]
-          }
-        },
-        "getSingle": {
-          "url": "/extra/:id",
-          "dataPath": null,
-          "queryParams": [],
-          "requestHeaders": {}
-        },
-        "put": {
-          "url": "/extra/:id",
-          "actualMethod": null,
-          "fields": [
-            {
-              "name": "name",
-              "label": "Name",
-              "type": "text"
-            }
-          ]
-        },
-        "post": {
-          "url": "/extra",
-          "fields": [
-            {
-              "name": "name",
-              "label": "Name",
-              "type": "text"
-            }
-          ]
-        },
-        "delete": {
-          "url": "/extra/:id"
+          "url": "https://restool-sample-app.herokuapp.com/api/contacts/:id"
         }
       }
     }

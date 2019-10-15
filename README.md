@@ -66,14 +66,14 @@ Set to true if you want this page to be the first to load in your app. If you ha
 A list of key-value headers you wish to add to every request we're making. For example: ``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``.
 
 ##### `methods` (object)
-A list of all methods which are available in your RESTfull API. Available methods:
+A list of all methods which are available in your RESTful API. Available methods:
 * get
 * post
 * put
 * post
 
 ##### `customActions` (array)
-A list of extra (non RESTfull) endpoints available in your ~RESTfull~ API. Specifically `customActions` is a list of PUT or POST method objects. For example this could enable an endpoint like: ``PUT http://website.com/users/:id/disable``
+A list of extra (non RESTful) endpoints available in your ~RESTful~ API. Specifically `customActions` is a list of PUT or POST method objects. For example this could enable an endpoint like: ``PUT /users/:id/disable``
 
 > These use the same format as the method objects defined below.
 
