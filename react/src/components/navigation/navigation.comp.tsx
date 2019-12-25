@@ -1,23 +1,25 @@
 import React from 'react';
-import { AppContext } from '../app.context';
 import { NavLink } from 'react-router-dom';
+
+import { AppContext, IAppContext } from '../app.context';
+import { withAppContext } from '../withContext/withContext.comp';
 
 import './navigation.scss';
 
-export const Navigation = () => {
+interface IProps {
+  context: IAppContext
+}
+
+const NavigationComp = ({ context: { config } }: IProps) => {
   return (
     <nav className="app-nav">
-      <AppContext.Consumer>
-        {
-          ({ config }) => {
-            return (
-              (config?.pages || []).map((page, idx) => (
-                <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}>{page.name}</NavLink>
-              ))
-            )
-          }
-        }
-      </AppContext.Consumer>
+      {
+        (config?.pages || []).map((page, idx) => (
+          <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}>{page.name}</NavLink>
+        ))
+      }
     </nav>
   );
 }
+
+export const Navigation = withAppContext(NavigationComp);

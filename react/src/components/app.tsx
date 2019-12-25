@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
 import ConfigService from '../services/config.service';
-import { IConfig } from '../common/models/config.model';
+import { IConfig, IConfigPage } from '../common/models/config.model';
 import { Page } from '../components/page/page.comp';
 import { Navigation } from '../components/navigation/navigation.comp';
 import { AppContext } from './app.context';
@@ -11,6 +11,7 @@ import './app.scss';
 
 function App() {
   const [config, setConfig] = useState<IConfig>(require('../config.json'));
+  const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages[0] || null);
   const [error, setError] = useState<string | null>(null);
 
   async function loadRemoteConfig() {
@@ -42,7 +43,7 @@ function App() {
 
   return (
     <div className="restool-app">
-      <AppContext.Provider value={{ config }}>
+      <AppContext.Provider value={{ config, activePage, setActivePage }}>
         <Router>
           <aside>
             <h1>{config?.name || 'RESTool App'}</h1>
