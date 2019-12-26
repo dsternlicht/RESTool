@@ -76,6 +76,7 @@ export interface IConfigQueryParam {
   name: string
   value: string
   label: string
+  urlReplaceOnly: boolean
 }
 
 export interface IConfigGetAllMethod extends IConfigMethod {

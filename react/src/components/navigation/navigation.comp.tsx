@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { AppContext, IAppContext } from '../app.context';
+import { IAppContext } from '../app.context';
 import { withAppContext } from '../withContext/withContext.comp';
 
 import './navigation.scss';

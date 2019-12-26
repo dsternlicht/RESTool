@@ -4,7 +4,7 @@ import { IConfig } from '../common/models/config.model';
 class ConfigService extends HTTPService {
 
   public async getRemoteConfig(url: string) {
-    return await this.makeRequest(url);
+    return await this.get(url);
   }
 
   public validateConfig(config: IConfig | null): { isValid: boolean, errorMessage: string | null } {
