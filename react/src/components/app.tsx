@@ -18,6 +18,7 @@ const httpService = new HttpService();
 httpService.baseUrl = configFile.baseUrl || '';
 httpService.errorMessageDataPath = configFile.errorMessageDataPath || '';
 httpService.unauthorizedRedirectUrl = configFile.unauthorizedRedirectUrl || '';
+document.title = configFile.name || 'RESTool App';
 
 function App() {
   const [config, setConfig] = useState<IConfig>(configFile);
@@ -26,13 +27,15 @@ function App() {
 
   async function loadRemoteConfig() {
     try {
-      const remoteConfig = await ConfigService.getRemoteConfig(config.remoteUrl);
+      const remoteConfig: IConfig = await ConfigService.getRemoteConfig(config.remoteUrl);
       
       // Setting global config for httpService
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
       httpService.unauthorizedRedirectUrl = remoteConfig.unauthorizedRedirectUrl || '';
       
+      document.title = remoteConfig.name || 'RESTool App';
+
       setConfig(remoteConfig);
     } catch (e) {
       console.error('Could not load config file', e);

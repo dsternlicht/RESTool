@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, TConfigDisplayField, IConfigGetAllMethod } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -50,6 +50,21 @@ const PageComp = ({ context }: IProps) => {
     setLoading(false);
   }
 
+  function renderTableCell(type: TConfigDisplayField, value: any) {
+    switch (type) {
+      case 'text':
+        return value;
+      case 'boolean':
+        return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
+      case 'image':
+        return <img src={value} alt={value} />
+      case 'url':
+        return <a href={value} target="_blank">{value}</a>
+      default:
+        return value;
+    }
+  }
+
   function renderPageContent() {
     if (error) {
       return <div className="app-error">{error}</div>;
@@ -60,10 +75,46 @@ const PageComp = ({ context }: IProps) => {
     }
 
     if (!items.length) {
-      return <div className="app-error">Nothing to see here. Data is empty 😶</div>;
+      return <div className="app-error">Nothing to see here. Data is empty.</div>;
     }
 
-    return <div>test</div>;
+    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+
+    return (
+      <div className="table-wrapper">
+        <table className="pure-table pure-table-horizontal">
+          <thead>
+            <tr>
+              {
+                fields.map((field) => {
+                  return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
+                })
+              }
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              items.map((item, rowIdx) => {
+                return (
+                  <tr key={`tr_${rowIdx}`}>
+                    {
+                      fields.map((field, fieldIdx) => {
+                        const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
+                        return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field.type, value)}</td>
+                      })
+                    }
+                    <td>
+                      actions
+                    </td>
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
+      </div>
+    );
   }
 
   useEffect(() => {

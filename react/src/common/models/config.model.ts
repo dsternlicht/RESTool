@@ -60,7 +60,7 @@ export interface IConfigOptionSource {
   sortBy: string
 }
 
-export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox';
+export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean';
 
 export interface IConfigDisplayField {
   name: string
@@ -83,7 +83,8 @@ export interface IConfigGetAllMethod extends IConfigMethod {
   dataPath: string
   queryParams: IConfigQueryParam[]
   display: {
-    type: 'table' | 'cards'
+    type: 'table' | 'cards',
+    fields: IConfigDisplayField[] // Should be deprecated
   },
   sortBy: string
   fields: IConfigDisplayField[]

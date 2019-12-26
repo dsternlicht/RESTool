@@ -1,5 +1,8 @@
 .app-nav {
   text-align: left;
+  position: sticky;
+  top: 0;
+  overflow: auto;
 
   a {
     display: block;
