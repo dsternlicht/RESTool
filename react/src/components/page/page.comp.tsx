@@ -59,7 +59,7 @@ const PageComp = ({ context }: IProps) => {
       case 'image':
         return <img src={value} alt={value} />
       case 'url':
-        return <a href={value} target="_blank">{value}</a>
+        return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
       default:
         return value;
     }
