@@ -1,6 +1,7 @@
 export interface IConfig {
   remoteUrl: string
   name: string
+  favicon: string // TODO: Update docs
   baseUrl: string
   errorMessageDataPath: string | string[]
   unauthorizedRedirectUrl: string

@@ -19,6 +19,21 @@ httpService.baseUrl = configFile.baseUrl || '';
 httpService.errorMessageDataPath = configFile.errorMessageDataPath || '';
 httpService.unauthorizedRedirectUrl = configFile.unauthorizedRedirectUrl || '';
 document.title = configFile.name || 'RESTool App';
+if (configFile.favicon) {
+  changeFavicon(configFile.favicon);
+}
+
+function changeFavicon(src: string) {
+  const link = document.createElement('link');
+  const oldLink = document.getElementById('favicon');
+  link.id = 'favicon';
+  link.rel = 'shortcut icon';
+  link.href = src;
+  if (oldLink) {
+   document.head.removeChild(oldLink);
+  }
+  document.head.appendChild(link);
+ }
 
 function App() {
   const [config, setConfig] = useState<IConfig>(configFile);
@@ -35,6 +50,10 @@ function App() {
       httpService.unauthorizedRedirectUrl = remoteConfig.unauthorizedRedirectUrl || '';
       
       document.title = remoteConfig.name || 'RESTool App';
+
+      if (configFile.favicon) {
+        changeFavicon(configFile.favicon);
+      }
 
       setConfig(remoteConfig);
     } catch (e) {
