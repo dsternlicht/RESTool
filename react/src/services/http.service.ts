@@ -29,7 +29,7 @@ class HttpService {
       // TODO: Add docs to "urlReplaceOnly"
       if (param.urlReplaceOnly) {
         const urlParamName = `:${param.name}`;
-        outputUrl = outputUrl.replace(urlParamName, param.value);
+        outputUrl = outputUrl.replace(urlParamName, param.value as string);
       } else {
         params.push(`${param.name}=${param.value || ''}`);
       }

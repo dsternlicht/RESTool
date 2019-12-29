@@ -77,7 +77,7 @@ export interface IConfigDisplayField {
 export interface IConfigQueryParam {
   type: TConfigInputField
   name: string
-  value: string
+  value: string | boolean
   label: string
   placeholder: string
   urlReplaceOnly: boolean

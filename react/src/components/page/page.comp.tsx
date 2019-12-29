@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+import * as QueryString from 'query-string';
 
 import { IAppContext } from '../app.context';
 import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigQueryParam } from '../../common/models/config.model';
@@ -18,6 +19,7 @@ interface IProps {
 
 const PageComp = ({ context }: IProps) => {
   const { page } = useParams();
+  const { push, location } = useHistory();
   const { activePage, error, setError, httpService } = context;
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
@@ -70,6 +72,13 @@ const PageComp = ({ context }: IProps) => {
 
   function submitForm(e: any) {
     e.preventDefault();
+
+    const queryState: string = queryParams.map((queryParam, idx) => {
+      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
+    }).join('&');
+
+    // Pushing query state to url
+    push(queryState);
 
     getAllRequest();
   }
@@ -133,6 +142,18 @@ const PageComp = ({ context }: IProps) => {
   }, [page]);
   
   useEffect(() => {
+    // Converting query state to local data
+    const params = QueryString.parse(location.search);
+    const updatedQueryParams: IConfigQueryParam[] = queryParams.map((queryParam) => {
+      if (typeof params[queryParam.name] !== 'undefined') {
+        queryParam.value = queryParam.type === 'boolean' ? (params[queryParam.name] === 'true') : decodeURIComponent(params[queryParam.name] as any);
+      }
+      return queryParam;
+    });
+    
+    setQueryParams(updatedQueryParams);
+
+    // Load data
     getAllRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);
