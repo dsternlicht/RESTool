@@ -2,15 +2,21 @@ import React from 'react';
 
 import { TConfigDisplayField, IConfigDisplayField } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
+import { Button } from '../button/button.comp';
 
 import './table.scss';
 
 interface IProps {
   items: any[]
+  callbacks: {
+    delete: (item: any) => void
+    post: () => void
+    put: (item: any) => void
+  }
   fields: IConfigDisplayField[]
 }
 
-export const Table = ({ fields, items }: IProps) => {
+export const Table = ({ items, fields, callbacks }: IProps) => {
   function renderTableCell(type: TConfigDisplayField, value: any) {
     switch (type) {
       case 'text':
@@ -30,6 +36,10 @@ export const Table = ({ fields, items }: IProps) => {
 
   return (
     <div className="table-wrapper">
+      {
+        callbacks.post &&
+        <Button className="add-item" color="green" onClick={() => callbacks.post()}>+ Add Item</Button>
+      }
       <table className="pure-table">
         <thead>
           <tr>
@@ -53,7 +63,24 @@ export const Table = ({ fields, items }: IProps) => {
                     })
                   }
                   <td>
-                    actions
+                    <div className="actions-wrapper">
+                      {
+                        callbacks.put &&
+                        <Button onClick={() => callbacks.put(item)}>
+                          <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </Button>
+                      }
+                      {
+                        false && 
+                        <i className="fa fa-cogs" aria-hidden="true"></i>
+                      }
+                      {
+                        callbacks.delete &&
+                        <Button onClick={() => callbacks.delete(item)}>
+                          <i className="fa fa-times" aria-hidden="true"></i>
+                        </Button>
+                      }
+                    </div>
                   </td>
                 </tr>
               );

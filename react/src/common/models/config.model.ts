@@ -26,7 +26,7 @@ export interface IConfigMethods {
   delete: IConfigDeleteMethod
 }
 
-export type TConfigMethod = 'get' | 'post' | 'put' | 'delete';
+export type TConfigMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
 export interface IConfigMethod {
   url: string

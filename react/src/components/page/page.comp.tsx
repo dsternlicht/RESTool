@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigQueryParam } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigQueryParam, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -23,6 +23,9 @@ const PageComp = ({ context }: IProps) => {
   const { activePage, error, setError, httpService } = context;
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
+  const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
+  const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
+  const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
   const [loading, setLoading] = useState<boolean>(false);
   const [items, setItems] = useState<any[]>([]);
   const [queryParams, setQueryParams] = useState<IConfigQueryParam[]>(getAllConfig?.queryParams || []);
@@ -37,7 +40,12 @@ const PageComp = ({ context }: IProps) => {
       }
       
       const { url, requestHeaders, actualMethod, dataPath } = getAllConfig;
-      const result = await httpService[actualMethod || 'get'](url, queryParams, requestHeaders);
+      const result = await httpService.fetch({
+        method: actualMethod || 'get', 
+        origUrl: url, 
+        queryParams, 
+        headers: requestHeaders
+      });
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
       if (!extractedData) {
@@ -56,6 +64,43 @@ const PageComp = ({ context }: IProps) => {
     setLoading(false);
   }
 
+  async function deleteItem(item: any) {
+    const approved: boolean = window.confirm('Are you sure you want to delete this item?');
+    
+    if (!approved) {
+      return;
+    }
+
+    try {
+      if (!deleteConfig) {
+        throw new Error('Delete method is not defined.');
+      }
+      
+      const { url, requestHeaders, actualMethod } = deleteConfig;
+      const success = await httpService.fetch({
+        method: actualMethod || 'delete', 
+        origUrl: url, 
+        data: item,
+        headers: requestHeaders, 
+        responseType: 'boolean'
+      });
+
+      if (success) {
+        getAllRequest();
+      }
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  function addItem() {
+
+  }
+
+  function updateItem() {
+
+  }
+
   function renderTable() {
     if (loading) {
       return <Loader />;
@@ -67,7 +112,17 @@ const PageComp = ({ context }: IProps) => {
 
     const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
 
-    return <Table fields={fields} items={items} />;
+    return (
+      <Table 
+        callbacks={{
+          delete: deleteConfig ? deleteItem : () => {},
+          post: postConfig ? addItem : () => {},
+          put: putConfig ? updateItem : () => {},
+        }}
+        fields={fields}
+        items={items} 
+      />
+    );
   }
 
   function submitForm(e: any) {

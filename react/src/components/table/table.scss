@@ -50,6 +50,16 @@
       max-width: 1px;
     }
 
+    .actions-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      > * {
+        margin: 0 5px;
+      }
+    }
+
     img {
       width: 200px;
       height: 150px;

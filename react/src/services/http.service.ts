@@ -1,6 +1,15 @@
 import { IConfigQueryParam, TConfigMethod } from '../common/models/config.model';
 
-export type ResponseType = 'json' | 'text' | 'boolean';
+export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
+
+export interface IFetchParams {
+  origUrl: string
+  method?: TConfigMethod
+  headers?: any
+  queryParams?: IConfigQueryParam[]
+  data?: any
+  responseType?: ResponseType
+}
 
 class HttpService {
   public baseUrl: string;
@@ -13,9 +22,24 @@ class HttpService {
     this.errorMessageDataPath = errorMessageDataPath || '';
   }
 
-  private buildUrl(url: string, queryParams: IConfigQueryParam[] = []) {
-    if (!queryParams || !queryParams.length) {
+  private replaceParamsInUrl(url: string, data?: any): string {
+    if (!data || typeof data !== 'object') {
       return url;
+    }
+
+    let outputUrl = url;
+    
+    Object.keys(data).forEach((key) => {
+      const urlParamName = `:${key}`;
+      outputUrl = outputUrl.replace(urlParamName, data[key] as string);
+    });
+
+    return outputUrl;
+  }
+
+  private buildUrl(url: string, queryParams: IConfigQueryParam[] = [], data?: any): string {
+    if (!queryParams || !queryParams.length) {
+      return this.replaceParamsInUrl(url, data);
     }
 
     let outputUrl = url;
@@ -43,15 +67,15 @@ class HttpService {
     return outputUrl;
   }
 
-  private buildRequest(requestMethod: TConfigMethod, url: string, queryParams: IConfigQueryParam[] = [], body: any, headers: any = {}): { url: string, params: any } {
-    const finalUrl: string = this.buildUrl(this.baseUrl + url, queryParams);
+  private buildRequest(params: IFetchParams): { url: string, params: any } {
+    const finalUrl: string = this.buildUrl(this.baseUrl + params.origUrl, params.queryParams, params.data);
     const requestParams = {
-      method: requestMethod,
+      method: params.method || 'get',
       headers: {
         'content-type': 'application/json',
-        ...headers
+        ...(params.headers || {})
       },
-      body
+      body: params.method === 'post' || params.method === 'put' ? params.data : undefined
     };
 
     return {
@@ -79,23 +103,8 @@ class HttpService {
     throw new Error(`Response code: ${res.status}`);
   }
 
-  public async get(origUrl: string, queryParams: IConfigQueryParam[] = [], headers: any = {}, responseType?: ResponseType) {
-    const { url, params } = this.buildRequest('get', origUrl, queryParams, undefined, headers);
-    return await this.makeRequest(url, params, responseType);
-  }
-
-  public async post(origUrl: string, queryParams: IConfigQueryParam[] = [], body: any, headers: any = {}, responseType?: ResponseType) {
-    const { url, params } = this.buildRequest('post', origUrl, queryParams, body, headers);
-    return await this.makeRequest(url, params, responseType);
-  }
-
-  public async put(origUrl: string, queryParams: IConfigQueryParam[] = [], body: any, headers: any = {}, responseType?: ResponseType) {
-    const { url, params } = this.buildRequest('put', origUrl, queryParams, body, headers);
-    return await this.makeRequest(url, params, responseType);
-  }
-
-  public async delete(origUrl: string, queryParams: IConfigQueryParam[] = [], headers: any = {}, responseType?: ResponseType) {
-    const { url, params } = this.buildRequest('delete', origUrl, queryParams, undefined, headers);
+  public async fetch({ method, origUrl, queryParams, data, headers, responseType }: IFetchParams) {
+    const { url, params } = this.buildRequest({ method, origUrl, queryParams, data, headers });
     return await this.makeRequest(url, params, responseType);
   }
 
