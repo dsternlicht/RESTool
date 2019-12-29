@@ -80,12 +80,14 @@ function App() {
     }
   }, [config]);
 
+  const appName: string = config?.name || 'RESTool App';
+
   return (
     <div className="restool-app">
       <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
         <Router>
           <aside>
-            <h1>{config?.name || 'RESTool App'}</h1>
+            <h1 title={appName}>{appName}</h1>
             {
               <Navigation />
             }

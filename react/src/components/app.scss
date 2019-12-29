@@ -12,6 +12,9 @@
     color: #fff;
     box-shadow: inset -2px 0px 3px rgba(0, 0, 0, 0.3);
     z-index: 10;
+    position: sticky;
+    top: 0;
+    height: 100vh;
 
     h1 {
       padding: 20px;
@@ -19,6 +22,10 @@
       font-size: 20px;
       font-weight: 300;
       margin: 0;
+      height: 63px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   

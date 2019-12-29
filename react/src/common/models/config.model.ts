@@ -40,6 +40,8 @@ export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'in
 
 export interface IConfigInputField {
   name: string
+  value: any
+  placeholder: string // TODO: Add docs
   type: TConfigInputField
   label: string
   dataPath: string
@@ -47,7 +49,7 @@ export interface IConfigInputField {
   options: [string | { display: string, value: string }],
   optionSource: IConfigOptionSource
   arrayType: 'object' | 'string'
-  default: string
+  default: string // Should be deprecated
   required: boolean
   useInUrl: boolean
   accept: string
@@ -77,6 +79,7 @@ export interface IConfigQueryParam {
   name: string
   value: string
   label: string
+  placeholder: string
   urlReplaceOnly: boolean
 }
 

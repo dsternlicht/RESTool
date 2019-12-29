@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, TConfigDisplayField, IConfigGetAllMethod } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigQueryParam } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
+import { Table } from '../table/table.comp';
+import { FormRow } from '../formRow/formRow.comp';
+import { Button } from '../button/button.comp';
 
 import './page.scss';
 
@@ -14,12 +17,13 @@ interface IProps {
 }
 
 const PageComp = ({ context }: IProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [items, setItems] = useState<any[]>([]);
   const { page } = useParams();
   const { activePage, error, setError, httpService } = context;
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [items, setItems] = useState<any[]>([]);
+  const [queryParams, setQueryParams] = useState<IConfigQueryParam[]>(getAllConfig?.queryParams || []);
 
   async function getAllRequest() {
     setLoading(true);
@@ -30,7 +34,7 @@ const PageComp = ({ context }: IProps) => {
         throw new Error('Get all method is not defined.');
       }
       
-      const { url, queryParams, requestHeaders, actualMethod, dataPath } = getAllConfig;
+      const { url, requestHeaders, actualMethod, dataPath } = getAllConfig;
       const result = await httpService[actualMethod || 'get'](url, queryParams, requestHeaders);
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
@@ -50,19 +54,63 @@ const PageComp = ({ context }: IProps) => {
     setLoading(false);
   }
 
-  function renderTableCell(type: TConfigDisplayField, value: any) {
-    switch (type) {
-      case 'text':
-        return value;
-      case 'boolean':
-        return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
-      case 'image':
-        return <img src={value} alt={value} />
-      case 'url':
-        return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
-      default:
-        return value;
+  function renderTable() {
+    if (loading) {
+      return <Loader />;
     }
+
+    if (!items.length) {
+      return <div className="app-error">Nothing to see here. Data result is empty.</div>;
+    }
+
+    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+
+    return <Table fields={fields} items={items} />;
+  }
+
+  function submitForm(e: any) {
+    e.preventDefault();
+
+    getAllRequest();
+  }
+
+  function formChanged(fieldName: string, value: any) {
+    const updatedQueryParams: IConfigQueryParam[] = [...queryParams].map((field) => {
+      if (field.name === fieldName) {
+        field.value = value;
+      }
+
+      return field;
+    });
+
+    setQueryParams(updatedQueryParams);
+  }
+
+  function renderQueryParamsForm() {
+    if (!queryParams.length) {
+      return <React.Fragment></React.Fragment>;
+    }
+
+    return (
+      <section className="query-params-form">
+        <h5>Query Params:</h5>
+        <form onSubmit={submitForm}>
+          {
+            queryParams.map((queryParam, idx) => {
+              return (
+                <FormRow 
+                  key={`query_param_${idx}`}
+                  field={queryParam} 
+                  onChange={formChanged}
+                  showReset={!queryParam.type || queryParam.type === 'text'}
+                />
+              );
+            })
+          }
+          <Button onClick={submitForm}>Submit</Button>
+        </form>
+      </section>
+    );
   }
 
   function renderPageContent() {
@@ -70,51 +118,12 @@ const PageComp = ({ context }: IProps) => {
       return <div className="app-error">{error}</div>;
     }
 
-    if (loading) {
-      return <Loader />;
-    }
-
-    if (!items.length) {
-      return <div className="app-error">Nothing to see here. Data is empty.</div>;
-    }
-
-    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
-
     return (
-      <div className="table-wrapper">
-        <table className="pure-table pure-table-horizontal">
-          <thead>
-            <tr>
-              {
-                fields.map((field) => {
-                  return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
-                })
-              }
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              items.map((item, rowIdx) => {
-                return (
-                  <tr key={`tr_${rowIdx}`}>
-                    {
-                      fields.map((field, fieldIdx) => {
-                        const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
-                        return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field.type, value)}</td>
-                      })
-                    }
-                    <td>
-                      actions
-                    </td>
-                  </tr>
-                );
-              })
-            }
-          </tbody>
-        </table>
-      </div>
-    );
+      <React.Fragment>
+        {renderQueryParamsForm()}
+        {renderTable()}
+      </React.Fragment>
+    )
   }
 
   useEffect(() => {

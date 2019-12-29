@@ -1,8 +1,7 @@
 .app-nav {
   text-align: left;
-  position: sticky;
-  top: 0;
   overflow: auto;
+  max-height: calc(100vh - 63px);
 
   a {
     display: block;

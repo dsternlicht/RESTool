@@ -1,0 +1,36 @@
+.button {
+  display: inline-block;
+  zoom: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  font-family: inherit;
+  padding: 8px 12px;
+  color: #000000cc;
+  border: none;
+  border: transparent;
+  background-color: #e6e6e6;
+  text-decoration: none;
+  border-radius: 2px;
+  font-weight: 300;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    background-color: #ebebeb;
+  }
+
+  &.green {
+    background: #1cb841;
+    color: #fff;
+
+    &:hover {
+      background-color: #2dc450;
+    }
+  }
+}

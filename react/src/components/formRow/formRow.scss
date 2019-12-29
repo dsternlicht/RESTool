@@ -1,0 +1,89 @@
+.form-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 15px;
+  position: relative;
+
+  > label {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    .premium-star {
+      margin-right: 5px;
+      margin-top: -3px;
+    }
+  }
+
+  > *:not(label) {
+    flex: 1;
+  }
+
+  .clear-input {
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    right: 8px;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  input[type=text], select, textarea, input[type=url], input[type=number], input[type=date], input[type=email], input[type=password] {
+    width: 100%;
+    padding: 7px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.05);
+    color: #AAB0BE;
+    background-color: #fff;
+    font-size: 14px;
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+    text-overflow: ellipsis;
+    border: none;
+
+    &.small {
+      max-width: 70px;
+      text-align: center;
+    }
+
+    &::placeholder {
+      color: #c5c9d2;
+    }
+
+    &::selection {
+      background-color: #AAB0BE;
+      color: #fff;
+    }
+    
+    &:focus {
+      color: #5C606B;
+      box-shadow: 0 0 3px rgba(0,0,0,0.25);
+      outline: none;
+    }
+  }
+
+  input[type=text] {
+    padding-right: 25px;
+  }
+  
+  &.column {
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+      flex-basis: 0;
+      margin: 0 5px 10px;
+    }
+  }
+}
