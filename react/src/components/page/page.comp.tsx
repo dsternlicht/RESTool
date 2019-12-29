@@ -108,7 +108,7 @@ const PageComp = ({ context }: IProps) => {
     }
 
     if (!items.length) {
-      return <div className="app-error">Nothing to see here. Data result is empty.</div>;
+      return <div className="app-error">Nothing to see here. Result is empty.</div>;
     }
 
     const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
@@ -117,7 +117,6 @@ const PageComp = ({ context }: IProps) => {
       <Table 
         callbacks={{
           delete: deleteConfig ? deleteItem : () => {},
-          post: postConfig ? addItem : () => {},
           put: putConfig ? updateItem : () => {},
         }}
         fields={fields}
@@ -230,6 +229,10 @@ const PageComp = ({ context }: IProps) => {
             <h4>{activePage?.description}</h4>
           }
         </hgroup>
+        {
+          postConfig &&
+          <Button className="add-item" color="green" onClick={() => addItem()}>+ Add Item</Button>
+        }
       </header>
       <main className="app-page-content">
         {renderPageContent()}

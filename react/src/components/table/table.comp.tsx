@@ -10,7 +10,6 @@ interface IProps {
   items: any[]
   callbacks: {
     delete: (item: any) => void
-    post: () => void
     put: (item: any) => void
   }
   fields: IConfigDisplayField[]
@@ -36,10 +35,6 @@ export const Table = ({ items, fields, callbacks }: IProps) => {
 
   return (
     <div className="table-wrapper">
-      {
-        callbacks.post &&
-        <Button className="add-item" color="green" onClick={() => callbacks.post()}>+ Add Item</Button>
-      }
       <table className="pure-table">
         <thead>
           <tr>
@@ -66,7 +61,7 @@ export const Table = ({ items, fields, callbacks }: IProps) => {
                     <div className="actions-wrapper">
                       {
                         callbacks.put &&
-                        <Button onClick={() => callbacks.put(item)}>
+                        <Button onClick={() => callbacks.put(item)} title="Edit">
                           <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </Button>
                       }
@@ -76,7 +71,7 @@ export const Table = ({ items, fields, callbacks }: IProps) => {
                       }
                       {
                         callbacks.delete &&
-                        <Button onClick={() => callbacks.delete(item)}>
+                        <Button onClick={() => callbacks.delete(item)} title="Delete">
                           <i className="fa fa-times" aria-hidden="true"></i>
                         </Button>
                       }

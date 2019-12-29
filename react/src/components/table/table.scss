@@ -1,3 +1,11 @@
+.table-wrapper {
+  position: relative;
+  
+  .add-item {
+    justify-self: flex-end;
+  }
+}
+
 .pure-table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -57,6 +65,10 @@
 
       > * {
         margin: 0 5px;
+        border-radius: 50em;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
       }
     }
 

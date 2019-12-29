@@ -19,8 +19,14 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
       case 'select':
           return (
             <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)}>
+              <option>-- Select --</option>
               {
-                (field.options || [])
+                (field.options || []).map((option) => {
+                  if (typeof option === 'string') {
+                    return <option value={option}>{option}</option>  
+                  }
+                  return <option value={option.value}>{option.display || option.value}</option>
+                })
               }
             </select>
           );
