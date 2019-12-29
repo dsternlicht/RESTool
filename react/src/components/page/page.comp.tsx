@@ -126,8 +126,10 @@ const PageComp = ({ context }: IProps) => {
     );
   }
 
-  function submitForm(e: any) {
-    e.preventDefault();
+  function submitForm(e?: any) {
+    if (e) {
+      e.preventDefault();
+    }
 
     const queryState: string = queryParams.map((queryParam, idx) => {
       return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
@@ -139,7 +141,7 @@ const PageComp = ({ context }: IProps) => {
     getAllRequest();
   }
 
-  function formChanged(fieldName: string, value: any) {
+  function formChanged(fieldName: string, value: any, submitAfterChange?: boolean) {
     const updatedQueryParams: IConfigQueryParam[] = [...queryParams].map((field) => {
       if (field.name === fieldName) {
         field.value = value;
@@ -149,6 +151,10 @@ const PageComp = ({ context }: IProps) => {
     });
 
     setQueryParams(updatedQueryParams);
+
+    if (submitAfterChange) {
+      submitForm();
+    }
   }
 
   function renderQueryParamsForm() {

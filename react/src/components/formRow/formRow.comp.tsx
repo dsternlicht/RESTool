@@ -6,7 +6,7 @@ import './formRow.scss';
 
 interface IProps {
   field: IConfigInputField | IConfigQueryParam
-  onChange: (fieldName: string, value: any) => void
+  onChange: (fieldName: string, value: any, submitAfterChange?: boolean) => void
   showReset?: boolean
   direction?: 'row' | 'column'
 }
@@ -30,7 +30,7 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
       {renderFieldInput()}
       {
         (showReset && field.value.length > 0) &&
-        <i title="Clear" onClick={() => onChange(field.name, '')} aria-label="Clear" className="clear-input fa fa-times"></i>
+        <i title="Clear" onClick={() => onChange(field.name, '', true)} aria-label="Clear" className="clear-input fa fa-times"></i>
       }
     </div>
   );

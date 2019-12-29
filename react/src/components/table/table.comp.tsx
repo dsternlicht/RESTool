@@ -71,7 +71,7 @@ export const Table = ({ items, fields, callbacks }: IProps) => {
                         </Button>
                       }
                       {
-                        false && 
+                        false && // TODO: Support custom actions
                         <i className="fa fa-cogs" aria-hidden="true"></i>
                       }
                       {
