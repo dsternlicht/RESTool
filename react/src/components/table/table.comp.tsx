@@ -18,9 +18,11 @@ export const Table = ({ fields, items }: IProps) => {
       case 'boolean':
         return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
       case 'image':
-        return <img src={value} alt={value} />
+        return <img src={value} alt={value} />;
       case 'url':
-        return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
+        return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
+      case 'colorbox':
+        return <div className="colorbox" style={{ backgroundColor: value }}></div>;
       default:
         return value;
     }
