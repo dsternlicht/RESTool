@@ -1,4 +1,4 @@
-import { IConfigQueryParam, TConfigMethod } from '../common/models/config.model';
+import { TConfigMethod, IConfigInputField } from '../common/models/config.model';
 
 export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
 
@@ -6,7 +6,7 @@ export interface IFetchParams {
   origUrl: string
   method?: TConfigMethod
   headers?: any
-  queryParams?: IConfigQueryParam[]
+  queryParams?: IConfigInputField[]
   data?: any
   responseType?: ResponseType
 }
@@ -37,7 +37,7 @@ class HttpService {
     return outputUrl;
   }
 
-  private buildUrl(url: string, queryParams: IConfigQueryParam[] = [], data?: any): string {
+  private buildUrl(url: string, queryParams: IConfigInputField[] = [], data?: any): string {
     if (!queryParams || !queryParams.length) {
       return this.replaceParamsInUrl(url, data);
     }

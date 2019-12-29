@@ -32,7 +32,7 @@ export interface IConfigMethod {
   url: string
   actualMethod: TConfigMethod
   requestHeaders: any
-  queryParams: IConfigQueryParam[]
+  queryParams: IConfigInputField[]
   fields: IConfigInputField[] | IConfigDisplayField[]
 }
 
@@ -41,10 +41,10 @@ export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'in
 export interface IConfigInputField {
   name: string
   value: any
-  placeholder: string // TODO: Add docs
   type: TConfigInputField
   label: string
   dataPath: string
+  placeholder: string // TODO: Add docs
   readonly: boolean
   options: [string | { display: string, value: string }],
   optionSource: IConfigOptionSource
@@ -53,6 +53,7 @@ export interface IConfigInputField {
   required: boolean
   useInUrl: boolean
   accept: string
+  urlReplaceOnly: boolean
 }
 
 export interface IConfigOptionSource {
@@ -74,18 +75,9 @@ export interface IConfigDisplayField {
   truncate: boolean
 }
 
-export interface IConfigQueryParam {
-  type: TConfigInputField
-  name: string
-  value: string | boolean
-  label: string
-  placeholder: string
-  urlReplaceOnly: boolean
-}
-
 export interface IConfigGetAllMethod extends IConfigMethod {
   dataPath: string
-  queryParams: IConfigQueryParam[]
+  queryParams: IConfigInputField[]
   display: {
     type: 'table' | 'cards',
     fields: IConfigDisplayField[] // Should be deprecated

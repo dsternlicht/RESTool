@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { IConfigInputField, IConfigQueryParam } from '../../common/models/config.model';
+import { IConfigInputField } from '../../common/models/config.model';
 
 import './formRow.scss';
 
 interface IProps {
-  field: IConfigInputField | IConfigQueryParam
+  field: IConfigInputField
   onChange: (fieldName: string, value: any, submitAfterChange?: boolean) => void
   showReset?: boolean
   direction?: 'row' | 'column'
@@ -15,7 +15,15 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
   function renderFieldInput() {
     switch (field.type) {
       case 'boolean':
-          return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked)} />;
+          return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} />;
+      case 'select':
+          return (
+            <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)}>
+              {
+                (field.options || [])
+              }
+            </select>
+          );
       case 'number':
           return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} />;
       case 'text':

@@ -4,7 +4,7 @@ import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigQueryParam, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -29,7 +29,7 @@ const PageComp = ({ context }: IProps) => {
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
   const [loading, setLoading] = useState<boolean>(false);
   const [items, setItems] = useState<any[]>([]);
-  const [queryParams, setQueryParams] = useState<IConfigQueryParam[]>(getAllConfig?.queryParams || []);
+  const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
 
   async function getAllRequest() {
     setLoading(true);
@@ -142,7 +142,7 @@ const PageComp = ({ context }: IProps) => {
   }
 
   function formChanged(fieldName: string, value: any, submitAfterChange?: boolean) {
-    const updatedQueryParams: IConfigQueryParam[] = [...queryParams].map((field) => {
+    const updatedQueryParams: IConfigInputField[] = [...queryParams].map((field) => {
       if (field.name === fieldName) {
         field.value = value;
       }
@@ -206,7 +206,7 @@ const PageComp = ({ context }: IProps) => {
   useEffect(() => {
     // Converting query state to local data
     const params = QueryString.parse(location.search);
-    const updatedQueryParams: IConfigQueryParam[] = queryParams.map((queryParam) => {
+    const updatedQueryParams: IConfigInputField[] = queryParams.map((queryParam) => {
       if (typeof params[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (params[queryParam.name] === 'true') : decodeURIComponent(params[queryParam.name] as any);
       }
