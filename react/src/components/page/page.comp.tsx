@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
+import { toast } from 'react-toastify';
 
 import { IAppContext } from '../app.context';
 import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigQueryParam, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod } from '../../common/models/config.model';
@@ -89,7 +90,7 @@ const PageComp = ({ context }: IProps) => {
         getAllRequest();
       }
     } catch (e) {
-      setError(e.message);
+      toast.error(e.message);
     }
   }
 

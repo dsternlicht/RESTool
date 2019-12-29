@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 import ConfigService from '../services/config.service';
 import { IConfig, IConfigPage } from '../common/models/config.model';
@@ -9,6 +10,7 @@ import { AppContext } from './app.context';
 import HttpService from '../services/http.service';
 
 import './app.scss';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Load local config json file
 const configFile = require('../config.json');
@@ -99,6 +101,11 @@ function App() {
               <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
             </Switch>
           }
+          <ToastContainer 
+            position={toast.POSITION.TOP_CENTER} 
+            autoClose={4000} 
+            draggable={false} 
+          />
         </Router>
       </AppContext.Provider>
     </div>
