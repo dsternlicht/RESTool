@@ -90,10 +90,16 @@ export interface IConfigGetSingleMethod extends IConfigMethod {
   dataPath: string
 }
 
-export interface IConfigPostMethod extends IConfigMethod {}
+export interface IConfigPostMethod extends IConfigMethod {
+  fields: IConfigInputField[]
+}
 
-export interface IConfigPutMethod extends IConfigMethod {}
+export interface IConfigPutMethod extends IConfigMethod {
+  fields: IConfigInputField[]
+}
 
 export interface IConfigDeleteMethod extends IConfigMethod {}
 
-export interface IConfigCustomAction extends IConfigMethod {}
+export interface IConfigCustomAction extends IConfigMethod {
+  fields: IConfigInputField[]
+}

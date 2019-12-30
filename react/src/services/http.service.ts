@@ -7,7 +7,8 @@ export interface IFetchParams {
   method?: TConfigMethod
   headers?: any
   queryParams?: IConfigInputField[]
-  data?: any
+  rawData?: any
+  body?: any
   responseType?: ResponseType
 }
 
@@ -22,24 +23,24 @@ class HttpService {
     this.errorMessageDataPath = errorMessageDataPath || '';
   }
 
-  private replaceParamsInUrl(url: string, data?: any): string {
-    if (!data || typeof data !== 'object') {
+  private replaceParamsInUrl(url: string, rawData?: any): string {
+    if (!rawData || typeof rawData !== 'object') {
       return url;
     }
 
     let outputUrl = url;
     
-    Object.keys(data).forEach((key) => {
+    Object.keys(rawData).forEach((key) => {
       const urlParamName = `:${key}`;
-      outputUrl = outputUrl.replace(urlParamName, data[key] as string);
+      outputUrl = outputUrl.replace(urlParamName, rawData[key] as string);
     });
 
     return outputUrl;
   }
 
-  private buildUrl(url: string, queryParams: IConfigInputField[] = [], data?: any): string {
+  private buildUrl(url: string, queryParams: IConfigInputField[] = [], rawData?: any): string {
     if (!queryParams || !queryParams.length) {
-      return this.replaceParamsInUrl(url, data);
+      return this.replaceParamsInUrl(url, rawData);
     }
 
     let outputUrl = url;
@@ -68,14 +69,14 @@ class HttpService {
   }
 
   private buildRequest(params: IFetchParams): { url: string, params: any } {
-    const finalUrl: string = this.buildUrl(this.baseUrl + params.origUrl, params.queryParams, params.data);
+    const finalUrl: string = this.buildUrl(this.baseUrl + params.origUrl, params.queryParams, params.rawData);
     const requestParams = {
       method: params.method || 'get',
       headers: {
         'content-type': 'application/json',
         ...(params.headers || {})
       },
-      body: params.method === 'post' || params.method === 'put' ? params.data : undefined
+      body: params.method === 'post' || params.method === 'put' ? JSON.stringify(params.body) : undefined
     };
 
     return {
@@ -103,8 +104,8 @@ class HttpService {
     throw new Error(`Response code: ${res.status}`);
   }
 
-  public async fetch({ method, origUrl, queryParams, data, headers, responseType }: IFetchParams) {
-    const { url, params } = this.buildRequest({ method, origUrl, queryParams, data, headers });
+  public async fetch({ method, origUrl, queryParams, rawData, body, headers, responseType }: IFetchParams) {
+    const { url, params } = this.buildRequest({ method, origUrl, queryParams, rawData, body, headers });
     return await this.makeRequest(url, params, responseType);
   }
 

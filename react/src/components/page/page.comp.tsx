@@ -11,11 +11,20 @@ import { dataHelpers } from '../../helpers/data.helpers';
 import { Table } from '../table/table.comp';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
+import { FormPopup } from '../formPopup/formPopup.comp';
 
 import './page.scss';
 
 interface IProps {
   context: IAppContext
+}
+
+interface IPopupProps {
+  type: 'add' | 'update' | 'action'
+  title: string
+  config: IConfigPostMethod | IConfigPutMethod
+  submitCallback: (body: any, rawData: any) => void
+  rawData?: {}
 }
 
 const PageComp = ({ context }: IProps) => {
@@ -28,8 +37,29 @@ const PageComp = ({ context }: IProps) => {
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
   const [loading, setLoading] = useState<boolean>(false);
+  const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [items, setItems] = useState<any[]>([]);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
+
+  function closeFormPopup(refreshData: boolean = false) {
+    setOpenedPopup(null);
+
+    if (refreshData === true) {
+      getAllRequest();
+    }
+  }
+
+  function openEditPopup(rawData: any) {
+    const params: IPopupProps = { 
+      rawData,
+      type: 'update', 
+      title: 'Update Item', 
+      config: putConfig as IConfigPutMethod, 
+      submitCallback: updateItem 
+    };
+
+    setOpenedPopup(params);
+  }
 
   async function getAllRequest() {
     setLoading(true);
@@ -65,6 +95,39 @@ const PageComp = ({ context }: IProps) => {
     setLoading(false);
   }
 
+  async function addItem(data: any) {
+    if (!postConfig) {
+      throw new Error('Post method is not defined.');
+    }
+      
+    const { url, requestHeaders, actualMethod } = postConfig;
+    
+    return await httpService.fetch({
+      method: actualMethod || 'post', 
+      origUrl: url, 
+      body: data,
+      headers: requestHeaders,
+      responseType: 'boolean'
+    });
+  }
+
+  async function updateItem(body: any, rawData: any) {
+    if (!putConfig) {
+      throw new Error('Put method is not defined.');
+    }
+    
+    const { url, requestHeaders, actualMethod } = putConfig;
+    
+    return await httpService.fetch({
+      method: actualMethod || 'put', 
+      origUrl: url, 
+      rawData,
+      body,
+      headers: requestHeaders,
+      responseType: 'boolean'
+    });
+  }
+
   async function deleteItem(item: any) {
     const approved: boolean = window.confirm('Are you sure you want to delete this item?');
     
@@ -81,7 +144,7 @@ const PageComp = ({ context }: IProps) => {
       const success = await httpService.fetch({
         method: actualMethod || 'delete', 
         origUrl: url, 
-        data: item,
+        rawData: item,
         headers: requestHeaders, 
         responseType: 'boolean'
       });
@@ -94,40 +157,13 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
-  function addItem() {
-
-  }
-
-  function updateItem() {
-
-  }
-
-  function renderTable() {
-    if (loading) {
-      return <Loader />;
-    }
-
-    if (!items.length) {
-      return <div className="app-error">Nothing to see here. Result is empty.</div>;
-    }
-
-    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
-
-    return (
-      <Table 
-        callbacks={{
-          delete: deleteConfig ? deleteItem : () => {},
-          put: putConfig ? updateItem : () => {},
-        }}
-        fields={fields}
-        items={items} 
-      />
-    );
-  }
-
   function submitForm(e?: any) {
     if (e) {
       e.preventDefault();
+    }
+
+    if (loading) {
+      return;
     }
 
     const queryState: string = queryParams.map((queryParam, idx) => {
@@ -183,6 +219,29 @@ const PageComp = ({ context }: IProps) => {
     );
   }
 
+  function renderTable() {
+    if (loading) {
+      return <Loader />;
+    }
+
+    if (!items.length) {
+      return <div className="app-error">Nothing to see here. Result is empty.</div>;
+    }
+
+    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+
+    return (
+      <Table 
+        callbacks={{
+          delete: deleteConfig ? deleteItem : () => {},
+          put: putConfig ? openEditPopup : () => {},
+        }}
+        fields={fields}
+        items={items} 
+      />
+    );
+  }
+
   function renderPageContent() {
     if (error) {
       return <div className="app-error">{error}</div>;
@@ -231,12 +290,22 @@ const PageComp = ({ context }: IProps) => {
         </hgroup>
         {
           postConfig &&
-          <Button className="add-item" color="green" onClick={() => addItem()}>+ Add Item</Button>
+          <Button className="add-item" color="green" onClick={() => setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })}>+ Add Item</Button>
         }
       </header>
       <main className="app-page-content">
         {renderPageContent()}
       </main>
+      {
+        openedPopup &&
+        <FormPopup
+          title={openedPopup.title}
+          closeCallback={closeFormPopup}
+          submitCallback={openedPopup.submitCallback}
+          fields={openedPopup.config?.fields || []}
+          rawData={openedPopup.rawData}
+        />
+      }
     </div>
   );
 }

@@ -15,23 +15,26 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
   function renderFieldInput() {
     switch (field.type) {
       case 'boolean':
-          return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} />;
+        return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} />;
       case 'select':
-          return (
-            <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)}>
-              <option>-- Select --</option>
-              {
-                (field.options || []).map((option) => {
-                  if (typeof option === 'string') {
-                    return <option value={option}>{option}</option>  
-                  }
-                  return <option value={option.value}>{option.display || option.value}</option>
-                })
-              }
-            </select>
-          );
+        return (
+          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)}>
+            <option>-- Select --</option>
+            {
+              (field.options || []).map((option, idx) => {
+                const key = `option_${idx}_`;
+                if (typeof option !== 'object') {
+                  return <option key={`${key}_${option}`} value={option}>{option}</option>  
+                }
+                return <option key={`${key}_${option.value}`} value={option.value}>{option.display || option.value}</option>
+              })
+            }
+          </select>
+        );
+      case 'long-text':
+        return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)}>{field.value}</textarea>;
       case 'number':
-          return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} />;
+        return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} />;
       case 'text':
       default:
         return <input type="text" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} />;
@@ -43,7 +46,7 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
       <label>{field.label}</label>
       {renderFieldInput()}
       {
-        (showReset && field.value.length > 0) &&
+        (showReset && field.value && field.value.length > 0) &&
         <i title="Clear" onClick={() => onChange(field.name, '', true)} aria-label="Clear" className="clear-input fa fa-times"></i>
       }
     </div>
