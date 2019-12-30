@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TConfigDisplayField, IConfigDisplayField } from '../../common/models/config.model';
+import { TConfigDisplayField, IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 
@@ -11,11 +11,13 @@ interface IProps {
   callbacks: {
     delete: (item: any) => void
     put: (item: any) => void
+    action: (item: any, action: IConfigCustomAction) => void
   }
   fields: IConfigDisplayField[]
+  customActions?: IConfigCustomAction[]
 }
 
-export const Table = ({ items, fields, callbacks }: IProps) => {
+export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
   function renderTableCell(type: TConfigDisplayField, value: any) {
     switch (type) {
       case 'text':
@@ -66,8 +68,12 @@ export const Table = ({ items, fields, callbacks }: IProps) => {
                         </Button>
                       }
                       {
-                        false && // TODO: Support custom actions
-                        <i className="fa fa-cogs" aria-hidden="true"></i>
+                        customActions?.length &&
+                        customActions.map((action, idx) => (
+                          <Button key={`action_${rowIdx}_${idx}`} onClick={() => callbacks.action(item, action)} title={action.name}>
+                            <i className="fa fa-cogs" aria-hidden="true"></i>
+                          </Button>
+                        ))
                       }
                       {
                         callbacks.delete &&

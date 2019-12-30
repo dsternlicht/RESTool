@@ -15,10 +15,10 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
   function renderFieldInput() {
     switch (field.type) {
       case 'boolean':
-        return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} />;
+        return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} disabled={field.readonly} />;
       case 'select':
         return (
-          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)}>
+          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly}>
             <option>-- Select --</option>
             {
               (field.options || []).map((option, idx) => {
@@ -32,12 +32,12 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
           </select>
         );
       case 'long-text':
-        return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)}>{field.value}</textarea>;
+        return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} value={field.value}></textarea>;
       case 'number':
-        return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} />;
+        return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} />;
       case 'text':
       default:
-        return <input type="text" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} />;
+        return <input type="text" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} />;
     }
   }
   
@@ -46,7 +46,7 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
       <label>{field.label}</label>
       {renderFieldInput()}
       {
-        (showReset && field.value && field.value.length > 0) &&
+        (showReset && !field.readonly && field.value && field.value.length > 0) &&
         <i title="Clear" onClick={() => onChange(field.name, '', true)} aria-label="Clear" className="clear-input fa fa-times"></i>
       }
     </div>

@@ -51,6 +51,10 @@
     transition: all 0.2s ease;
     text-overflow: ellipsis;
 
+    &:disabled {
+      background-color: rgba(0,0,0,0.1);
+    }
+
     &.small {
       max-width: 70px;
       text-align: center;

@@ -4,7 +4,7 @@ import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -23,7 +23,7 @@ interface IPopupProps {
   type: 'add' | 'update' | 'action'
   title: string
   config: IConfigPostMethod | IConfigPutMethod
-  submitCallback: (body: any, rawData: any) => void
+  submitCallback: (body: any) => void
   rawData?: {}
 }
 
@@ -32,6 +32,7 @@ const PageComp = ({ context }: IProps) => {
   const { push, location } = useHistory();
   const { activePage, error, setError, httpService } = context;
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
+  const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
@@ -55,10 +56,39 @@ const PageComp = ({ context }: IProps) => {
       type: 'update', 
       title: 'Update Item', 
       config: putConfig as IConfigPutMethod, 
-      submitCallback: updateItem 
+      submitCallback: async (body: any) => {
+        return await updateItem(body, rawData);
+      }
     };
 
     setOpenedPopup(params);
+  }
+
+  function openCustomActionPopup(rawData: any, action: IConfigCustomAction) {
+    const params: IPopupProps = { 
+      rawData,
+      type: 'action', 
+      title: action.name || 'Custom Action', 
+      config: action as IConfigCustomAction, 
+      submitCallback: async (body: any) => {
+        return await performAction(body, rawData, action);
+      }
+    };
+
+    setOpenedPopup(params);
+  }
+
+  async function performAction(body: any, rawData: any, action: IConfigCustomAction) {
+    const { url, requestHeaders, actualMethod } = action;
+    
+    return await httpService.fetch({
+      method: actualMethod || 'put', 
+      origUrl: url, 
+      rawData,
+      body,
+      headers: requestHeaders,
+      responseType: 'boolean'
+    });
   }
 
   async function getAllRequest() {
@@ -192,9 +222,11 @@ const PageComp = ({ context }: IProps) => {
         callbacks={{
           delete: deleteConfig ? deleteItem : () => {},
           put: putConfig ? openEditPopup : () => {},
+          action: customActions.length ? openCustomActionPopup : () => {},
         }}
         fields={fields}
         items={items} 
+        customActions={customActions}
       />
     );
   }

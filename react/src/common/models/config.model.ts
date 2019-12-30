@@ -101,5 +101,6 @@ export interface IConfigPutMethod extends IConfigMethod {
 export interface IConfigDeleteMethod extends IConfigMethod {}
 
 export interface IConfigCustomAction extends IConfigMethod {
+  name: string
   fields: IConfigInputField[]
 }

@@ -17,7 +17,7 @@ interface IProps {
   fields: IConfigInputField[]
   rawData?: any
   closeCallback: (reloadData: boolean) => void
-  submitCallback: (body: any, rawData: any) => void
+  submitCallback: (body: any) => void
 }
 
 export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallback }: IProps) => {
@@ -43,7 +43,7 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
 
     return field;
   }));
-  
+
   async function submitForm(e: any) {
     e.preventDefault();
 
@@ -57,7 +57,7 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
 
     try {
       const body = unflatten(finalObject);
-      await submitCallback(body, rawData);
+      await submitCallback(body);
       
       toast.success('Great Success!');
       
