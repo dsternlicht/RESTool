@@ -9,7 +9,7 @@ import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Table } from '../table/table.comp';
-import { FormRow } from '../formRow/formRow.comp';
+import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
 
@@ -38,8 +38,8 @@ const PageComp = ({ context }: IProps) => {
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
   const [loading, setLoading] = useState<boolean>(false);
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
-  const [items, setItems] = useState<any[]>([]);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
+  const [items, setItems] = useState<any[]>([]);
 
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
@@ -157,15 +157,14 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
-  function submitForm(e?: any) {
-    if (e) {
-      e.preventDefault();
-    }
+  function submitQueryParams(updatedParams: IConfigInputField[]) {
+    setQueryParams(updatedParams);
 
     if (loading) {
       return;
     }
 
+    // Building query string
     const queryState: string = queryParams.map((queryParam, idx) => {
       return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
     }).join('&');
@@ -173,50 +172,8 @@ const PageComp = ({ context }: IProps) => {
     // Pushing query state to url
     push(queryState);
 
+    // Performing get request
     getAllRequest();
-  }
-
-  function formChanged(fieldName: string, value: any, submitAfterChange?: boolean) {
-    const updatedQueryParams: IConfigInputField[] = [...queryParams].map((field) => {
-      if (field.name === fieldName) {
-        field.value = value;
-      }
-
-      return field;
-    });
-
-    setQueryParams(updatedQueryParams);
-
-    if (submitAfterChange) {
-      submitForm();
-    }
-  }
-
-  function renderQueryParamsForm() {
-    if (!queryParams.length) {
-      return <React.Fragment></React.Fragment>;
-    }
-
-    return (
-      <section className="query-params-form">
-        <h5>Query Params:</h5>
-        <form onSubmit={submitForm}>
-          {
-            queryParams.map((queryParam, idx) => {
-              return (
-                <FormRow 
-                  key={`query_param_${idx}`}
-                  field={queryParam} 
-                  onChange={formChanged}
-                  showReset={!queryParam.type || queryParam.type === 'text'}
-                />
-              );
-            })
-          }
-          <Button onClick={submitForm}>Submit</Button>
-        </form>
-      </section>
-    );
   }
 
   function renderTable() {
@@ -249,7 +206,10 @@ const PageComp = ({ context }: IProps) => {
 
     return (
       <React.Fragment>
-        {renderQueryParamsForm()}
+        <QueryParams 
+          initialParams={queryParams}
+          submitCallback={submitQueryParams}
+        />
         {renderTable()}
       </React.Fragment>
     )
@@ -267,6 +227,8 @@ const PageComp = ({ context }: IProps) => {
     const updatedQueryParams: IConfigInputField[] = queryParams.map((queryParam) => {
       if (typeof params[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (params[queryParam.name] === 'true') : decodeURIComponent(params[queryParam.name] as any);
+      } else {
+        queryParam.value = '';
       }
       return queryParam;
     });
