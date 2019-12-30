@@ -15,10 +15,10 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
   function renderFieldInput() {
     switch (field.type) {
       case 'boolean':
-        return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} disabled={field.readonly} required={field.required} />;
+        return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} disabled={field.readonly} />;
       case 'select':
         return (
-          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required}>
+          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly}>
             <option>-- Select --</option>
             {
               (field.options || []).map((option, idx) => {
@@ -32,18 +32,18 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
           </select>
         );
       case 'long-text':
-        return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} value={field.value} required={field.required}></textarea>;
+        return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} value={field.value}></textarea>;
       case 'number':
-        return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
+        return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} />;
       case 'text':
       default:
-        return <input type="text" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
+        return <input type="text" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} />;
     }
   }
   
   return (
     <div className={`form-row ${direction || 'row'}`}>
-      <label>{field.label}</label>
+      <label>{field.required ? '* ' : ''}{field.label}</label>
       {renderFieldInput()}
       {
         (showReset && !field.readonly && field.value && field.value.length > 0) &&

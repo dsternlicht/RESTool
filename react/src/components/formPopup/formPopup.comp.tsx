@@ -47,13 +47,23 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
   async function submitForm(e: any) {
     e.preventDefault();
 
-    setLoading(true);
-    
     const finalObject: any = {};
+    let validationError = null;
 
     formFields.forEach((field) => {
       finalObject[field.name] = field.value;
+
+      if (field.required && !field.value) {
+        validationError = 'Please fill up all required fields.';
+      }
     });
+
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const body = unflatten(finalObject);
@@ -109,7 +119,7 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
                 })
               }
               <div className="buttons-wrapper center">
-                <Button onClick={submitForm} color="green">Submit</Button>
+                <Button type="submit" onClick={submitForm} color="green">Submit</Button>
               </div>
             </form>
           }

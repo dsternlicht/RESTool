@@ -58,7 +58,7 @@ export const QueryParams = ({ initialParams, submitCallback }: IProps) => {
             );
           })
         }
-        <Button onClick={submit}>Submit</Button>
+        <Button type="submit" onClick={submit}>Submit</Button>
       </form>
     </section>
   );
