@@ -1,7 +1,7 @@
 export interface IConfig {
   remoteUrl: string
   name: string
-  favicon: string // TODO: Update docs
+  favicon: string // TODO: Add docs
   baseUrl: string
   errorMessageDataPath: string | string[]
   unauthorizedRedirectUrl: string
@@ -102,5 +102,6 @@ export interface IConfigDeleteMethod extends IConfigMethod {}
 
 export interface IConfigCustomAction extends IConfigMethod {
   name: string
+  icon: string // TODO: Add docs
   fields: IConfigInputField[]
 }
