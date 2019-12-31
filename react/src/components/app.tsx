@@ -13,16 +13,23 @@ import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Load local config json file
-const configFile = require('../config.json');
+let configFile: IConfig | null = null;
+
+try {
+  configFile = require('../config.json');
+} catch (e) {
+
+}
+
 const httpService = new HttpService();
 
 // Setting global config for httpService
-httpService.baseUrl = configFile.baseUrl || '';
-httpService.errorMessageDataPath = configFile.errorMessageDataPath || '';
-httpService.unauthorizedRedirectUrl = configFile.unauthorizedRedirectUrl || '';
-document.title = configFile.name || 'RESTool App';
-if (configFile.favicon) {
-  changeFavicon(configFile.favicon);
+httpService.baseUrl = configFile?.baseUrl || '';
+httpService.errorMessageDataPath = configFile?.errorMessageDataPath || '';
+httpService.unauthorizedRedirectUrl = configFile?.unauthorizedRedirectUrl || '';
+document.title = configFile?.name || 'RESTool App';
+if (configFile?.favicon) {
+  changeFavicon(configFile?.favicon);
 }
 
 function changeFavicon(src: string) {
@@ -38,11 +45,15 @@ function changeFavicon(src: string) {
  }
 
 function App() {
-  const [config, setConfig] = useState<IConfig>(configFile);
+  const [config, setConfig] = useState<IConfig | null>(configFile);
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
 
   async function loadRemoteConfig() {
+    if (!config) {
+      return;
+    }
+
     try {
       const remoteConfig: IConfig = await ConfigService.getRemoteConfig(config.remoteUrl);
       
@@ -53,7 +64,7 @@ function App() {
       
       document.title = remoteConfig.name || 'RESTool App';
 
-      if (configFile.favicon) {
+      if (configFile?.favicon) {
         changeFavicon(configFile.favicon);
       }
 
@@ -86,28 +97,32 @@ function App() {
 
   return (
     <div className="restool-app">
-      <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
-        <Router>
-          <aside>
-            <h1 title={appName}>{appName}</h1>
+      {
+        !config ? 
+        <div className="app-error">Could not find config file.</div> :
+        <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
+          <Router>
+            <aside>
+              <h1 title={appName}>{appName}</h1>
+              {
+                <Navigation />
+              }
+            </aside>
             {
-              <Navigation />
+              config &&
+              <Switch>
+                <Route exact path="/:page" component={Page} />
+                <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
+              </Switch>
             }
-          </aside>
-          {
-            config &&
-            <Switch>
-              <Route exact path="/:page" component={Page} />
-              <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
-            </Switch>
-          }
-          <ToastContainer 
-            position={toast.POSITION.TOP_CENTER} 
-            autoClose={4000} 
-            draggable={false} 
-          />
-        </Router>
-      </AppContext.Provider>
+            <ToastContainer 
+              position={toast.POSITION.TOP_CENTER} 
+              autoClose={4000} 
+              draggable={false} 
+            />
+          </Router>
+        </AppContext.Provider>
+      }
     </div>
   );
 }

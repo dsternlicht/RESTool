@@ -68,7 +68,7 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
                         </Button>
                       }
                       {
-                        customActions?.length &&
+                        (customActions && customActions.length > 0) &&
                         customActions.map((action, idx) => (
                           <Button key={`action_${rowIdx}_${idx}`} onClick={() => callbacks.action(item, action)} title={action.name}>
                             <i className={`fa fa-${action.icon || 'cogs'}`} aria-hidden="true"></i>

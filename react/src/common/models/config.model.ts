@@ -12,7 +12,7 @@ export interface IConfigPage {
   name: string
   id: string
   description: string
-  default: boolean
+  default: boolean // TODO: Should deprecate
   requestHeaders: any
   methods: IConfigMethods
   customActions: IConfigCustomAction[]
