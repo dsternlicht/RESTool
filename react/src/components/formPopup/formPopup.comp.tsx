@@ -34,8 +34,13 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
     // This will use us later for unflatten the final object
     field.name = key;
 
+    if (field.type === 'object') {
+      field.value = JSON.stringify(rawData[key], null, '  ');
+      return field;
+    }
+
     if (flattenData[key]) {
-      field.value = flattenData[key]
+      field.value = flattenData[key];
     } else {
       // important in order to prevent controlled / uncontrolled components error
       field.value = '';
@@ -55,6 +60,14 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
 
       if (field.required && !field.value) {
         validationError = 'Please fill up all required fields.';
+      }
+
+      if (field.type === 'object' && field.value) {
+        try {
+          finalObject[field.name] = JSON.parse(field.value);
+        } catch (e) {
+          validationError = `Invalid JSON for field "${field.name}".`;
+        }
       }
     });
 

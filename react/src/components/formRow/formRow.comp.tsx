@@ -31,6 +31,8 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
             }
           </select>
         );
+      case 'object':
+        return <textarea placeholder={field.placeholder || 'Enter JSON...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} value={field.value}></textarea>;
       case 'long-text':
         return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} value={field.value}></textarea>;
       case 'number':

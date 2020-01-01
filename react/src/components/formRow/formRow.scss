@@ -76,6 +76,11 @@
     }
   }
 
+  textarea {
+    height: 120px;
+    min-height: 120px;
+  }
+
   input[type=text] {
     padding-right: 25px;
   }
