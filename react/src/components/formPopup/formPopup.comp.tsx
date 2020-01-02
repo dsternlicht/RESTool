@@ -68,7 +68,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       // This will use us later for unflatten the final object
       field.name = key;
   
-      if (field.type === 'object') {
+      if (field.type === 'object' || field.type === 'array') {
         field.value = JSON.stringify(finalRawData[key], null, '  ');
         return field;
       }
@@ -105,6 +105,10 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         } catch (e) {
           validationError = `Invalid JSON for field "${field.name}".`;
         }
+      }
+
+      if (field.type === 'encode') {
+        finalObject[field.name] = encodeURIComponent(field.value);
       }
     });
 

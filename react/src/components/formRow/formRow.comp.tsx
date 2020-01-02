@@ -18,7 +18,7 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
         return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} disabled={field.readonly} />;
       case 'select':
         return (
-          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly}>
+          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required}>
             <option>-- Select --</option>
             {
               (field.options || []).map((option, idx) => {
@@ -32,14 +32,26 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
           </select>
         );
       case 'object':
-        return <textarea placeholder={field.placeholder || 'Enter JSON...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} value={field.value}></textarea>;
+      case 'array': // TODO: add arrayType support
+        return <textarea placeholder={field.placeholder || 'Enter JSON...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} value={field.value}></textarea>;
       case 'long-text':
-        return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} value={field.value}></textarea>;
+        return <textarea placeholder={field.placeholder || 'Enter text...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} value={field.value}></textarea>;
       case 'number':
-        return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} />;
+      case 'integer':
+        return <input type="number" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.valueAsNumber)} disabled={field.readonly} required={field.required} />;
+      case 'color':
+        return <input type="color" placeholder={field.placeholder || 'Select color...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
+      case 'email':
+        return <input type="email" placeholder={field.placeholder || 'Enter email...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
+      case 'password':
+        return <input type="password" placeholder={field.placeholder || 'Enter email...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
+      case 'hidden':
+        return <input type="hidden" value={field.value} />;
+      case 'note':
+        return <p className="note">{field.value}</p>;
       case 'text':
       default:
-        return <input type="text" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} />;
+        return <input type="text" placeholder={field.placeholder || 'Enter text...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
     }
   }
   
