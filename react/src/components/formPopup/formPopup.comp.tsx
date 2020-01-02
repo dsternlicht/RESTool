@@ -149,6 +149,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
   useEffect(() => {
     initFormFields();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
