@@ -68,7 +68,9 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       field.name = key;
   
       if (field.type === 'object' || field.type === 'array') {
-        field.value = JSON.stringify(finalRawData[key], null, '  ');
+        if (finalRawData[key] || field.value) {
+          field.value = JSON.stringify(finalRawData[key] || field.value, null, '  ') || '';
+        }
         return field;
       }
   
