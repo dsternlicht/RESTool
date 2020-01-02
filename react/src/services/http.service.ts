@@ -1,4 +1,5 @@
 import { TConfigMethod, IConfigInputField } from '../common/models/config.model';
+import { dataHelpers } from '../helpers/data.helpers';
 
 export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
 
@@ -85,33 +86,6 @@ class HttpService {
     };
   }
 
-  private extractDataFromResponse(data: any, dataPath: string, attr: string | null = null) {
-    if (!data || !dataPath) {
-      if (attr) {
-        return data[attr];
-      }
-      return data;
-    }
-
-	
-    let extractedData = data;
-    const digProps = dataPath.split('.');
-
-    for (let prop of digProps) {
-      if (typeof extractedData[prop] !== 'undefined') {
-        extractedData = extractedData[prop];
-      } else {
-        return null;
-      }
-    }
-
-    if (extractedData != null && attr) {
-      return extractedData[attr];
-    }
-
-    return extractedData;
-  }
-
   private async getErrorMessage(res: Response | any): Promise<string> {
     let errorMessage: string = '';
 
@@ -119,7 +93,7 @@ class HttpService {
       const body = await res.json();
 
       for (const path of this.errorMessageDataPath) {
-        const dataAtPath = this.extractDataFromResponse(body, path);
+        const dataAtPath = dataHelpers.extractDataByDataPath(body, path);
 
         if (dataAtPath) {
           errorMessage = dataAtPath;
