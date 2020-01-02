@@ -85,6 +85,64 @@ class HttpService {
     };
   }
 
+  private extractDataFromResponse(data: any, dataPath: string, attr: string | null = null) {
+    if (!data || !dataPath) {
+      if (attr) {
+        return data[attr];
+      }
+      return data;
+    }
+
+	
+    let extractedData = data;
+    const digProps = dataPath.split('.');
+
+    for (let prop of digProps) {
+      if (typeof extractedData[prop] !== 'undefined') {
+        extractedData = extractedData[prop];
+      } else {
+        return null;
+      }
+    }
+
+    if (extractedData != null && attr) {
+      return extractedData[attr];
+    }
+
+    return extractedData;
+  }
+
+  private async getErrorMessage(res: Response | any): Promise<string> {
+    let errorMessage: string = '';
+
+    try {
+      const body = await res.json();
+
+      for (const path of this.errorMessageDataPath) {
+        const dataAtPath = this.extractDataFromResponse(body, path);
+
+        if (dataAtPath) {
+          errorMessage = dataAtPath;
+        }
+      }
+    } catch {}
+
+    errorMessage = `${res.status} - ${res.statusText || ''}`;
+
+    return errorMessage;
+  }
+
+  private async handleError(res: Response) {
+    // In case response status is "Unauthorized", redirect to relevant url
+    if (res.status === 401 && this.unauthorizedRedirectUrl) {
+      const redirectUrl: string = this.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(document.location.href));
+      document.location.href = redirectUrl;
+      return;
+    }
+
+    throw new Error(await this.getErrorMessage(res));
+  }
+
   private async makeRequest(url: string, params: any = {}, responseType: ResponseType = 'json') {
     const res: Response = await fetch(url, Object.assign({}, params, {}));
     
@@ -101,14 +159,13 @@ class HttpService {
       }
     }
 
-    throw new Error(`Response code: ${res.status}`);
+    await this.handleError(res);
   }
 
   public async fetch({ method, origUrl, queryParams, rawData, body, headers, responseType }: IFetchParams) {
     const { url, params } = this.buildRequest({ method, origUrl, queryParams, rawData, body, headers });
     return await this.makeRequest(url, params, responseType);
   }
-
 }
 
 export default HttpService;
