@@ -64,13 +64,13 @@ export interface IConfigOptionSource {
   sortBy: string
 }
 
-export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean';
+export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean'; // TODO: Support arrays
 
 export interface IConfigDisplayField {
   name: string
   type: TConfigDisplayField
   label: string
-  dataPath: string
+  dataPath: string // TODO: Support array[idx].path
   filterable: boolean
   truncate: boolean
 }

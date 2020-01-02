@@ -4,7 +4,7 @@ import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -34,6 +34,7 @@ const PageComp = ({ context }: IProps) => {
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
+  const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
@@ -50,7 +51,7 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
-  function openEditPopup(rawData: any) {
+  async function openEditPopup(rawData: any) {
     const params: IPopupProps = { 
       rawData,
       type: 'update', 
@@ -298,6 +299,7 @@ const PageComp = ({ context }: IProps) => {
           submitCallback={openedPopup.submitCallback}
           fields={openedPopup.config?.fields || []}
           rawData={openedPopup.rawData}
+          getSingleConfig={getSingleConfig}
         />
       }
     </div>

@@ -1,53 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { Popup } from '../popup/popup.comp';
-import { IConfigInputField } from '../../common/models/config.model';
+import { IConfigInputField, IConfigGetSingleMethod } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
+import { Loader } from '../loader/loader.comp';
+import { dataHelpers } from '../../helpers/data.helpers';
+import { IAppContext } from '../app.context';
+import { withAppContext } from '../withContext/withContext.comp';
 
 import './formPopup.scss';
-import { Loader } from '../loader/loader.comp';
 
 const flatten = require('flat');
 const unflatten = require('flat').unflatten;
 
 interface IProps {
+  context: IAppContext
   title: string
   fields: IConfigInputField[]
   rawData?: any
+  getSingleConfig?: IConfigGetSingleMethod
   closeCallback: (reloadData: boolean) => void
   submitCallback: (body: any) => void
 }
 
-export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallback }: IProps) => {
-  const flattenData = flatten(rawData || {});
-  const [loading, setLoading] = useState<boolean>(false);
-  const [formFields, setFormFields] = useState<IConfigInputField[]>(fields.map((field) => {
-    let key = field.name;
+export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, submitCallback, closeCallback }: IProps) => {
+  const { httpService } = context;
+  const [loading, setLoading] = useState<boolean>(true);
+  const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
+
+  async function initFormFields() {
+    let finalRawData: any = rawData;
+
+    if (getSingleConfig && getSingleConfig.url) {
+      try {
+        const { url, requestHeaders, actualMethod, dataPath, queryParams } = getSingleConfig;
+        const result = await httpService.fetch({
+          method: actualMethod || 'get', 
+          origUrl: url, 
+          queryParams, 
+          headers: requestHeaders,
+          rawData,
+        });
+        
+        const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+
+        if (extractedData && typeof extractedData === 'object') {
+          finalRawData = extractedData;
+        }
+      } catch (e) {
+        console.error('Could not load single item\'s data.', e);
+        toast.error('Could not load single item\'s data.');
+      }
+    }
+
+    const flattenData = flatten(finalRawData || {});
     
-    if (field.dataPath) {
-      key = `${field.dataPath}.${field.name}`;
-    }
-
-    // Changing field name to include datapath
-    // This will use us later for unflatten the final object
-    field.name = key;
-
-    if (field.type === 'object') {
-      field.value = JSON.stringify(rawData[key], null, '  ');
+    setFormFields(fields.map((field) => {
+      let key = field.name;
+      
+      if (field.dataPath) {
+        key = `${field.dataPath}.${field.name}`;
+      }
+  
+      // Changing field name to include datapath
+      // This will use us later for unflatten the final object
+      field.name = key;
+  
+      if (field.type === 'object') {
+        field.value = JSON.stringify(finalRawData[key], null, '  ');
+        return field;
+      }
+  
+      if (flattenData[key]) {
+        field.value = flattenData[key];
+      } else {
+        // important in order to prevent controlled / uncontrolled components error
+        field.value = '';
+      }
+  
       return field;
-    }
+    }));
 
-    if (flattenData[key]) {
-      field.value = flattenData[key];
-    } else {
-      // important in order to prevent controlled / uncontrolled components error
-      field.value = '';
-    }
-
-    return field;
-  }));
+    setLoading(false);
+  } 
 
   async function submitForm(e: any) {
     e.preventDefault();
@@ -106,6 +143,10 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
     setFormFields(updatedFormFields);
   }
 
+  useEffect(() => {
+    initFormFields();
+  }, []);
+
   return (
     <Popup
       show={true}
@@ -140,4 +181,4 @@ export const FormPopup = ({ title, fields, rawData, submitCallback, closeCallbac
       </React.Fragment>
     </Popup>
   );
-};
+});
