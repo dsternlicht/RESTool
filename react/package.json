@@ -37,5 +37,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/outbrain/Restool/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/outbrain/Restool.git"
+  },
+  "homepage": "https://github.com/outbrain/Restool#readme"
 }
