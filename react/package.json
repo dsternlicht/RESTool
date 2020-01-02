@@ -39,11 +39,10 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/outbrain/Restool/issues"
+    "url": "https://github.com/dsternlicht/Restool/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/outbrain/Restool.git"
-  },
-  "homepage": "https://github.com/outbrain/Restool#readme"
+    "url": "git+https://github.com/dsternlicht/Restool.git"
+  }
 }
