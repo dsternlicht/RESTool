@@ -43,7 +43,7 @@ const PageComp = ({ context }: IProps) => {
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
   const [items, setItems] = useState<any[]>([]);
-
+  
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
 
@@ -259,7 +259,7 @@ const PageComp = ({ context }: IProps) => {
   useEffect(() => {
     // Converting query state to local data
     const params = QueryString.parse(location.search);
-    const updatedQueryParams: IConfigInputField[] = queryParams.map((queryParam) => {
+    const updatedQueryParams: IConfigInputField[] = (getAllConfig?.queryParams || []).map((queryParam) => {
       if (typeof params[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (params[queryParam.name] === 'true') : decodeURIComponent(params[queryParam.name] as any);
       } else {
