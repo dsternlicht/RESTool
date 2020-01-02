@@ -56,7 +56,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     }
 
     const flattenData = flatten(finalRawData || {});
-    
+    console.log('flattenData', finalRawData);
     setFormFields(fields.map((field) => {
       let key = field.name;
       
@@ -77,7 +77,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         field.value = flattenData[key];
       } else {
         // important in order to prevent controlled / uncontrolled components error
-        field.value = '';
+        field.value = field.value || '';
       }
   
       return field;

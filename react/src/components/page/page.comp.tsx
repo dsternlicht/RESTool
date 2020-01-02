@@ -24,6 +24,7 @@ interface IPopupProps {
   title: string
   config: IConfigPostMethod | IConfigPutMethod
   submitCallback: (body: any) => void
+  getSingleConfig?: IConfigGetSingleMethod
   rawData?: {}
 }
 
@@ -56,7 +57,8 @@ const PageComp = ({ context }: IProps) => {
       rawData,
       type: 'update', 
       title: 'Update Item', 
-      config: putConfig as IConfigPutMethod, 
+      config: putConfig as IConfigPutMethod,
+      getSingleConfig, 
       submitCallback: async (body: any) => {
         return await updateItem(body, rawData);
       }
@@ -299,7 +301,7 @@ const PageComp = ({ context }: IProps) => {
           submitCallback={openedPopup.submitCallback}
           fields={openedPopup.config?.fields || []}
           rawData={openedPopup.rawData}
-          getSingleConfig={getSingleConfig}
+          getSingleConfig={openedPopup.getSingleConfig}
         />
       }
     </div>
