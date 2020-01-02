@@ -12,25 +12,8 @@ import HttpService from '../services/http.service';
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Load local config json file
-let configFile: IConfig | null = null;
-
-try {
-  configFile = require('../config.json');
-} catch (e) {
-
-}
-
 const httpService = new HttpService();
-
-// Setting global config for httpService
-httpService.baseUrl = configFile?.baseUrl || '';
-httpService.errorMessageDataPath = configFile?.errorMessageDataPath || '';
-httpService.unauthorizedRedirectUrl = configFile?.unauthorizedRedirectUrl || '';
-document.title = configFile?.name || 'RESTool App';
-if (configFile?.favicon) {
-  changeFavicon(configFile?.favicon);
-}
+const defaultAppName: string = 'RESTool App';
 
 function changeFavicon(src: string) {
   const link = document.createElement('link');
@@ -45,29 +28,30 @@ function changeFavicon(src: string) {
  }
 
 function App() {
-  const [config, setConfig] = useState<IConfig | null>(configFile);
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
+  const [config, setConfig] = useState<IConfig | null>(null);
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
 
-  async function loadRemoteConfig() {
-    if (!config) {
-      return;
-    }
-
+  async function loadConfig(url: string): Promise<void> {
     try {
-      const remoteConfig: IConfig = await ConfigService.getRemoteConfig(config.remoteUrl);
+      const remoteConfig: IConfig = await ConfigService.getRemoteConfig(url);
       
       // Setting global config for httpService
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
       httpService.unauthorizedRedirectUrl = remoteConfig.unauthorizedRedirectUrl || '';
-      
-      document.title = remoteConfig.name || 'RESTool App';
+      document.title = remoteConfig.name || defaultAppName;
 
-      if (configFile?.favicon) {
-        changeFavicon(configFile.favicon);
+      if (remoteConfig?.favicon) {
+        changeFavicon(remoteConfig.favicon);
       }
 
+      if (config?.remoteUrl) {
+        return await loadConfig(config.remoteUrl);
+      }
+
+      setFirstLoad(false);
       setConfig(remoteConfig);
     } catch (e) {
       console.error('Could not load config file', e);
@@ -75,13 +59,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (!config) {
-      return;
-    }
-
-    if (config.remoteUrl) {
-      loadRemoteConfig();
-    }
+    loadConfig('./config.json');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -93,13 +71,15 @@ function App() {
     }
   }, [config]);
 
-  const appName: string = config?.name || 'RESTool App';
+  const appName: string = config?.name || defaultAppName;
 
   return (
     <div className="restool-app">
       {
         !config ? 
-        <div className="app-error">Could not find config file.</div> :
+        <div className="app-error">
+          {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
+        </div> :
         <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
           <Router>
             <aside>
