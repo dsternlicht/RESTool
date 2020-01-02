@@ -31,7 +31,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
 
   async function initFormFields() {
-    let finalRawData: any = rawData;
+    let finalRawData: any = rawData || {};
 
     if (getSingleConfig && getSingleConfig.url) {
       try {
