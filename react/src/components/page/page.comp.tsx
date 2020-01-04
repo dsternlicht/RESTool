@@ -100,7 +100,7 @@ const PageComp = ({ context }: IProps) => {
       if (typeof parsedParams[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
       } else {
-        queryParam.value = '';
+        queryParam.value = queryParam.value || '';
       }
       return queryParam;
     }); 
