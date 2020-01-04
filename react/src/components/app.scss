@@ -6,6 +6,10 @@
   align-items: stretch;
   min-height: 100vh;
 
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+
   aside {
     width: $aside-width;
     background: #3C3E6F;
@@ -15,6 +19,11 @@
     position: sticky;
     top: 0;
     height: 100vh;
+
+    @media screen and (max-width: 800px) {
+      height: auto;
+      width: 100%;
+    }
 
     h1 {
       padding: 20px;
@@ -26,6 +35,10 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      @media screen and (max-width: 800px) {
+        text-align: center;
+      }
     }
   }
   

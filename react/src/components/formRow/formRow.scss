@@ -85,6 +85,10 @@
     padding-right: 25px;
   }
 
+  input[type=checkbox] {
+    flex: 0 1;
+  }
+
   .note {
     margin: 0;
     font-size: 14px;

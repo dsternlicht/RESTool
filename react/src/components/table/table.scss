@@ -1,9 +1,7 @@
 .table-wrapper {
   position: relative;
-  
-  .add-item {
-    justify-self: flex-end;
-  }
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .pure-table {
