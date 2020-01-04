@@ -102,7 +102,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
       if (field.type === 'object' && field.value) {
         try {
-          finalObject[field.name] = JSON.parse(field.value);
+          finalObject[field.name] = JSON.parse(JSON.stringify(field.value));
         } catch (e) {
           validationError = `Invalid JSON for field "${field.name}".`;
         }
