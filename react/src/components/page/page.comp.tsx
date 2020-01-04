@@ -94,6 +94,20 @@ const PageComp = ({ context }: IProps) => {
     });
   }
 
+  function extractQueryParams(): IConfigInputField[] {
+    const parsedParams = QueryString.parse(location.search);
+    const finalQueryParams: IConfigInputField[] = (getAllConfig?.queryParams || []).map((queryParam) => {
+      if (typeof parsedParams[queryParam.name] !== 'undefined') {
+        queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
+      } else {
+        queryParam.value = '';
+      }
+      return queryParam;
+    }); 
+
+    return finalQueryParams
+  }
+
   async function getAllRequest() {
     setLoading(true);
     setError(null);
@@ -107,7 +121,7 @@ const PageComp = ({ context }: IProps) => {
       const result = await httpService.fetch({
         method: actualMethod || 'get', 
         origUrl: url, 
-        queryParams, 
+        queryParams: extractQueryParams(), 
         headers: requestHeaders
       });
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
@@ -204,9 +218,6 @@ const PageComp = ({ context }: IProps) => {
 
     // Pushing query state to url
     push(queryState);
-
-    // Performing get request
-    getAllRequest();
   }
 
   function renderTable() {
@@ -257,23 +268,15 @@ const PageComp = ({ context }: IProps) => {
   }, [page]);
   
   useEffect(() => {
-    // Converting query state to local data
-    const params = QueryString.parse(location.search);
-    const updatedQueryParams: IConfigInputField[] = (getAllConfig?.queryParams || []).map((queryParam) => {
-      if (typeof params[queryParam.name] !== 'undefined') {
-        queryParam.value = queryParam.type === 'boolean' ? (params[queryParam.name] === 'true') : decodeURIComponent(params[queryParam.name] as any);
-      } else {
-        queryParam.value = '';
-      }
-      return queryParam;
-    });
-    
-    setQueryParams(updatedQueryParams);
-
-    // Load data
-    getAllRequest();
+    setQueryParams(extractQueryParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);
+
+  useEffect(() => {
+    // Load data when query params changed
+    getAllRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryParams]);
 
   return (
     <div className="app-page">

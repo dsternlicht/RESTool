@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { IConfigInputField } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
@@ -37,6 +37,10 @@ export const QueryParams = ({ initialParams, submitCallback }: IProps) => {
       submit();
     }
   }
+
+  useEffect(() => {
+    setQueryParams(initialParams);
+  }, [initialParams]);
 
   if (!queryParams.length) {
     return <React.Fragment></React.Fragment>;

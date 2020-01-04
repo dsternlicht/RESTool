@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-
 import ConfigService from '../services/config.service';
 import { IConfig, IConfigPage } from '../common/models/config.model';
 import { Page } from '../components/page/page.comp';
