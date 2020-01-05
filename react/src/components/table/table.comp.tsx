@@ -25,7 +25,7 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
 
     switch (type) {
       case 'text':
-        return value;
+        return <span>{value}</span>;
       case 'boolean':
         return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
       case 'image':
