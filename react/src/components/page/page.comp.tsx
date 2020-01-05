@@ -9,6 +9,7 @@ import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Table } from '../table/table.comp';
+import { Cards } from '../cards/cards.comp';
 import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
@@ -230,6 +231,21 @@ const PageComp = ({ context }: IProps) => {
     }
 
     const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+
+    if (getAllConfig?.display.type === 'cards') {
+      return (
+        <Cards 
+          callbacks={{
+            delete: deleteConfig ? deleteItem : () => {},
+            put: putConfig ? openEditPopup : () => {},
+            action: customActions.length ? openCustomActionPopup : () => {},
+          }}
+          fields={fields}
+          items={items} 
+          customActions={customActions}
+        />
+      );
+    }
 
     return (
       <Table 

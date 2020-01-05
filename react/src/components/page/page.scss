@@ -59,6 +59,12 @@
 .app-page-content {
   position: relative;
   padding: 30px;
+
+  @media screen and (max-width: 800px) { 
+    .app-loader {
+      position: relative;
+    }
+  }
 }
 
 .app-error, .app-loader {
