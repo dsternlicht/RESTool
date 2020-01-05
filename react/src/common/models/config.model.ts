@@ -39,11 +39,12 @@ export interface IConfigMethod {
 export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'integer' | 'number' | 'boolean' | 'email' | 'color' | 'select' | 'array' | 'file' | 'password' | 'note' | 'hidden';
 
 export interface IConfigInputField {
+  originalName: string
   name: string
   value: any
   type: TConfigInputField
   label: string
-  dataPath: string
+  dataPath: string // TODO: Add docs to array
   placeholder: string // TODO: Add docs
   readonly: boolean
   options: [string | { display: string, value: string }],

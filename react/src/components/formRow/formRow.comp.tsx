@@ -57,7 +57,7 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
   
   return (
     <div className={`form-row ${direction || 'row'}`}>
-      <label>{field.required ? '* ' : ''}{field.label}</label>
+      <label>{field.label || field.originalName}{field.required ? '* ' : ''}</label>
       {renderFieldInput()}
       {
         (showReset && !field.readonly && field.value && field.value.length > 0) &&

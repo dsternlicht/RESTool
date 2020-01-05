@@ -19,6 +19,10 @@ interface IProps {
 
 export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
   function renderTableCell(type: TConfigDisplayField, value: any) {
+    if (value && typeof value === 'object') {
+      return 'object';
+    }
+
     switch (type) {
       case 'text':
         return value;

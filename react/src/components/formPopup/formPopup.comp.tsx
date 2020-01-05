@@ -58,6 +58,8 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     const flattenData = flatten(finalRawData || {});
     setFormFields(fields.map((field) => {
       let key = field.name;
+
+      field.originalName = field.name; 
       
       if (field.dataPath) {
         key = `${field.dataPath}.${field.name}`;
@@ -100,9 +102,9 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         validationError = 'Please fill up all required fields.';
       }
 
-      if (field.type === 'object' && field.value) {
+      if ((field.type === 'object' || field.type === 'array') && field.value) {
         try {
-          finalObject[field.name] = JSON.parse(JSON.stringify(field.value));
+          finalObject[field.name] = JSON.parse(field.value);
         } catch (e) {
           validationError = `Invalid JSON for field "${field.name}".`;
         }
