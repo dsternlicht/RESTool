@@ -57,6 +57,30 @@ function App() {
     }
   }
 
+  function scrollToTop(scrollDuration: number = 250) {
+    var cosParameter = window.scrollY / 2,
+    scrollCount = 0,
+    oldTimestamp = performance.now();
+    
+    function step (newTimestamp: number) {
+        scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
+        
+        if (scrollCount >= Math.PI) { 
+          window.scrollTo(0, 0);
+        }
+
+        if (window.scrollY === 0) {
+          return;
+        }
+
+        window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+        oldTimestamp = newTimestamp;
+        window.requestAnimationFrame(step);
+    }
+
+    window.requestAnimationFrame(step);
+  }
+
   useEffect(() => {
     loadConfig('./config.json');
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +106,7 @@ function App() {
         <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
           <Router>
             <aside>
-              <h1 title={appName}>{appName}</h1>
+              <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
               {
                 <Navigation />
               }

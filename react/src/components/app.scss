@@ -35,6 +35,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      cursor: default;
 
       @media screen and (max-width: 800px) {
         text-align: center;

@@ -33,6 +33,10 @@
     right: 8px;
     opacity: 0.6;
 
+    @media screen and (max-width: 800px) {
+      bottom: 18px;
+    }
+
     &:hover {
       opacity: 0.85;
     }
