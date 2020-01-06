@@ -1,7 +1,7 @@
 export interface IConfig {
   remoteUrl: string
   name: string
-  favicon: string // TODO: Add docs
+  favicon: string
   baseUrl: string
   errorMessageDataPath: string | string[]
   unauthorizedRedirectUrl: string
@@ -12,7 +12,6 @@ export interface IConfigPage {
   name: string
   id: string
   description: string
-  default: boolean // TODO: Should be deprecate
   requestHeaders: any
   methods: IConfigMethods
   customActions: IConfigCustomAction[]
