@@ -38,7 +38,7 @@ Some new features and capabilities in V2:
 * Custom icons for actions
 * Better error handling in configuration and requests
 
-<br />
+
 ## Getting started
 
 Clone RESTool repository to get started.
