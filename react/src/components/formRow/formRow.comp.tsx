@@ -1,4 +1,5 @@
 import React from 'react';
+import { orderBy } from 'natural-orderby';
 
 import { IConfigInputField } from '../../common/models/config.model';
 
@@ -17,20 +18,25 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
       case 'boolean':
         return <input type="checkbox" checked={field.value} onChange={(e) => onChange(field.name, e.target.checked, true)} disabled={field.readonly} />;
       case 'select':
-        return (
-          <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required}>
-            <option>-- Select --</option>
-            {
-              (field.options || []).map((option, idx) => {
-                const key = `option_${idx}_`;
-                if (typeof option !== 'object') {
-                  return <option key={`${key}_${option}`} value={option}>{option}</option>  
-                }
-                return <option key={`${key}_${option.value}`} value={option.value}>{option.display || option.value}</option>
-              })
-            }
-          </select>
-        );
+        {
+          const sortBy = field.optionSource?.sortBy;
+          const sortedOptions = orderBy(field.options || [], typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
+
+          return (
+            <select value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required}>
+              <option>-- Select --</option>
+              {
+                sortedOptions.map((option, idx) => {
+                  const key = `option_${idx}_`;
+                  if (typeof option !== 'object') {
+                    return <option key={`${key}_${option}`} value={option}>{option}</option>  
+                  }
+                  return <option key={`${key}_${option.value}`} value={option.value}>{option.display || option.value}</option>
+                })
+              }
+            </select>
+          );
+        };
       case 'object':
       case 'array': // TODO: add arrayType support
         return <textarea placeholder={field.placeholder || 'Enter JSON...'} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} value={field.value}></textarea>;

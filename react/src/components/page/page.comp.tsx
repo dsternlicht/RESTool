@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
+import { orderBy } from 'natural-orderby';
 
 import { IAppContext } from '../app.context';
 import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod } from '../../common/models/config.model';
@@ -118,7 +119,7 @@ const PageComp = ({ context }: IProps) => {
         throw new Error('Get all method is not defined.');
       }
       
-      const { url, requestHeaders, actualMethod, dataPath } = getAllConfig;
+      const { url, requestHeaders, actualMethod, dataPath, sortBy } = getAllConfig;
       const result = await httpService.fetch({
         method: actualMethod || 'get', 
         origUrl: url, 
@@ -135,7 +136,9 @@ const PageComp = ({ context }: IProps) => {
         throw new Error('Extracted data is invalid.');
       }
 
-      setItems(extractedData);
+      const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
+      
+      setItems(orderedItems);
     } catch (e) {
       setError(e.message);
     }
