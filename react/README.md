@@ -50,9 +50,9 @@ git clone https://github.com/dsternlicht/RESTool.git
 cd RESTool
 ```
 
-If you only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](https://github.com/dsternlicht/RESTool#configuration) and [deployment](https://github.com/dsternlicht/RESTool#deploy).
+If you only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration) and [deployment](#deploy).
 
-If you wish to extend RESTool's functionality and develop on top of it, please go to the [development](https://github.com/dsternlicht/RESTool#development) section.
+If you wish to extend RESTool's functionality and develop on top of it, please go to the [development](#development) section.
 
 <br />
 
@@ -86,7 +86,7 @@ Each **page** is an object and represents a resource in your API. It should have
 | description | `string` | false | A short description about the page and its usage. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
-| customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](custom-actions). |
+| customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
 
 <br />
 
@@ -344,7 +344,7 @@ The list of fields you want to present in the main view of the app. Each one is 
 | name | `string` | true | The property name of the field that contains the value in the API result. |
 | type | `string` | true | This will help RESTool to render the main view. See a list of available type below. |
 | label | `string` | false | A label that describes the field. Will be presented as table headers in the main view. |
-| dataPath | `string` | false | Read more about dataPath [here](data-path).
+| dataPath | `string` | false | Read more about dataPath [here](#data-path).
 | filterable | `boolean` | false | Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields. |
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
 
@@ -369,7 +369,7 @@ A list of fields you want us to send as the body of the request. Each one is an 
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of the field / parameter to be sent. |
 | label | `string` | false | A label that describes the field. This will act as a label in RESTool's forms. |
-| dataPath | `string` | false | Use this field to let RESTool know what is the path of this field in the body of the request. Read more about `dataPath` [here](data-path). |
+| dataPath | `string` | false | Use this field to let RESTool know what is the path of this field in the body of the request. Read more about `dataPath` [here](#data-path). |
 | type | `string` | true | Use the `type` field to define the type of the field. See a list of available type below. |
 | options | `string[]` | false | Add the `options` field if you chose a `select` as a type. This field should contain an array of options to be displayed in the select box. <br /><br />For example: `["Amazon", "Google", { "display": "Microsoft", "value": "ms" }]`|
 | arrayType | `string` | false | For `array` field type, you should specify another property called `arrayType` so RESTool will know how to present & send the data in the POST and PUT methods. Array type could be `object` or `text`. |
@@ -378,7 +378,7 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | readOnly | `boolean` | false | If true, a field will be displayed, but not editable. It's data will still be added to the PUT and POST requests. |
 | accept | `string` | false | An optional setting for `file` type inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files. <br /><br />For example: `{ "accept": ".png,.jpeg,image/*" }`|
 | useInUrl | `boolean` | false | If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body. |
-| optionSource| `object` | false | Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api. Read more about it [here](option-source).|
+| optionSource| `object` | false | Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api. Read more about it [here](#option-source).|
 
 <br />
 
@@ -395,7 +395,7 @@ Available options:
 *  ``boolean`` - This will render a checkbox.
 *  ``email`` - A text box for [an email address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email). Falls back to a simple text input on unsupported browsers.
 *  ``color`` - A [color selector](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color) yielding #RRGGBB hex value strings. Falls back to a simple text input on unsupported browsers.
-*  ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#optionsource-object) properties
+*  ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#option-source) properties
 *  ``array`` - Enter multiple values. POST and PUT page only.
 *  ``file`` - A file-input form element, to upload files as `Content-Type: multipart/form-data`. All non-file form inputs will be sent as individual string values. The current implementation supports only one file input per form.
 *  ``password`` - A password text box
