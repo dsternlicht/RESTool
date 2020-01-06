@@ -47,6 +47,8 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
         return <input type="password" placeholder={field.placeholder || 'Enter email...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
       case 'hidden':
         return <input type="hidden" value={field.value} />;
+      case 'file':
+        return <input type="file" accept={field.accept || '*'} placeholder={field.placeholder || 'Select file...'} value={field.value} onChange={(e) => onChange(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
       case 'note':
         return <p className="note">{field.value}</p>;
       case 'text':
