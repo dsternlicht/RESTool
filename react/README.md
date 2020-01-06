@@ -23,6 +23,7 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 **Live Demo**: [https://restool-sample-app.herokuapp.com/](https://restool-sample-app.herokuapp.com/)
 
 <br />
+
 ## What's New in V2?
 
 While RESTool originally was developed with Angular, we decided to rewrite it from scratch and move to **React**. The main reason we moved to React is the **community**. Since React is so popular we believe that choosing React over Angular will get a much wider **community support**.
@@ -39,6 +40,7 @@ Some new features and capabilities in V2:
 * Better error handling in configuration and requests
 
 <br />
+
 ## Getting started
 
 Clone RESTool repository to get started.
@@ -53,6 +55,7 @@ If you only interested in using **RESTool** on its latest version as a managemen
 If you wish to extend RESTool's functionality and develop on top of it, please go to the [development](https://github.com/dsternlicht/RESTool#development) section.
 
 <br />
+
 ## Configuration
 
 One of the best things about RESTool (and the reason we actually built it) is that you don't need to develop anything. Everything is configurable and may be set simply by editing a configuration file (`config.json`).
@@ -71,6 +74,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | favicon | `string` | false | A URL for you app's favicon. |
  
 <br />
+
 ### Pages
 
 Each **page** is an object and represents a resource in your API. It should have the following properties:
@@ -85,6 +89,7 @@ Each **page** is an object and represents a resource in your API. It should have
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](custom-actions). |
 
 <br />
+
 #### Methods
 
 A method object will tell RESTool how to work with your API. Available methods:
@@ -106,11 +111,13 @@ Each method has the following common properties (which could be extended specifi
 | fields | `array` | false | A list of [Input fields](#input-fields) that will be used as the body of the request. <br /><br /> For the `getAll` request, the fields will be a list to [display fields](#display-fields) and will be used to render the main view. |
 
 <br />
+
 ##### `getAll` - additional properties
 
 We'll use this request in order to get a list of items from our API. This type of GET request has the following additional properties:
 
 <br />
+
 ###### `dataPath` (string)
 
 Use this field to let RESTool know from where it should extract the data from. For example, if your API is returning the following JSON response:
@@ -143,6 +150,7 @@ If your API returning:
 The `dataPath` will be `data.items`.
 
 <br />
+
 ###### `display` (object: { type: "table" | "cards" })
 
 RESTool allows you to control how to output the data. The display object has a `type` property that will define how to display the data. RESTool supports two display type: `"table"` and `"cards"`.
@@ -157,11 +165,13 @@ RESTool allows you to control how to output the data. The display object has a `
 ```
 
 <br />
+
 ###### `sortBy` (string | string[])
 
 One or more paths to properties in the result object to sort the list by.
 
 <br />
+
 ##### `getSingle`
 
 This method will be fired once you hit the edit button on an item in order to get a single item's data. By default, if this method hasn't been set, when editing an item, RESTool will take the raw data from the original `getAll` request.
@@ -178,6 +188,7 @@ An example of a `getSingle` request:
 ```
 
 <br />
+
 ##### `post`
 The `post` method will be used to create new items in your API resource.
 
@@ -208,6 +219,7 @@ Example:
 ```
 
 <br />
+
 #####  `put`
 The `put` method will be used to update an existing item in your API resource.
 
@@ -236,6 +248,7 @@ Example:
 ```
 
 <br />
+
 #####  `delete`
 The `delete` method will be used to delete an existing item in your API resource.
 
@@ -250,6 +263,7 @@ Example:
 ```
 
 <br />
+
 ####  Custom Actions
 
 A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. For example this could enable an endpoint like: ``PUT /users/:id/disable``
@@ -320,6 +334,7 @@ Here's an example for a configuration of 2 custom actions:
 
 
 <br />
+
 ### Display fields
 
 The list of fields you want to present in the main view of the app. Each one is an object and could have the following properties:
@@ -334,6 +349,7 @@ The list of fields you want to present in the main view of the app. Each one is 
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
 
 <br />
+
 #### Display field types
 
 Here's a list of available display field types:
@@ -344,6 +360,7 @@ Here's a list of available display field types:
 * `colorbox` - will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string
 
 <br />
+
 ### Input fields
 
 A list of fields you want us to send as the body of the request. Each one is an object and could have the following properties:
@@ -364,6 +381,7 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | optionSource| `object` | false | Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api. Read more about it [here](option-source).|
 
 <br />
+
 #### Input field types
 
 Available options:
@@ -385,6 +403,7 @@ Available options:
 *  ``hidden`` - Set to true if you want the value to be sent but not to be editable.
 
 <br />
+
 #### Option source
 
 Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api.
@@ -417,6 +436,7 @@ fields: [
 ```
 
 <br />
+
 ### Data path
 
 Use this field to help RESTool understand what's the path to get to the field's value in the raw data. For example, if this is a single result's data:
@@ -456,6 +476,7 @@ The field name will be `url`, the type will be `text`, and the data path will be
 
 
 <br />
+
 ## Development
 
 If you haven't done it already, navigate to the root folder and install all of the project's dependencies by running 
@@ -470,12 +491,14 @@ In order to start developing:
 * The app will automatically reload if you change source files
 
 <br />
+
 ## Build
 
 Once you're ready, run `npm run build` to build the project. The build artifacts will be stored in the `build/` folder.
 **The `build` folder is the one you want to deploy to your server.**
 
 <br />
+
 ## Deploy
 
 * Copy the `build` folder with all of its content.
@@ -484,6 +507,7 @@ Once you're ready, run `npm run build` to build the project. The build artifacts
 * Enjoy! 😎
 
 <br />
+
 ## Created By
 
 *  [Daniel Sternlicht](http://danielsternlicht.com/)
