@@ -26,6 +26,22 @@
     flex: 1;
   }
 
+  .array-form {
+    .add-array-item {
+      border-radius: 50em;
+    }
+    
+    .array-form-item {
+      margin-bottom: 10px;
+      position: relative;
+
+      .clear-input {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
   .clear-input {
     cursor: pointer;
     position: absolute;

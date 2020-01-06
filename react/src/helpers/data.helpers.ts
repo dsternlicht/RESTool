@@ -1,3 +1,5 @@
+import { IConfigInputField } from "../common/models/config.model";
+
 class DataHelpers {
 
   public extractDataByDataPath(data: any, dataPath: string, attr: string | null = null) {
@@ -28,6 +30,20 @@ class DataHelpers {
     }
 
     return extractedData;
+  }
+
+  public checkIfFieldIsObject(field: IConfigInputField): boolean {
+    if (field.type === 'object') {
+      return true;
+    }
+
+    if (field.type === 'array') {
+      if (!field.arrayType || field.arrayType === 'object') {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 }

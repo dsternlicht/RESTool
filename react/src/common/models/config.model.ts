@@ -12,7 +12,7 @@ export interface IConfigPage {
   name: string
   id: string
   description: string
-  default: boolean // TODO: Should deprecate
+  default: boolean // TODO: Should be deprecate
   requestHeaders: any
   methods: IConfigMethods
   customActions: IConfigCustomAction[]
@@ -49,7 +49,7 @@ export interface IConfigInputField {
   readonly: boolean
   options: [string | { display: string, value: string }],
   optionSource: IConfigOptionSource
-  arrayType: 'object' | 'string'
+  arrayType: 'object' | 'text' | 'number' | 'integer'
   default: string // Should be deprecated
   required: boolean
   useInUrl: boolean
@@ -65,13 +65,13 @@ export interface IConfigOptionSource {
   sortBy: string
 }
 
-export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean'; // TODO: Support arrays
+export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean';
 
 export interface IConfigDisplayField {
   name: string
   type: TConfigDisplayField
   label: string
-  dataPath: string // TODO: Support array[idx].path
+  dataPath: string
   filterable: boolean
   truncate: boolean
 }

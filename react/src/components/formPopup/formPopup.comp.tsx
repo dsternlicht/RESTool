@@ -26,6 +26,7 @@ interface IProps {
 }
 
 export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, submitCallback, closeCallback }: IProps) => {
+  const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
   const { httpService } = context;
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
@@ -56,7 +57,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     }
 
     const flattenData = flatten(finalRawData || {});
-    setFormFields(fields.map((field) => {
+    setFormFields(fieldsCopy.map((field) => {
       let key = field.name;
 
       field.originalName = field.name; 
@@ -69,10 +70,15 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       // This will use us later for unflatten the final object
       field.name = key;
   
-      if (field.type === 'object' || field.type === 'array') {
+      if (dataHelpers.checkIfFieldIsObject(field)) {
         if (finalRawData[key] || field.value) {
           field.value = JSON.stringify(finalRawData[key] || field.value, null, '  ') || '';
         }
+        return field;
+      }
+
+      if (field.type === 'array') {
+        field.value = finalRawData[key] || field.value || [];
         return field;
       }
   
@@ -87,7 +93,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     }));
 
     setLoading(false);
-  } 
+  }
 
   async function submitForm(e: any) {
     e.preventDefault();
@@ -102,7 +108,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         validationError = 'Please fill up all required fields.';
       }
 
-      if ((field.type === 'object' || field.type === 'array') && field.value) {
+      if (dataHelpers.checkIfFieldIsObject(field) && field.value) {
         try {
           finalObject[field.name] = JSON.parse(field.value);
         } catch (e) {
