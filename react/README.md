@@ -4,7 +4,7 @@
 
 <p  align="center">
 
-<img  src="https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/restool_screenshot.png?raw=true"  alt="RESTool Sample App"/>
+<img  src="https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/screenshot_1.png?raw=true"  alt="RESTool Sample App"/>
 
 </p>
 
