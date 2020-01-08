@@ -61,8 +61,16 @@
   padding: 30px;
 
   @media screen and (max-width: 800px) { 
-    .app-loader {
+    .app-loader, .app-error {
       position: relative;
+    }
+
+    .app-error {
+      transform: none;
+      left: 0;
+      top: 0;
+      margin: 40px 0;
+      text-align: center;
     }
   }
 }

@@ -128,7 +128,7 @@ const PageComp = ({ context }: IProps) => {
       });
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
-      if (!extractedData) {
+      if (extractedData) {
         throw new Error('Could not extract data from response.');
       }
 
@@ -265,17 +265,17 @@ const PageComp = ({ context }: IProps) => {
   }
 
   function renderPageContent() {
-    if (error) {
-      return <div className="app-error">{error}</div>;
-    }
-
     return (
       <React.Fragment>
         <QueryParams 
           initialParams={queryParams}
           submitCallback={submitQueryParams}
         />
-        {renderTable()}
+        {
+          error ? 
+          <div className="app-error">{error}</div> :
+          renderTable()
+        }
       </React.Fragment>
     )
   }
