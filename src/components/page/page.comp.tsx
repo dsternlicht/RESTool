@@ -128,7 +128,7 @@ const PageComp = ({ context }: IProps) => {
       });
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
-      if (extractedData) {
+      if (!extractedData) {
         throw new Error('Could not extract data from response.');
       }
 
