@@ -73,11 +73,8 @@ class HttpService {
     const finalUrl: string = this.buildUrl(this.baseUrl + params.origUrl, params.queryParams, params.rawData);
     const requestParams = {
       method: params.method || 'get',
-      headers: {
-        'content-type': 'application/json',
-        ...(params.headers || {})
-      },
-      body: params.method === 'post' || params.method === 'put' ? JSON.stringify(params.body) : undefined
+      headers: params.headers || {},
+      body: params.method === 'post' || params.method === 'put' ? params.body : undefined
     };
 
     return {

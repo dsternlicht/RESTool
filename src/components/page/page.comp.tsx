@@ -25,7 +25,7 @@ interface IPopupProps {
   type: 'add' | 'update' | 'action'
   title: string
   config: IConfigPostMethod | IConfigPutMethod
-  submitCallback: (body: any) => void
+  submitCallback: (body: any, containFiles: boolean) => void
   getSingleConfig?: IConfigGetSingleMethod
   rawData?: {}
 }
@@ -61,8 +61,8 @@ const PageComp = ({ context }: IProps) => {
       title: 'Update Item', 
       config: putConfig as IConfigPutMethod,
       getSingleConfig, 
-      submitCallback: async (body: any) => {
-        return await updateItem(body, rawData);
+      submitCallback: async (body: any, containFiles: boolean) => {
+        return await updateItem(body, rawData, containFiles);
       }
     };
 
@@ -75,23 +75,26 @@ const PageComp = ({ context }: IProps) => {
       type: 'action', 
       title: action.name || 'Custom Action', 
       config: action as IConfigCustomAction, 
-      submitCallback: async (body: any) => {
-        return await performAction(body, rawData, action);
+      submitCallback: async (body: any, containFiles: boolean) => {
+        return await performAction(body, rawData, action, containFiles);
       }
     };
 
     setOpenedPopup(params);
   }
 
-  async function performAction(body: any, rawData: any, action: IConfigCustomAction) {
+  async function performAction(body: any, rawData: any, action: IConfigCustomAction, containFiles: boolean) {
     const { url, requestHeaders, actualMethod } = action;
     
     return await httpService.fetch({
       method: actualMethod || 'put', 
       origUrl: url, 
       rawData,
-      body,
-      headers: requestHeaders,
+      body: containFiles ? body : JSON.stringify(body),
+      headers: {
+        ...requestHeaders,
+        ...(containFiles ? {} : { 'content-type': 'application/json' })
+      },
       responseType: 'boolean'
     });
   }
@@ -146,7 +149,7 @@ const PageComp = ({ context }: IProps) => {
     setLoading(false);
   }
 
-  async function addItem(data: any) {
+  async function addItem(body: any, containFiles?: boolean) {
     if (!postConfig) {
       throw new Error('Post method is not defined.');
     }
@@ -156,13 +159,16 @@ const PageComp = ({ context }: IProps) => {
     return await httpService.fetch({
       method: actualMethod || 'post', 
       origUrl: url, 
-      body: data,
-      headers: requestHeaders,
+      body: containFiles ? body : JSON.stringify(body),
+      headers: {
+        ...requestHeaders,
+        ...(containFiles ? {} : { 'content-type': 'application/json' })
+      },
       responseType: 'boolean'
     });
   }
 
-  async function updateItem(body: any, rawData: any) {
+  async function updateItem(body: any, rawData: any, containFiles?: boolean) {
     if (!putConfig) {
       throw new Error('Put method is not defined.');
     }
@@ -173,8 +179,11 @@ const PageComp = ({ context }: IProps) => {
       method: actualMethod || 'put', 
       origUrl: url, 
       rawData,
-      body,
-      headers: requestHeaders,
+      body: containFiles ? body : JSON.stringify(body),
+      headers: {
+        ...requestHeaders,
+        ...(containFiles ? {} : { 'content-type': 'application/json' })
+      },
       responseType: 'boolean'
     });
   }

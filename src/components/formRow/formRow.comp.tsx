@@ -116,7 +116,7 @@ export const FormRow = ({ field, direction, showReset, onChange }: IProps) => {
       case 'hidden':
         return <input type="hidden" value={field.value} />;
       case 'file':
-        return <input type="file" accept={field.accept || '*'} placeholder={field.placeholder || 'Select file...'} value={field.value} onChange={(e) => changeCallback(field.name, e.target.value)} disabled={field.readonly} required={field.required} />;
+        return <input type="file" accept={field.accept || '*'} placeholder={field.placeholder || 'Select file...'} name={field.name || 'file'} disabled={field.readonly} required={field.required} />;
       case 'note':
         return <p className="note">{field.value}</p>;
       case 'text':

@@ -7,6 +7,7 @@ import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
+import { fileHelpers } from '../../helpers/file.helpers';
 import { IAppContext } from '../app.context';
 import { withAppContext } from '../withContext/withContext.comp';
 
@@ -22,7 +23,7 @@ interface IProps {
   rawData?: any
   getSingleConfig?: IConfigGetSingleMethod
   closeCallback: (reloadData: boolean) => void
-  submitCallback: (body: any) => void
+  submitCallback: (body: any, containFiles: boolean) => void
 }
 
 export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, submitCallback, closeCallback }: IProps) => {
@@ -57,6 +58,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     }
 
     const flattenData = flatten(finalRawData || {});
+
     setFormFields(fieldsCopy.map((field) => {
       let key = field.name;
 
@@ -99,10 +101,26 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     e.preventDefault();
 
     const finalObject: any = {};
+    const formData = new FormData();
+    const containFiles: boolean = fileHelpers.isMultipartForm(formFields);
     let validationError = null;
 
     formFields.forEach((field) => {
+      if (field.type === 'file') {
+        const fileInput: any = document.querySelector(`input[name="${field.name || 'file'}"]`) as HTMLInputElement;
+        
+        if (fileInput.files.length > 0) {
+          const firstFile = fileInput.files[0];
+          formData.append(field.name || 'file', firstFile, firstFile.name);
+        }
+        return;
+      }
+
       finalObject[field.name] = field.value;
+
+      if (containFiles) {
+        formData.append(field.name, field.value);
+      }
 
       if (field.required && !field.value) {
         validationError = 'Please fill up all required fields.';
@@ -129,8 +147,8 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     setLoading(true);
 
     try {
-      const body = unflatten(finalObject);
-      await submitCallback(body);
+      const body = containFiles ? formData : unflatten(finalObject);
+      await submitCallback(body, containFiles);
       
       toast.success('Great Success!');
       
