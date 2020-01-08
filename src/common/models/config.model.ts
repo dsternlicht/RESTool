@@ -43,13 +43,12 @@ export interface IConfigInputField {
   value: any
   type: TConfigInputField
   label: string
-  dataPath: string // TODO: Add docs to array
-  placeholder: string // TODO: Add docs
+  dataPath: string
+  placeholder: string
   readonly: boolean
   options: [string | { display: string, value: string }],
   optionSource: IConfigOptionSource
   arrayType: 'object' | 'text' | 'number' | 'integer'
-  default: string // Should be deprecated
   required: boolean
   useInUrl: boolean
   accept: string
@@ -80,7 +79,7 @@ export interface IConfigGetAllMethod extends IConfigMethod {
   queryParams: IConfigInputField[]
   display: {
     type: 'table' | 'cards',
-    fields: IConfigDisplayField[] // Should be deprecated
+    fields: IConfigDisplayField[] // Deprecated
   },
   sortBy: string
   fields: IConfigDisplayField[]
@@ -102,6 +101,6 @@ export interface IConfigDeleteMethod extends IConfigMethod {}
 
 export interface IConfigCustomAction extends IConfigMethod {
   name: string
-  icon: string // TODO: Add docs
+  icon: string
   fields: IConfigInputField[]
 }

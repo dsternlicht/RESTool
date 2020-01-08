@@ -376,6 +376,7 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | value | `any` | false | Set a default value to the field. |
 | required | `boolean` | false | If true, a field will be marked as required on PUT and POST forms. |
 | readOnly | `boolean` | false | If true, a field will be displayed, but not editable. It's data will still be added to the PUT and POST requests. |
+| placeholder | `string` | false | Input field placeholder. |
 | accept | `string` | false | An optional setting for `file` type inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files. <br /><br />For example: `{ "accept": ".png,.jpeg,image/*" }`|
 | useInUrl | `boolean` | false | If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body. |
 | optionSource| `object` | false | Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api. Read more about it [here](#option-source).|
@@ -442,7 +443,6 @@ fields: [
 Use this field to help RESTool understand what's the path to get to the field's value in the raw data. For example, if this is a single result's data:
 
 ```
-
 [
 	{
 		name: 'Daniel',
@@ -458,10 +458,28 @@ Use this field to help RESTool understand what's the path to get to the field's 
 
 And you want to present the `numberOfChildrens` field in the main view, the data path for this field will be `details`, and the `name` should be `numberOfChildrens`.
 
+`dataPath` also supports extracting value from an array:
+
+```
+[
+	{
+		childrens: [
+      {
+        nickName: 'Spiderman'
+      }, { 
+        nickName: 'Ironman'
+      }    
+    ]
+	},
+	...
+]
+```
+
+You may use the following data path to extract the first children's nickName: `childrens.0` and the field's name will be `nickName`.
+
 Another usage of this field is to help RESTool to build up the request body. Let's assume that you want to build the following request body:
 
 ```
-
 {
 	name: 'Daniel',
 	details: {
