@@ -1,4 +1,3 @@
 {
-  "git.ignoreLimitWarning": true,
-  "typescript.tsdk": "./react/node_modules/typescript/lib"
+  "git.ignoreLimitWarning": true
 }

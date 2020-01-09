@@ -3,7 +3,6 @@
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
   "pages": [
     {
-      "default": true,
       "name": "Cast & Characters",
       "id": "characters",
       "description": "Manage GOT characters location and budget.",
@@ -20,40 +19,40 @@
             }
           ],
           "display": {
-            "type": "table",
-            "fields": [
-              {
-                "name": "thumbnail",
-                "type": "image",
-                "label": "Thumbnail"
-              },
-              {
-                "name": "id",
-                "type": "text",
-                "label": "ID"
-              },
-              {
-                "name": "name",
-                "type": "text",
-                "label": "Name"
-              },
-              {
-                "name": "realName",
-                "type": "text",
-                "label": "Real Name"
-              },
-              {
-                "name": "location",
-                "type": "text",
-                "label": "Current Location"
-              },
-              {
-                "name": "isAlive",
-                "type": "boolean",
-                "label": "Alive?"
-              }
-            ]
-          }
+            "type": "table"
+          },
+          "fields": [
+            {
+              "name": "thumbnail",
+              "type": "image",
+              "label": "Thumbnail"
+            },
+            {
+              "name": "id",
+              "type": "text",
+              "label": "ID"
+            },
+            {
+              "name": "name",
+              "type": "text",
+              "label": "Name"
+            },
+            {
+              "name": "realName",
+              "type": "text",
+              "label": "Real Name"
+            },
+            {
+              "name": "location",
+              "type": "text",
+              "label": "Current Location"
+            },
+            {
+              "name": "isAlive",
+              "type": "boolean",
+              "label": "Alive?"
+            }
+          ]
         },
         "getSingle": {
           "url": "/character/:id",
