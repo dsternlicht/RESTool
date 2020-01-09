@@ -60,6 +60,7 @@ export interface IConfigOptionSource {
   dataPath: string
   displayPath: string
   valuePath: string
+  actualMethod: TConfigMethod
   sortBy: string
 }
 

@@ -24,6 +24,13 @@ class HttpService {
     this.errorMessageDataPath = errorMessageDataPath || '';
   }
 
+  private urlIsAbsolute(url: string) {
+    if (url.indexOf('http') === 0 || url.indexOf('https') === 0) {
+      return true;
+    }
+    return false;
+  }
+
   private replaceParamsInUrl(url: string, rawData?: any): string {
     if (!rawData || typeof rawData !== 'object') {
       return url;
@@ -70,7 +77,8 @@ class HttpService {
   }
 
   private buildRequest(params: IFetchParams): { url: string, params: any } {
-    const finalUrl: string = this.buildUrl(this.baseUrl + params.origUrl, params.queryParams, params.rawData);
+    const reqUrl: string = this.urlIsAbsolute(params.origUrl) ? params.origUrl : this.baseUrl + params.origUrl;
+    const finalUrl: string = this.buildUrl(reqUrl, params.queryParams, params.rawData);
     const requestParams = {
       method: params.method || 'get',
       headers: params.headers || {},
