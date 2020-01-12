@@ -10,6 +10,7 @@ import HttpService from '../services/http.service';
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import { CustomStyles } from './customStyles/customStyles.comp';
 
 const httpService = new HttpService();
 const defaultAppName: string = 'RESTool App';
@@ -104,6 +105,12 @@ function App() {
           {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
         </div> :
         <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
+          {
+            config.customStyles &&
+            <CustomStyles 
+              styles={config.customStyles} 
+            />
+          }
           <Router>
             <aside>
               <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>

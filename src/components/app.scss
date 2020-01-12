@@ -1,4 +1,5 @@
 @import '../common/styles/vars';
+@import '../common/styles/functions';
 
 .restool-app {
   display: flex;
@@ -12,8 +13,8 @@
 
   aside {
     width: $aside-width;
-    background: #3C3E6F;
-    color: #fff;
+    background: v(navBackground, #3C3E6F);
+    color: v(navText, #fff);
     box-shadow: inset -2px 0px 3px rgba(0, 0, 0, 0.3);
     z-index: 10;
     position: sticky;

@@ -6,6 +6,20 @@ export interface IConfig {
   errorMessageDataPath: string | string[]
   unauthorizedRedirectUrl: string
   pages: IConfigPage[]
+  customStyles?: ICustomStyles
+}
+
+export interface ICustomStyles {
+  appText?: string
+  appBackground?: string
+  navBackground?: string
+  navText?: string
+  navItem?: string
+  navItemHoverBackground?: string
+  navItemActiveBackground?: string
+  actionButtonBackground?: string
+  actionButtonHoverBackground?: string
+  actionButtonText?: string
 }
 
 export interface IConfigPage {

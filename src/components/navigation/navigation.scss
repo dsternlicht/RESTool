@@ -1,3 +1,5 @@
+@import '../../common/styles/functions';
+
 .app-nav {
   text-align: left;
   overflow: auto;
@@ -53,8 +55,7 @@
 
     a {
       display: block;
-      color: #fff;
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+      color: v(navItem, #fff);
       text-decoration: none;
       padding: 10px 20px;
       margin: 0;
@@ -75,11 +76,11 @@
       }
   
       &:hover {
-        background: #424479;
+        background: v(navItemHoverBackground, #424479);
       }
   
       &.active {
-        background: #57578f;
+        background: v(navItemActiveBackground, #57578f);
       }
     }
   }
