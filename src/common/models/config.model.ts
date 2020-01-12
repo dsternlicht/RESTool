@@ -10,16 +10,18 @@ export interface IConfig {
 }
 
 export interface ICustomStyles {
-  appText?: string
-  appBackground?: string
-  navBackground?: string
-  navText?: string
-  navItem?: string
-  navItemHoverBackground?: string
-  navItemActiveBackground?: string
-  actionButtonBackground?: string
-  actionButtonHoverBackground?: string
-  actionButtonText?: string
+  vars?: {
+    appText?: string
+    appBackground?: string
+    navBackground?: string
+    navText?: string
+    navItem?: string
+    navItemHoverBackground?: string
+    navItemActiveBackground?: string
+    actionButtonBackground?: string
+    actionButtonHoverBackground?: string
+    actionButtonText?: string
+  }
 }
 
 export interface IConfigPage {

@@ -1,14 +1,16 @@
 import React from 'react';
+import { ICustomStyles } from '../../common/models/config.model';
 
 interface IProps {
-  styles: any
+  styles: ICustomStyles
 }
 
 export const CustomStyles = ({ styles }: IProps) => {
+  const cssVars = styles.vars || {};
   const arr = [];
   
-  for (const key in styles) {
-    arr.push(`--${key}: ${styles[key]}`);
+  for (const key in cssVars) {
+    arr.push(`--${key}: ${(cssVars as any)[key]}`);
   }
 
   return (
