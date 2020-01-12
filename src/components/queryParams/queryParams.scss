@@ -1,0 +1,84 @@
+.query-params-form {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  max-width: 100%;
+  overflow: auto;
+
+  @media screen and (max-width: 800px) { 
+    flex-direction: column;
+  }
+
+  h5 {
+    color: #666;
+    margin: 0 20px 0 0;
+    padding-right: 20px;
+    border-right: 1px solid #ccc;
+
+    @media screen and (max-width: 800px) { 
+      border-right: none;
+      padding: 0;
+      margin: 0 0 20px;
+    }
+  }
+
+  form {
+    display: flex;
+    align-items: center;
+
+    @media screen and (max-width: 800px) { 
+      flex-direction: column;
+      width: 100%;
+      align-items: stretch;
+    }
+  }
+  
+  .form-row {
+    margin: 0 20px 0 0;
+    padding: 7.5px 0;
+
+    @media screen and (max-width: 800px) { 
+      justify-content: center;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 0;
+    }
+
+    input[type=text], input[type=number] {
+      min-width: 220px;
+
+      @media screen and (max-width: 800px) { 
+        min-width: 0;
+        width: 100%;
+      }
+    }
+
+    input[type=checkbox] {
+      margin-left: 10px;
+    }
+
+    label {
+      background: #fff;
+      padding: 8.5px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-right: none;
+      z-index: 1;
+      border-radius: 3px 0 0 3px;
+      color: #999;
+
+      @media screen and (max-width: 800px) { 
+        background: none;
+        border: none;
+        padding: 0 5px 5px;
+      }
+    }
+
+    input[type=text], select, textarea, input[type=url], input[type=number], input[type=date], input[type=email], input[type=password] {
+      border-radius: 0 3px 3px 0;
+
+      &:focus {
+        box-shadow: inset 0 0 3px rgba(0,0,0,0.25);
+      }
+    }
+  }
+}

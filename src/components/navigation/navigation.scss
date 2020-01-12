@@ -1,0 +1,87 @@
+@import '../../common/styles/functions';
+
+.app-nav {
+  text-align: left;
+  overflow: auto;
+  max-height: calc(100vh - 63px);
+
+  .app-nav-opener {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    border-radius: 50em;
+    background: none;
+    z-index: 1;
+    font-size: 18px;
+    display: none;
+
+    @media screen and (max-width: 800px) {
+      display: block;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .app-nav-wrapper {
+    @media screen and (max-width: 800px) { 
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      left: 0;
+      top: 0;
+      overflow: auto;
+      background: #3C3E6F;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+    }
+
+    &.opened {
+      display: flex;
+    }
+
+    .app-nav-links {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      align-self: flex-start;
+    }
+
+    a {
+      display: block;
+      color: v(navItemText, #fff);
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.3em;
+      cursor: pointer;
+      transition: 0.2s background-color ease 0s;
+
+      @media screen and (max-width: 800px) { 
+        border-radius: 50em;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 10px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+  
+      &:hover {
+        background: v(navItemHoverBackground, #424479);
+      }
+  
+      &.active {
+        background: v(navItemActiveBackground, #57578f);
+      }
+    }
+  }
+}

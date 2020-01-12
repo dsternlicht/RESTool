@@ -1,0 +1,41 @@
+.form-popup {
+  .popup-content {
+    width: 90%;
+    max-width: 540px;
+    
+    section {
+      padding: 20px;
+    }
+
+    .app-loader {
+      position: relative;
+      margin: 50px auto;
+    }
+
+    .form-row {
+      label {
+        width: 140px;
+
+        @media screen and (max-width: 800px) {
+          width: 100px;
+        }
+
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .buttons-wrapper {
+      padding: 0;
+
+      .button {
+        font-size: 16px;
+        padding: 7px 15px;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+    }
+  }
+}
