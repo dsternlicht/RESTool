@@ -15,7 +15,7 @@ export interface ICustomStyles {
     appBackground?: string
     navBackground?: string
     navText?: string
-    navItem?: string
+    navItemText?: string
     navItemHoverBackground?: string
     navItemActiveBackground?: string
     actionButtonBackground?: string

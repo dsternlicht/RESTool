@@ -33,6 +33,7 @@ Some new features and capabilities in V2:
 * **From Angular to React & Typescript**
 * Full mobile support
 * Cards layout
+* Custom app colors
 * Data path extraction from arrays
 * New & improved design
 * Custom favicon support
@@ -72,6 +73,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | errorMessageDataPath | `string`, `string[]` | false | The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found. |
 | unauthorizedRedirectUrl | `string` | false | Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"` |
 | favicon | `string` | false | A URL for you app's favicon. |
+| customStyles | `object` | false | [Custom styles](#custom-styles) |
  
 <br />
 
@@ -325,13 +327,41 @@ Here's an example for a configuration of 2 custom actions:
 }
 ```
 
+<br />
 
+####  Custom Styles
 
+The `customStyles` property allows you to control the look & feel of your RESTool app. The object will contains a `vars` property where you'll be able to change the deafult colors of RESTool.
 
+Here's a list of variable names you may change:
 
-
+| Name | Value | Description | 
+|--------------|-----|----------------------------------------------------------------|
+| appText | `string` | Root text color. |
+| appBackground | `string` | App background color. |
+| navBackground | `string` | Navigation menu background color. |
+| navText | `string` | Navigation menu text color. |
+| navItemText | `string` | Navigation item text color. |
+| navItemHoverBackground | `string` | Navigation item background color on hover event. |
+| navItemActiveBackground | `string` | Active navigation item background color. |
+| actionButtonBackground | `string` | Action button background color. |
+| actionButtonHoverBackground | `string` | Action button background color on hover event. |
+| actionButtonText | `string` | Action button text color. |
   
+Usage example in `config.json` file:
 
+```
+{
+  ...
+  "customStyles": {
+    "vars": {
+      "appBackground": "#888",
+      "navBackground": "#333"
+      "navItemHoverBackground": "#454545"
+    }
+  }
+}
+```
 
 <br />
 
