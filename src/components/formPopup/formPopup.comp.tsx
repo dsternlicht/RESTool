@@ -134,6 +134,10 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         }
       }
 
+      if (field.type === 'boolean') {
+        finalObject[field.name] = field.value || false;
+      }
+
       if (field.type === 'encode') {
         finalObject[field.name] = encodeURIComponent(field.value);
       }
