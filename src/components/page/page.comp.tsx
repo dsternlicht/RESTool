@@ -14,6 +14,7 @@ import { Cards } from '../cards/cards.comp';
 import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
+import { FilterField } from '../filterField/filterField.comp';
 
 import './page.scss';
 
@@ -45,6 +46,8 @@ const PageComp = ({ context }: IProps) => {
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
   const [items, setItems] = useState<any[]>([]);
+  const [filter, setFilter] = useState<string>('');
+
   
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
@@ -238,11 +241,25 @@ const PageComp = ({ context }: IProps) => {
       return <Loader />;
     }
 
-    if (!items.length) {
-      return <div className="app-error">Nothing to see here. Result is empty.</div>;
+    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+    const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
+    let filteredItems = items;
+    
+    if (filter && fieldsToFilter.length) {
+      filteredItems = items.filter((item) => {
+        let passFilter = false;
+        fieldsToFilter.forEach((fieldName) => {
+          if (item[fieldName].toLowerCase().indexOf(filter) >= 0) {
+            passFilter = true;
+          }
+        })
+        return passFilter;
+      });
     }
 
-    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+    if (!filteredItems.length) {
+      return <div className="app-error">Nothing to see here. Result is empty.</div>;
+    }
 
     if (getAllConfig?.display.type === 'cards') {
       return (
@@ -253,7 +270,7 @@ const PageComp = ({ context }: IProps) => {
             action: customActions.length ? openCustomActionPopup : () => {},
           }}
           fields={fields}
-          items={items} 
+          items={filteredItems} 
           customActions={customActions}
         />
       );
@@ -267,19 +284,26 @@ const PageComp = ({ context }: IProps) => {
           action: customActions.length ? openCustomActionPopup : () => {},
         }}
         fields={fields}
-        items={items} 
+        items={filteredItems} 
         customActions={customActions}
       />
     );
   }
 
   function renderPageContent() {
+    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+    const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
+
     return (
       <React.Fragment>
         <QueryParams 
           initialParams={queryParams}
           submitCallback={submitQueryParams}
         />
+        {
+          fieldsToFilter.length &&
+          <FilterField onChange={setFilter} />
+        }
         {
           error ? 
           <div className="app-error">{error}</div> :
