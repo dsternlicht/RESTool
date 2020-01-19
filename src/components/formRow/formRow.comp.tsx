@@ -20,11 +20,12 @@ interface IProps {
 
 export const FormRow = withAppContext(({ context, field, direction, showReset, onChange }: IProps) => {
   const [optionSources, setOptionSources] = useState<any>({});
-  const { httpService } = context;
-  
+  const { httpService, activePage } = context;
+  const pageHeaders: any = activePage?.requestHeaders || {};
+
   async function loadOptionSourceFromRemote(fieldName: string, optionSource: IConfigOptionSource) {
     try {
-      const { url, dataPath, actualMethod } = optionSource;
+      const { url, dataPath, actualMethod, requestHeaders } = optionSource;
 
       if (!url) {
         throw new Error(`URL option source (for field "${fieldName}") is empty.`);
@@ -34,7 +35,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         method: actualMethod || 'get', 
         origUrl: url, 
         queryParams: [], 
-        headers: {},
+        headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
       });
       
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);

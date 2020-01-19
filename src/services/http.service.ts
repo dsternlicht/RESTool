@@ -17,11 +17,13 @@ class HttpService {
   public baseUrl: string;
   public unauthorizedRedirectUrl: string;
   public errorMessageDataPath: string | string[];
+  public requestHeaders: any;
 
   constructor(baseUrl: string = '', unauthorizedRedirectUrl: string = '', errorMessageDataPath: string = '') {
     this.baseUrl = baseUrl || '';
     this.unauthorizedRedirectUrl = unauthorizedRedirectUrl || '';
     this.errorMessageDataPath = errorMessageDataPath || '';
+    this.requestHeaders = {};
   }
 
   private urlIsAbsolute(url: string) {
@@ -81,7 +83,7 @@ class HttpService {
     const finalUrl: string = this.buildUrl(reqUrl, params.queryParams, params.rawData);
     const requestParams = {
       method: params.method || 'get',
-      headers: params.headers || {},
+      headers: Object.assign({}, this.requestHeaders, params.headers || {}),
       body: params.method === 'post' || params.method === 'put' ? params.body : undefined
     };
 
