@@ -5,6 +5,7 @@ export interface IConfig {
   baseUrl: string
   errorMessageDataPath: string | string[]
   unauthorizedRedirectUrl: string
+  requestHeaders: any
   pages: IConfigPage[]
   customStyles?: ICustomStyles
 }
@@ -78,6 +79,7 @@ export interface IConfigOptionSource {
   valuePath: string
   actualMethod: TConfigMethod
   sortBy: string
+  requestHeaders: any
 }
 
 export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean';

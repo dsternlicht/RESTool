@@ -28,9 +28,10 @@ interface IProps {
 
 export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, submitCallback, closeCallback }: IProps) => {
   const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
-  const { httpService } = context;
+  const { httpService, activePage } = context;
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
+  const pageHeaders: any = activePage?.requestHeaders || {};
 
   async function initFormFields() {
     let finalRawData: any = rawData || {};
@@ -42,7 +43,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
           method: actualMethod || 'get', 
           origUrl: url, 
           queryParams, 
-          headers: requestHeaders,
+          headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
           rawData,
         });
         

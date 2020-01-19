@@ -35,6 +35,7 @@ const PageComp = ({ context }: IProps) => {
   const { page } = useParams();
   const { push, location } = useHistory();
   const { activePage, error, setError, httpService } = context;
+  const pageHeaders: any = activePage?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
@@ -95,7 +96,8 @@ const PageComp = ({ context }: IProps) => {
       rawData,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
-        ...requestHeaders,
+        ...pageHeaders,
+        ...(requestHeaders || {}),
         ...(containFiles ? {} : { 'content-type': 'application/json' })
       },
       responseType: 'boolean'
@@ -130,7 +132,7 @@ const PageComp = ({ context }: IProps) => {
         method: actualMethod || 'get', 
         origUrl: url, 
         queryParams: extractQueryParams(), 
-        headers: requestHeaders
+        headers: Object.assign({}, pageHeaders, requestHeaders || {})
       });
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
@@ -164,7 +166,8 @@ const PageComp = ({ context }: IProps) => {
       origUrl: url, 
       body: containFiles ? body : JSON.stringify(body),
       headers: {
-        ...requestHeaders,
+        ...pageHeaders,
+        ...(requestHeaders || {}),
         ...(containFiles ? {} : { 'content-type': 'application/json' })
       },
       responseType: 'boolean'
@@ -184,7 +187,8 @@ const PageComp = ({ context }: IProps) => {
       rawData,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
-        ...requestHeaders,
+        ...pageHeaders,
+        ...(requestHeaders || {}),
         ...(containFiles ? {} : { 'content-type': 'application/json' })
       },
       responseType: 'boolean'
@@ -208,7 +212,7 @@ const PageComp = ({ context }: IProps) => {
         method: actualMethod || 'delete', 
         origUrl: url, 
         rawData: item,
-        headers: requestHeaders, 
+        headers: Object.assign({}, pageHeaders, requestHeaders || {}), 
         responseType: 'boolean'
       });
 
