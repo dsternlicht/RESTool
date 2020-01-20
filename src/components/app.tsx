@@ -52,11 +52,12 @@ function App() {
         return await loadConfig(config.remoteUrl);
       }
 
-      setFirstLoad(false);
       setConfig(remoteConfig);
     } catch (e) {
       console.error('Could not load config file', e);
     }
+    
+    setFirstLoad(false);
   }
 
   function scrollToTop(scrollDuration: number = 250) {
