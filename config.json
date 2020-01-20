@@ -1,5 +1,5 @@
 {
-  "name": "NWD Restool",
+  "name": "RESTool App",
   "favicon": "https://www.commoninja.com/public/favicon.ico",
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
   "pages": [
