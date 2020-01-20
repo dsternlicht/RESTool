@@ -253,7 +253,8 @@ const PageComp = ({ context }: IProps) => {
       filteredItems = items.filter((item) => {
         let passFilter = false;
         fieldsToFilter.forEach((fieldName) => {
-          if (item[fieldName].toLowerCase().indexOf(filter) >= 0) {
+          const value = item[fieldName];
+          if (typeof value === 'string' && value.toLowerCase().indexOf(filter) >= 0) {
             passFilter = true;
           }
         })
