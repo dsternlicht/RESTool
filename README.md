@@ -1,4 +1,4 @@
-# RESTool 2.0 ([demo](https://restool-sample-app.herokuapp.com/))
+# RESTool 2.0 ([demo](https://dsternlicht.github.io/RESTool/))
 
   
 
@@ -20,7 +20,7 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 
   
 
-**Live Demo**: [https://restool-sample-app.herokuapp.com/](https://restool-sample-app.herokuapp.com/)
+**Live Demo**: [https://dsternlicht.github.io/RESTool/](https://dsternlicht.github.io/RESTool/)
 
 <br />
 
