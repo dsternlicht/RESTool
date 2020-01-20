@@ -20,7 +20,7 @@
             }
           ],
           "display": {
-            "type": "table"
+            "type": "cards"
           },
           "fields": [
             {
@@ -117,6 +117,7 @@
           "name":"Send Email",
           "url": "/character/:id/sendEmail",
           "actualMethod": "post",
+          "icon": "envelope",
           "fields": [
             {
               "name": "id",
@@ -142,6 +143,7 @@
           "name":"Disable Character",
           "url": "/character/:id/disable",
           "actualMethod": "post",
+          "icon": "ban",
           "fields": [
             {
               "name": "id",
