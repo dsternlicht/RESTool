@@ -1,6 +1,6 @@
 {
   "name": "restool",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -45,5 +45,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dsternlicht/Restool.git"
-  }
+  },
+  "homepage": "."
 }
