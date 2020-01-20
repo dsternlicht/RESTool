@@ -1,0 +1,196 @@
+{
+  "name": "NWD Restool",
+  "favicon": "https://www.commoninja.com/public/favicon.ico",
+  "baseUrl": "https://restool-sample-app.herokuapp.com/api",
+  "customStyles111": {
+    "vars": {
+      "appText": "green",
+      "appBackground": "red",
+      "navBackground": "yellow",
+      "navText": "gray",
+      "navItem": "red",
+      "navItemHoverBackground": "pink",
+      "navItemActiveBackground": "white",
+      "actionButtonBackground": "pink",
+      "actionButtonHoverBackground": "red",
+      "actionButtonText": "white"
+    }
+  },
+  "pages": [
+    {
+      "name": "Cast & Characters",
+      "id": "characters",
+      "description": "Manage GOT characters location and budget.",
+      "methods": {
+        "getAll": {
+          "url": "/character",
+          "queryParams": [
+            {
+              "name": "search",
+              "value": "",
+              "label": "Search",
+              "placeholder": "Enter character name..."
+            },
+            {
+              "name": "bool",
+              "value": true,
+              "label": "Bolean",
+              "type": "boolean"
+            }
+          ],
+          "sortBy": "name",
+          "display": {
+            "type": "cards",
+            "fields": [
+              {
+                "name": "thumbnail",
+                "type": "image",
+                "label": "Thumbnail"
+              },
+              {
+                "name": "id",
+                "type": "text",
+                "label": "ID"
+              },
+              {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "filterable": true
+              },
+              {
+                "name": "realName",
+                "type": "text",
+                "label": "Real Name"
+              },
+              {
+                "name": "location",
+                "type": "text",
+                "label": "Current Location",
+                "filterable": true
+              },
+              {
+                "name": "test",
+                "dataPath": "array.1",
+                "type": "text",
+                "label": "Array"
+              },
+              {
+                "name": "isAlive",
+                "type": "boolean",
+                "label": "Alive?"
+              }
+            ]
+          }
+        },
+        "post": {
+          "url": "/character",
+          "fields": [
+            {
+              "name": "thumbnail",
+              "label": "Thumbnail",
+              "type": "text"
+            },
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text"
+            },
+            {
+              "name": "realName",
+              "label": "Real Name",
+              "type": "text"
+            },
+            {
+              "name": "location",
+              "label": "Location",
+              "type": "select",
+              "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
+            },
+            {
+              "name": "isAlive",
+              "label": "Alive?",
+              "type": "boolean"
+            },
+            {
+              "name": "array",
+              "type": "array",
+              "arrayType": "text",
+              "value": []
+            }
+          ]
+        },
+        "put": {
+          "url": "/character/:id",
+          "actualMethod": null,
+          "fields": [
+            {
+              "name": "location",
+              "label": "Location",
+              "type": "select",
+              "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
+            },
+            {
+              "name": "isAlive",
+              "label": "Alive?",
+              "type": "boolean"
+            },
+            {
+              "name": "array",
+              "type": "array",
+              "arrayType": "text",
+              "value": []
+            }
+          ]
+        },
+        "delete": {
+          "url": "/character/:id"
+        }
+      },
+      "customActions": [
+        {
+          "name": "Send Email",
+          "url": "/character/:id/sendEmail",
+          "actualMethod": "post",
+          "icon": "envelope",
+          "fields": [
+            {
+              "name": "id",
+              "type": "text",
+              "label": "ID",
+              "readonly": true
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Email Title",
+              "required": true
+            },
+            {
+              "name": "body",
+              "type": "long-text",
+              "label": "Email Body",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "Disable Character",
+          "url": "/character/:id/disable",
+          "actualMethod": "post",
+          "fields": [
+            {
+              "name": "id",
+              "type": "text",
+              "label": "Contact ID",
+              "readonly": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Test"
+    }
+  ]
+}
