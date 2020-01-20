@@ -306,7 +306,7 @@ const PageComp = ({ context }: IProps) => {
           submitCallback={submitQueryParams}
         />
         {
-          fieldsToFilter.length &&
+          fieldsToFilter.length > 0 &&
           <FilterField onChange={setFilter} />
         }
         {
