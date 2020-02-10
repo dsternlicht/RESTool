@@ -106,11 +106,11 @@ class HttpService {
           errorMessage = dataAtPath;
         }
       }
-    } catch {}
+    } catch {} // TODO: proper handling of errors (^.^)
 
-    errorMessage = `${res.status} - ${res.statusText || ''}`;
-
-    return errorMessage;
+    return errorMessage && errorMessage.length ?
+        errorMessage :
+        `${res.status} - ${res.statusText || ''}`;
   }
 
   private async handleError(res: Response) {
