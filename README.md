@@ -75,6 +75,14 @@ Here's a detailed list of properties you could add to your configuration file (j
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
  
+#### Dynamic configuration file
+RESTool also support dynamic js configuration file. 
+Just replace the `config.json` file with `config.js` file with this content:
+```
+export default {
+    //content is the same as the json config file
+}
+``` 
 <br />
 
 ### Pages
