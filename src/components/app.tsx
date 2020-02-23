@@ -33,10 +33,9 @@ function App() {
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
 
-  async function loadConfig(url: string): Promise<void> {
+  async function loadConfig(url?: string): Promise<void> {
     try {
-      const remoteConfig: IConfig = await ConfigService.getRemoteConfig(url);
-      
+      const remoteConfig: IConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
       // Setting global config for httpService
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
@@ -48,15 +47,15 @@ function App() {
         changeFavicon(remoteConfig.favicon);
       }
 
-      if (config?.remoteUrl) {
-        return await loadConfig(config.remoteUrl);
+      if (remoteConfig?.remoteUrl) {
+        return await loadConfig(remoteConfig.remoteUrl);
       }
 
       setConfig(remoteConfig);
     } catch (e) {
       console.error('Could not load config file', e);
     }
-    
+
     setFirstLoad(false);
   }
 
@@ -64,11 +63,11 @@ function App() {
     var cosParameter = window.scrollY / 2,
     scrollCount = 0,
     oldTimestamp = performance.now();
-    
+
     function step (newTimestamp: number) {
         scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
-        
-        if (scrollCount >= Math.PI) { 
+
+        if (scrollCount >= Math.PI) {
           window.scrollTo(0, 0);
         }
 
@@ -85,7 +84,7 @@ function App() {
   }
 
   useEffect(() => {
-    loadConfig('./config.json');
+    loadConfig();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -102,15 +101,15 @@ function App() {
   return (
     <div className="restool-app">
       {
-        !config ? 
+        !config ?
         <div className="app-error">
           {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
         </div> :
         <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
           {
             config.customStyles &&
-            <CustomStyles 
-              styles={config.customStyles} 
+            <CustomStyles
+              styles={config.customStyles}
             />
           }
           <Router>
@@ -127,10 +126,10 @@ function App() {
                 <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
               </Switch>
             }
-            <ToastContainer 
-              position={toast.POSITION.TOP_CENTER} 
-              autoClose={4000} 
-              draggable={false} 
+            <ToastContainer
+              position={toast.POSITION.TOP_CENTER}
+              autoClose={4000}
+              draggable={false}
             />
           </Router>
         </AppContext.Provider>
