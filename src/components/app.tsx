@@ -47,8 +47,8 @@ function App() {
         changeFavicon(remoteConfig.favicon);
       }
 
-      if (config?.remoteUrl) {
-        return await loadConfig(config.remoteUrl);
+      if (remoteConfig?.remoteUrl) {
+        return await loadConfig(remoteConfig.remoteUrl);
       }
 
       setConfig(remoteConfig);

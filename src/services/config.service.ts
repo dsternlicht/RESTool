@@ -7,7 +7,7 @@ class ConfigService extends HTTPService {
 
   public async getRemoteConfig(url: string) {
     if (url.endsWith('.js')) {
-      return await import(/* webpackIgnore: true */url);
+      return (await import(/* webpackIgnore: true */url)).default;
     }
     return await httpService.fetch({
       origUrl: url,
@@ -18,7 +18,7 @@ class ConfigService extends HTTPService {
     try {
       return await this.getRemoteConfig('/config.json');
     } catch (e) {
-      return (await this.getRemoteConfig('/config.js')).default;
+      return (await this.getRemoteConfig('/config.js'));
     }
   }
 
