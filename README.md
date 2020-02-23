@@ -80,7 +80,7 @@ RESTool also support dynamic js configuration file.
 Just replace the `config.json` file with `config.js` file with this content:
 ```
 export default {
-    //content is the same as the json config file
+    // Content is the same as the json config file
 }
 ``` 
 <br />
