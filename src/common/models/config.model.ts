@@ -1,3 +1,5 @@
+export type ConfigFunction = (context?: any) => Promise<any> | any;
+
 export interface IConfig {
   remoteUrl: string
   name: string
@@ -102,6 +104,7 @@ export interface IConfigGetAllMethod extends IConfigMethod {
   },
   sortBy: string
   fields: IConfigDisplayField[]
+  dataTransform?: ConfigFunction
 }
 
 export interface IConfigGetSingleMethod extends IConfigMethod {

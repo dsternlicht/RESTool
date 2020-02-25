@@ -182,6 +182,23 @@ One or more paths to properties in the result object to sort the list by.
 
 <br />
 
+###### `dataTransform` (Function | async Function)
+
+Optional. Relevant only when using dynamic (js) config.
+A function that runs for each data item to allow manipulation on it. 
+Useful for changing the data for display purposes.
+
+Here is an example for adding a new field named `wiki` to the data:
+```
+{
+    ...
+
+    "dataTransform": item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` })
+}
+```
+
+<br />
+
 ##### `getSingle`
 
 This method will be fired once you hit the edit button on an item in order to get a single item's data. By default, if this method hasn't been set, when editing an item, RESTool will take the raw data from the original `getAll` request.
