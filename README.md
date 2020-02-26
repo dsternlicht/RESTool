@@ -185,15 +185,15 @@ One or more paths to properties in the result object to sort the list by.
 ###### `dataTransform` (Function | async Function)
 
 Optional. Relevant only when using dynamic (js) config.
-A function that runs for each data item to allow manipulation on it. 
-Useful for changing the data for display purposes.
+A function to allow manipulation on the response data. 
+Useful for changing\adding data for display purposes.
 
 Here is an example for adding a new field named `wiki` to the data:
 ```
 {
     ...
 
-    "dataTransform": item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` })
+    "dataTransform": items => items.map(item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` }))
 }
 ```
 

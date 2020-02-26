@@ -133,7 +133,7 @@ const PageComp = ({ context }: IProps) => {
         queryParams: extractQueryParams(),
         headers: Object.assign({}, pageHeaders, requestHeaders || {})
       });
-      const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+      let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
       if (!extractedData) {
         throw new Error('Could not extract data from response.');
@@ -144,9 +144,7 @@ const PageComp = ({ context }: IProps) => {
       }
 
       if (typeof dataTransform === 'function') {
-        for (let item of extractedData) {
-          await dataTransform(item);
-        }
+        extractedData = await dataTransform(extractedData);
       }
 
       const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
