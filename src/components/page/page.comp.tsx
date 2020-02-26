@@ -49,7 +49,6 @@ const PageComp = ({ context }: IProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>('');
 
-  
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
 
@@ -59,12 +58,12 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function openEditPopup(rawData: any) {
-    const params: IPopupProps = { 
+    const params: IPopupProps = {
       rawData,
-      type: 'update', 
-      title: 'Update Item', 
+      type: 'update',
+      title: 'Update Item',
       config: putConfig as IConfigPutMethod,
-      getSingleConfig, 
+      getSingleConfig,
       submitCallback: async (body: any, containFiles: boolean) => {
         return await updateItem(body, rawData, containFiles);
       }
@@ -74,11 +73,11 @@ const PageComp = ({ context }: IProps) => {
   }
 
   function openCustomActionPopup(rawData: any, action: IConfigCustomAction) {
-    const params: IPopupProps = { 
+    const params: IPopupProps = {
       rawData,
-      type: 'action', 
-      title: action.name || 'Custom Action', 
-      config: action as IConfigCustomAction, 
+      type: 'action',
+      title: action.name || 'Custom Action',
+      config: action as IConfigCustomAction,
       submitCallback: async (body: any, containFiles: boolean) => {
         return await performAction(body, rawData, action, containFiles);
       }
@@ -89,10 +88,10 @@ const PageComp = ({ context }: IProps) => {
 
   async function performAction(body: any, rawData: any, action: IConfigCustomAction, containFiles: boolean) {
     const { url, requestHeaders, actualMethod } = action;
-    
+
     return await httpService.fetch({
-      method: actualMethod || 'put', 
-      origUrl: url, 
+      method: actualMethod || 'put',
+      origUrl: url,
       rawData,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
@@ -113,7 +112,7 @@ const PageComp = ({ context }: IProps) => {
         queryParam.value = queryParam.value || '';
       }
       return queryParam;
-    }); 
+    });
 
     return finalQueryParams
   }
@@ -126,15 +125,15 @@ const PageComp = ({ context }: IProps) => {
       if (!getAllConfig) {
         throw new Error('Get all method is not defined.');
       }
-      
-      const { url, requestHeaders, actualMethod, dataPath, sortBy } = getAllConfig;
+
+      const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
       const result = await httpService.fetch({
-        method: actualMethod || 'get', 
-        origUrl: url, 
-        queryParams: extractQueryParams(), 
+        method: actualMethod || 'get',
+        origUrl: url,
+        queryParams: extractQueryParams(),
         headers: Object.assign({}, pageHeaders, requestHeaders || {})
       });
-      const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+      let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
       if (!extractedData) {
         throw new Error('Could not extract data from response.');
@@ -144,8 +143,12 @@ const PageComp = ({ context }: IProps) => {
         throw new Error('Extracted data is invalid.');
       }
 
+      if (typeof dataTransform === 'function') {
+        extractedData = await dataTransform(extractedData);
+      }
+
       const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
-      
+
       setItems(orderedItems);
     } catch (e) {
       setError(e.message);
@@ -158,12 +161,12 @@ const PageComp = ({ context }: IProps) => {
     if (!postConfig) {
       throw new Error('Post method is not defined.');
     }
-      
+
     const { url, requestHeaders, actualMethod } = postConfig;
-    
+
     return await httpService.fetch({
-      method: actualMethod || 'post', 
-      origUrl: url, 
+      method: actualMethod || 'post',
+      origUrl: url,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
         ...pageHeaders,
@@ -178,12 +181,12 @@ const PageComp = ({ context }: IProps) => {
     if (!putConfig) {
       throw new Error('Put method is not defined.');
     }
-    
+
     const { url, requestHeaders, actualMethod } = putConfig;
-    
+
     return await httpService.fetch({
-      method: actualMethod || 'put', 
-      origUrl: url, 
+      method: actualMethod || 'put',
+      origUrl: url,
       rawData,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
@@ -197,7 +200,7 @@ const PageComp = ({ context }: IProps) => {
 
   async function deleteItem(item: any) {
     const approved: boolean = window.confirm('Are you sure you want to delete this item?');
-    
+
     if (!approved) {
       return;
     }
@@ -206,13 +209,13 @@ const PageComp = ({ context }: IProps) => {
       if (!deleteConfig) {
         throw new Error('Delete method is not defined.');
       }
-      
+
       const { url, requestHeaders, actualMethod } = deleteConfig;
       const success = await httpService.fetch({
-        method: actualMethod || 'delete', 
-        origUrl: url, 
+        method: actualMethod || 'delete',
+        origUrl: url,
         rawData: item,
-        headers: Object.assign({}, pageHeaders, requestHeaders || {}), 
+        headers: Object.assign({}, pageHeaders, requestHeaders || {}),
         responseType: 'boolean'
       });
 
@@ -248,7 +251,7 @@ const PageComp = ({ context }: IProps) => {
     const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
     const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
     let filteredItems = items;
-    
+
     if (filter && fieldsToFilter.length) {
       filteredItems = items.filter((item) => {
         let passFilter = false;
@@ -268,28 +271,28 @@ const PageComp = ({ context }: IProps) => {
 
     if (getAllConfig?.display.type === 'cards') {
       return (
-        <Cards 
+        <Cards
           callbacks={{
             delete: deleteConfig ? deleteItem : () => {},
             put: putConfig ? openEditPopup : () => {},
             action: customActions.length ? openCustomActionPopup : () => {},
           }}
           fields={fields}
-          items={filteredItems} 
+          items={filteredItems}
           customActions={customActions}
         />
       );
     }
 
     return (
-      <Table 
+      <Table
         callbacks={{
           delete: deleteConfig ? deleteItem : () => {},
           put: putConfig ? openEditPopup : () => {},
           action: customActions.length ? openCustomActionPopup : () => {},
         }}
         fields={fields}
-        items={filteredItems} 
+        items={filteredItems}
         customActions={customActions}
       />
     );
@@ -301,7 +304,7 @@ const PageComp = ({ context }: IProps) => {
 
     return (
       <React.Fragment>
-        <QueryParams 
+        <QueryParams
           initialParams={queryParams}
           submitCallback={submitQueryParams}
         />
@@ -310,7 +313,7 @@ const PageComp = ({ context }: IProps) => {
           <FilterField onChange={setFilter} />
         }
         {
-          error ? 
+          error ?
           <div className="app-error">{error}</div> :
           renderTable()
         }
@@ -323,7 +326,7 @@ const PageComp = ({ context }: IProps) => {
     context.setActivePage(nextActivePage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
-  
+
   useEffect(() => {
     setQueryParams(extractQueryParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
