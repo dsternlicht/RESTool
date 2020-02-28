@@ -269,14 +269,16 @@ const PageComp = ({ context }: IProps) => {
       return <div className="app-error">Nothing to see here. Result is empty.</div>;
     }
 
+    const callbacks = {
+      delete: deleteConfig ? deleteItem : null,
+      put: putConfig ? openEditPopup : null,
+      action: customActions.length ? openCustomActionPopup : () => {},
+    };
+
     if (getAllConfig?.display.type === 'cards') {
       return (
         <Cards
-          callbacks={{
-            delete: deleteConfig ? deleteItem : () => {},
-            put: putConfig ? openEditPopup : () => {},
-            action: customActions.length ? openCustomActionPopup : () => {},
-          }}
+          callbacks={callbacks}
           fields={fields}
           items={filteredItems}
           customActions={customActions}
@@ -286,11 +288,7 @@ const PageComp = ({ context }: IProps) => {
 
     return (
       <Table
-        callbacks={{
-          delete: deleteConfig ? deleteItem : () => {},
-          put: putConfig ? openEditPopup : () => {},
-          action: customActions.length ? openCustomActionPopup : () => {},
-        }}
+        callbacks={callbacks}
         fields={fields}
         items={filteredItems}
         customActions={customActions}

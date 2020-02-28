@@ -9,8 +9,8 @@ import './cards.scss';
 interface IProps {
   items: any[]
   callbacks: {
-    delete: (item: any) => void
-    put: (item: any) => void
+    delete: ((item: any) => void) | null
+    put: ((item: any) => void) | null
     action: (item: any, action: IConfigCustomAction) => void
   }
   fields: IConfigDisplayField[]
@@ -62,7 +62,7 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
               <div className="actions-wrapper">
                 {
                   callbacks.put &&
-                  <Button onClick={() => callbacks.put(item)} title="Edit">
+                  <Button onClick={() => callbacks.put?.(item)} title="Edit">
                     <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                   </Button>
                 }
@@ -76,7 +76,7 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
                 }
                 {
                   callbacks.delete &&
-                  <Button onClick={() => callbacks.delete(item)} title="Delete">
+                  <Button onClick={() => callbacks.delete?.(item)} title="Delete">
                     <i className="fa fa-times" aria-hidden="true"></i>
                   </Button>
                 }
