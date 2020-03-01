@@ -32,12 +32,12 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       }
 
       const result = await httpService.fetch({
-        method: actualMethod || 'get', 
-        origUrl: url, 
-        queryParams: [], 
+        method: actualMethod || 'get',
+        origUrl: url,
+        queryParams: [],
         headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
       });
-      
+
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
       if (!extractedData || !extractedData.length) {
@@ -103,7 +103,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
                 }
                 return localValue;
               });
-              
+
               onChange(originalField.name, updatedArray);
             });
 
@@ -127,9 +127,9 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       return {
         value: field.value,
         placeholder: field.placeholder || defaultPlaceholder,
-        disabled: field.readonly, 
+        disabled: field.readonly,
         required: field.required,
-        onChange: (e: any) => changeCallback(field.name, e.target.value), 
+        onChange: (e: any) => changeCallback(field.name, e.target.value),
       };
     };
 
@@ -142,7 +142,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
 
           if (optionSource && !optionSources[field.name]) {
             loadOptionSourceFromRemote(field.name, optionSource);
-            return <select><option>-- Loading Options... --</option></select>
+            return <select {...inputProps()}><option>-- Loading Options... --</option></select>
           }
 
           const sortBy = field.optionSource?.sortBy;
@@ -156,7 +156,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
                 sortedOptions.map((option, idx) => {
                   const key = `option_${idx}_`;
                   if (typeof option !== 'object') {
-                    return <option key={`${key}_${option}`} value={option}>{option}</option>  
+                    return <option key={`${key}_${option}`} value={option}>{option}</option>
                   }
                   return <option key={`${key}_${option.value}`} value={option.value}>{option.display || option.value}</option>
                 })
@@ -195,7 +195,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         return <input type="text" {...inputProps('Enter text...')}/>;
     }
   }
-  
+
   return (
     <div className={`form-row ${direction || 'row'}`}>
       <label>{field.label || field.originalName}{field.required ? ' *' : ''}</label>
