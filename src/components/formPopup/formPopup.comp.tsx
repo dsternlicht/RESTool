@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { Popup } from '../popup/popup.comp';
-import { IConfigInputField, IConfigGetSingleMethod } from '../../common/models/config.model';
+import {
+  IConfigInputField,
+  IConfigGetSingleMethod,
+  IConfigPostMethod,
+  IConfigPutMethod
+} from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
 import { Loader } from '../loader/loader.comp';
@@ -22,15 +27,17 @@ interface IProps {
   fields: IConfigInputField[]
   rawData?: any
   getSingleConfig?: IConfigGetSingleMethod
+  methodConfig: IConfigPostMethod | IConfigPutMethod
   closeCallback: (reloadData: boolean) => void
   submitCallback: (body: any, containFiles: boolean) => void
 }
 
-export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, submitCallback, closeCallback }: IProps) => {
+export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
   const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
   const { httpService, activePage } = context;
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
+  const [finalRawData, setFinalRawData] = useState<any>(null);
   const pageHeaders: any = activePage?.requestHeaders || {};
 
   async function initFormFields() {
@@ -40,13 +47,13 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       try {
         const { url, requestHeaders, actualMethod, dataPath, queryParams } = getSingleConfig;
         const result = await httpService.fetch({
-          method: actualMethod || 'get', 
-          origUrl: url, 
-          queryParams, 
+          method: actualMethod || 'get',
+          origUrl: url,
+          queryParams,
           headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
           rawData,
         });
-        
+
         const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
         if (extractedData && typeof extractedData === 'object') {
@@ -58,21 +65,23 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       }
     }
 
+    setFinalRawData(finalRawData); // Store the raw data for later.
+
     const flattenData = flatten(finalRawData || {});
 
     setFormFields(fieldsCopy.map((field) => {
       let key = field.name;
 
-      field.originalName = field.name; 
-      
+      field.originalName = field.name;
+
       if (field.dataPath) {
         key = `${field.dataPath}.${field.name}`;
       }
-  
+
       // Changing field name to include datapath
       // This will use us later for unflatten the final object
       field.name = key;
-  
+
       if (dataHelpers.checkIfFieldIsObject(field)) {
         if (finalRawData[key] || field.value) {
           field.value = JSON.stringify(finalRawData[key] || field.value, null, '  ') || '';
@@ -84,14 +93,14 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         field.value = finalRawData[key] || field.value || [];
         return field;
       }
-  
+
       if (flattenData[key]) {
         field.value = flattenData[key];
       } else {
         // important in order to prevent controlled / uncontrolled components error
         field.value = field.value || '';
       }
-  
+
       return field;
     }));
 
@@ -101,7 +110,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
   async function submitForm(e: any) {
     e.preventDefault();
 
-    const finalObject: any = {};
+    const finalObject: any = (methodConfig as IConfigPutMethod).includeOriginalFields ? Object.assign({}, finalRawData) : {};
     const formData = new FormData();
     const containFiles: boolean = fileHelpers.isMultipartForm(formFields);
     let validationError = null;
@@ -109,7 +118,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     formFields.forEach((field) => {
       if (field.type === 'file') {
         const fileInput: any = document.querySelector(`input[name="${field.name || 'file'}"]`) as HTMLInputElement;
-        
+
         if (fileInput.files.length > 0) {
           const firstFile = fileInput.files[0];
           formData.append(field.name || 'file', firstFile, firstFile.name);
@@ -154,9 +163,9 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     try {
       const body = containFiles ? formData : unflatten(finalObject);
       await submitCallback(body, containFiles);
-      
+
       toast.success('Great Success!');
-      
+
       closeCallback(true);
     } catch (e) {
       toast.error(e.message);
@@ -167,7 +176,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
   function formChanged(fieldName: string, value: any) {
     let updatedFormFields: IConfigInputField[] = JSON.parse(JSON.stringify(formFields));
-    
+
     updatedFormFields = updatedFormFields.map((field: IConfigInputField) => {
       if (field.name === fieldName) {
         field.value = value;
@@ -194,15 +203,15 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         <h2>{title}</h2>
         <section>
           {
-            loading ? 
+            loading ?
             <Loader /> :
             <form onSubmit={submitForm}>
               {
                 formFields.map((field, idx) => {
                   return (
-                    <FormRow 
+                    <FormRow
                       key={`field_${idx}`}
-                      field={field} 
+                      field={field}
                       onChange={formChanged}
                       showReset={!field.type || field.type === 'text'}
                     />

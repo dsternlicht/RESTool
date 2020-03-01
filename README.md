@@ -247,7 +247,8 @@ Example:
 
 <br />
 
-#####  `put`
+#####  `put` - additional properties
+
 The `put` method will be used to update an existing item in your API resource.
 
 Example:
@@ -257,6 +258,7 @@ Example:
 	"put": {
 		"url": "/character/:id",
         "actualMethod": "post",
+        "includeOriginalFields": false,
         "fields": [
           {
             "name": "location",
@@ -273,6 +275,10 @@ Example:
 	}
 }
 ```
+
+###### `includeOriginalFields` (boolean)
+When set to `true`, all fields from the original object are merged and sent in the request body.
+Default is `false`.
 
 <br />
 

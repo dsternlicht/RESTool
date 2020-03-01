@@ -363,6 +363,7 @@ const PageComp = ({ context }: IProps) => {
           fields={openedPopup.config?.fields || []}
           rawData={openedPopup.rawData}
           getSingleConfig={openedPopup.getSingleConfig}
+          methodConfig={openedPopup.config}
         />
       }
     </div>
