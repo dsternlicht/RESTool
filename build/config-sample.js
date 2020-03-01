@@ -64,6 +64,7 @@ export default {
         "put": {
           "url": "/character/:id",
           "actualMethod": null,
+          "includeOriginalFields": false,
           "fields": [
             {
               "name": "location",
