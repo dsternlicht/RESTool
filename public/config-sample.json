@@ -203,6 +203,7 @@
         "put": {
           "url": "/employee/:id",
           "actualMethod": null,
+          "includeOriginalFields": false,
           "fields": [
             {
               "name": "name",
