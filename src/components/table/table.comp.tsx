@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TConfigDisplayField, IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
+import { IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 
@@ -18,12 +18,12 @@ interface IProps {
 }
 
 export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
-  function renderTableCell(type: TConfigDisplayField, value: any) {
+  function renderTableCell(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
     }
 
-    switch (type) {
+    switch (origField.type) {
       case 'text':
         return <span>{value}</span>;
       case 'boolean':
@@ -31,7 +31,8 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
       case 'image':
         return <img src={value} alt={value} />;
       case 'url':
-        return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
+        const url: string = (origField.url || value).replace(`:${origField.name}`, value);
+        return <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>;
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
       default:
@@ -60,7 +61,7 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
                   {
                     fields.map((field, fieldIdx) => {
                       const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
-                      return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field.type, value)}</td>
+                      return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
                     })
                   }
                   <td>

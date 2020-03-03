@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TConfigDisplayField, IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
+import { IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 
@@ -18,12 +18,12 @@ interface IProps {
 }
 
 export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
-  function renderRow(type: TConfigDisplayField, value: any) {
+  function renderRow(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
     }
 
-    switch (type) {
+    switch (origField.type) {
       case 'text':
         return <span>{value}</span>;
       case 'boolean':
@@ -31,7 +31,8 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
       case 'image':
         return <img src={value} alt={value} />;
       case 'url':
-        return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
+        const url: string = (origField.url || value).replace(`:${origField.name}`, value);
+        return <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>;
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
       default:
@@ -54,7 +55,7 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
                         field.type !== 'image' &&
                         <label>{field.label || field.name}: </label>
                       }
-                      {renderRow(field.type, value)}
+                      {renderRow(field, value)}
                     </div>
                   );
                 })

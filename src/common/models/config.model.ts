@@ -93,6 +93,7 @@ export interface IConfigDisplayField {
   dataPath: string
   filterable: boolean
   truncate: boolean
+  url: string
 }
 
 export interface IConfigGetAllMethod extends IConfigMethod {
@@ -117,7 +118,6 @@ export interface IConfigPostMethod extends IConfigMethod {
 
 export interface IConfigPutMethod extends IConfigMethod {
   fields: IConfigInputField[]
-  includeOriginalFields: boolean
 }
 
 export interface IConfigDeleteMethod extends IConfigMethod {}
