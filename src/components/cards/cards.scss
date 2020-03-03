@@ -34,10 +34,12 @@
       font-size: 14px;
       font-weight: 700;
       width: 120px;
+      flex-shrink: 0;
     }
 
     > *:not(label) {
-      flex: 3;
+      flex: 1;
+      word-break: break-word;
     }
 
     &.image {
