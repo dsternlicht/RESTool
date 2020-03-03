@@ -118,6 +118,7 @@ export interface IConfigPostMethod extends IConfigMethod {
 
 export interface IConfigPutMethod extends IConfigMethod {
   fields: IConfigInputField[]
+  includeOriginalFields: boolean
 }
 
 export interface IConfigDeleteMethod extends IConfigMethod {}
