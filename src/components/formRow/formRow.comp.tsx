@@ -133,6 +133,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       };
     };
 
+    console.log("field.type",field.type);
     switch (field.type) {
       case 'boolean':
         return <input type="checkbox" {...inputProps()} checked={field.value} onChange={(e) => changeCallback(field.name, e.target.checked, true)} />;
@@ -190,6 +191,8 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         return <input type="file" accept={field.accept || '*'} placeholder={field.placeholder || 'Select file...'} name={field.name || 'file'} disabled={field.readonly} required={field.required} />;
       case 'note':
         return <p className="note">{field.value}</p>;
+      case 'date':
+        return <input type="date" {...inputProps('Enter date...')}/>;
       case 'text':
       default:
         return <input type="text" {...inputProps('Enter text...')}/>;
