@@ -133,7 +133,6 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       };
     };
 
-    console.log("field.type",field.type);
     switch (field.type) {
       case 'boolean':
         return <input type="checkbox" {...inputProps()} checked={field.value} onChange={(e) => changeCallback(field.name, e.target.checked, true)} />;
