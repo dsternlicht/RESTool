@@ -455,12 +455,13 @@ Available options:
 *  ``integer`` - A text box for positive and negative integers.
 *  ``number`` - A text box for positive and negative floating point numbers.
 *  ``boolean`` - This will render a checkbox.
+*  ``date`` - A text box for [date format](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date). Falls back to a simple text input on unsupported browsers.
 *  ``email`` - A text box for [an email address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email). Falls back to a simple text input on unsupported browsers.
 *  ``color`` - A [color selector](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color) yielding #RRGGBB hex value strings. Falls back to a simple text input on unsupported browsers.
 *  ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#option-source) properties
 *  ``array`` - Enter multiple values. POST and PUT page only.
 *  ``file`` - A file-input form element, to upload files as `Content-Type: multipart/form-data`. All non-file form inputs will be sent as individual string values. The current implementation supports only one file input per form.
-*  ``password`` - A password text box
+*  ``password`` - A password text box.
 *  ``note`` - A plain text note within the other fields. Use ``note`` property for text. ``label`` is optional.
 *  ``hidden`` - Set to true if you want the value to be sent but not to be editable.
 
