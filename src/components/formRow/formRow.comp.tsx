@@ -200,7 +200,10 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
 
   return (
     <div className={`form-row ${direction || 'row'}`}>
-      <label>{field.label || field.originalName}{field.required ? ' *' : ''}</label>
+      {
+        field.type !== 'hidden' &&
+        <label>{field.label || field.originalName}{field.required ? ' *' : ''}</label>
+      }
       {renderFieldInput(field, onChange)}
       {
         (showReset && !field.readonly && field.value && field.value.length > 0) &&
