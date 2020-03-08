@@ -1,7 +1,6 @@
 {
   "name": "restool",
-  "version": "2.0.10",
-  "private": true,
+  "version": "2.0.12",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
@@ -23,6 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "prepare": "npm run build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -48,6 +48,12 @@
     "type": "git",
     "url": "git+https://github.com/dsternlicht/Restool.git"
   },
+  "files": [
+    "build"
+  ],
+  "main": "build/index.html",
+  "module": "build/index.es.html",
+  "jsnext:main": "build/index.es.html",
   "homepage": ".",
   "devDependencies": {
     "gh-pages": "^2.2.0"

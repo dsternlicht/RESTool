@@ -31,7 +31,7 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
       case 'image':
         return <img src={value} alt={value} />;
       case 'url':
-        const url: string = (origField.url || value).replace(`:${origField.name}`, value);
+        const url: string = (origField.url || value || '').replace(`:${origField.name}`, value);
         return <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>;
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
