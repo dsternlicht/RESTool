@@ -601,7 +601,7 @@ In this case you'll want to set a config file directly on the window object:
 <script>
   window.RESTool = {
     config: {
-      remoteUrl: 'https://backoffice.commoninja.com/config.js'
+      remoteUrl: '{CONFIG_FILE_URL}'
     }
   };
 </script>
