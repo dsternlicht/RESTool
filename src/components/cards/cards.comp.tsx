@@ -29,7 +29,7 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
       case 'boolean':
         return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
       case 'image':
-        return <img src={value} alt={value} />;
+        return <img src={value || ''} alt={value || origField.label || origField.name} />;
       case 'url':
         const url: string = (origField.url || value || '').replace(`:${origField.name}`, value);
         return <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>;
