@@ -7,10 +7,10 @@ import { Page } from '../components/page/page.comp';
 import { Navigation } from '../components/navigation/navigation.comp';
 import { AppContext } from './app.context';
 import HttpService from '../services/http.service';
+import { CustomStyles } from './customStyles/customStyles.comp';
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import { CustomStyles } from './customStyles/customStyles.comp';
 
 const httpService = new HttpService();
 const defaultAppName: string = 'RESTool App';
@@ -35,7 +35,15 @@ function App() {
 
   async function loadConfig(url?: string): Promise<void> {
     try {
-      const remoteConfig: IConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
+      const windowConfig = (window as any).RESTool?.config;
+      let remoteConfig: IConfig; 
+      // Try to load config from window object first
+      if (!url && windowConfig) {
+        remoteConfig = Object.assign({}, windowConfig, {});
+      } else {
+        remoteConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
+      }
+
       // Setting global config for httpService
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
