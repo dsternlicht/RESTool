@@ -44,14 +44,7 @@ Some new features and capabilities in V2:
 
 ## Getting started
 
-Clone RESTool repository to get started.
-
-```
-git clone https://github.com/dsternlicht/RESTool.git
-cd RESTool
-```
-
-If you only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration) and [deployment](#deploy).
+If you only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration), [deployment](#deploy), and [consuming RESTool from CDN](#consume-from-cdn).
 
 If you wish to extend RESTool's functionality and develop on top of it, please go to the [development](#development) section.
 
@@ -167,9 +160,9 @@ RESTool allows you to control how to output the data. The display object has a `
 
 ```
 {
-	"display": {
-    	"type": "cards"
-    },
+  "display": {
+    "type": "cards"
+  },
 	...
 }
 ```
@@ -191,9 +184,8 @@ Useful for changing\adding data for display purposes.
 Here is an example for adding a new field named `wiki` to the data:
 ```
 {
-    ...
-
-    "dataTransform": items => items.map(item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` }))
+  ...
+  "dataTransform": items => items.map(item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` }))
 }
 ```
 
@@ -208,9 +200,9 @@ An example of a `getSingle` request:
 ```
 {
 	"url": "/character/:id",
-    "dataPath": "data",
-    "queryParams": [],
-    "requestHeaders": {}
+  "dataPath": "data",
+  "queryParams": [],
+  "requestHeaders": {}
 }
 ```
 
@@ -224,24 +216,24 @@ Example:
 ```
 {
 	"url": "/character",
-    "fields": [
-        {
-          "name": "name",
-          "label": "Name",
-          "type": "text"
-        },
-        {
-          "name": "location",
-          "label": "Location",
-          "type": "select",
-          "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
-        },
-        {
-          "name": "isAlive",
-          "label": "Alive?",
-          "type": "boolean"
-        }		
-    ]
+  "fields": [
+    {
+      "name": "name",
+      "label": "Name",
+      "type": "text"
+    },
+    {
+      "name": "location",
+      "label": "Location",
+      "type": "select",
+      "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
+    },
+    {
+      "name": "isAlive",
+      "label": "Alive?",
+      "type": "boolean"
+    }		
+  ]
 }
 ```
 
@@ -257,21 +249,21 @@ Example:
 {
 	"put": {
 		"url": "/character/:id",
-        "actualMethod": "post",
-        "includeOriginalFields": false,
-        "fields": [
-          {
-            "name": "location",
-            "label": "Location",
-            "type": "select",
-            "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
-          },
-          {
-            "name": "isAlive",
-            "label": "Alive?",
-            "type": "boolean"
-          }
-        ]
+    "actualMethod": "post",
+    "includeOriginalFields": false,
+    "fields": [
+      {
+        "name": "location",
+        "label": "Location",
+        "type": "select",
+        "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
+      },
+      {
+        "name": "isAlive",
+        "label": "Alive?",
+        "type": "boolean"
+      }
+    ]
 	}
 }
 ```
@@ -289,9 +281,9 @@ Example:
 
 ```
 {
-	"delete": {
-		"url": "/character/:id"
-	}
+  "delete": {
+    "url": "/character/:id"
+  }
 }
 ```
 
@@ -314,7 +306,7 @@ Here's an example for a configuration of 2 custom actions:
 ```
 {
 	"customActions": [
-      {
+    {
       "name":"Send Email",
       "url": "/character/:id/sendEmail",
       "actualMethod": "post",
@@ -339,22 +331,22 @@ Here's an example for a configuration of 2 custom actions:
           "required": true
         }
       ]
-      },
-      {
-        "name":"Disable Character",
-        "url": "/character/:id/disable",
-        "actualMethod": "post",
-        "icon": "minus-circle",
-      	"fields": [
-          {
-            "name": "id",
-            "type": "text",
-            "label": "Contact ID",
-            "readonly": true
-          }
-        ]
-      }
-    ]
+    },
+    {
+      "name":"Disable Character",
+      "url": "/character/:id/disable",
+      "actualMethod": "post",
+      "icon": "minus-circle",
+      "fields": [
+        {
+          "name": "id",
+          "type": "text",
+          "label": "Contact ID",
+          "readonly": true
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -559,8 +551,17 @@ The field name will be `url`, the type will be `text`, and the data path will be
 
 ## Development
 
-If you haven't done it already, navigate to the root folder and install all of the project's dependencies by running 
-`npm i`.
+Clone RESTool repository to get started.
+
+```
+git clone https://github.com/dsternlicht/RESTool.git
+cd RESTool
+```
+
+Install project dependencies by running:
+```
+npm i
+```
 
 We used React for developing this awesome tool so no need to install anything globally.
 
@@ -568,13 +569,13 @@ In order to start developing:
 
 * Start the development server by running `npm start`.
 * Browse to `http://localhost:3000/`.
-* The app will automatically reload if you change source files
+* The app will automatically reload on changes.
 
 <br />
 
 ## Build
 
-Once you're ready, run `npm run build` to build the project. The build artifacts will be stored in the `build/` folder.
+Once you're ready, run `npm run build` in order build the project. The build artifacts will be stored in the `build/` folder.
 **The `build` folder is the one you want to deploy to your server.**
 
 <br />
@@ -588,8 +589,48 @@ Once you're ready, run `npm run build` to build the project. The build artifacts
 
 <br />
 
+## Consume from CDN
+
+Instead of using the `build` folder, you may also consume RESTool as a script from CDN in an HTML page:
+```
+<script src="https://unpkg.com/restool"></script>
+```
+
+In this case you'll want to set a config file directly on the window object:
+```
+<script>
+  window.RESTool = {
+    config: {
+      remoteUrl: 'https://backoffice.commoninja.com/config.js'
+    }
+  };
+</script>
+```
+
+Full example:
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RESTool App</title>
+  </head>
+  <body>
+    <script>
+      window.RESTool = {
+        config: {
+          remoteUrl: '{CONFIG_FILE_URL}'
+        }
+      };
+    </script>
+    <script src="https://unpkg.com/restool"></script>
+  </body>
+</html>
+```
+
 ## Created By
 
-*  [Daniel Sternlicht](http://danielsternlicht.com/)
+* [Daniel Sternlicht](http://danielsternlicht.com/)
 * Oreli Levi
 * Jonathan Sellam
