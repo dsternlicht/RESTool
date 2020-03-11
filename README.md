@@ -73,7 +73,7 @@ RESTool also support dynamic js configuration file.
 Just replace the `config.json` file with `config.js` file with this content:
 ```
 export default {
-    // Content is the same as the json config file
+  // Content is the same as the json config file
 }
 ``` 
 <br />
@@ -128,8 +128,8 @@ Use this field to let RESTool know from where it should extract the data from. F
 ```
 
 {
-	success: true,
-	data: []
+  success: true,
+  data: []
 }
 
 ```
@@ -199,7 +199,7 @@ An example of a `getSingle` request:
 
 ```
 {
-	"url": "/character/:id",
+  "url": "/character/:id",
   "dataPath": "data",
   "queryParams": [],
   "requestHeaders": {}
@@ -215,7 +215,7 @@ Example:
 
 ```
 {
-	"url": "/character",
+  "url": "/character",
   "fields": [
     {
       "name": "name",
@@ -247,8 +247,8 @@ Example:
 
 ```
 {
-	"put": {
-		"url": "/character/:id",
+  "put": {
+    "url": "/character/:id",
     "actualMethod": "post",
     "includeOriginalFields": false,
     "fields": [
@@ -264,7 +264,7 @@ Example:
         "type": "boolean"
       }
     ]
-	}
+  }
 }
 ```
 
@@ -305,7 +305,7 @@ Here's an example for a configuration of 2 custom actions:
 
 ```
 {
-	"customActions": [
+  "customActions": [
     {
       "name":"Send Email",
       "url": "/character/:id/sendEmail",
@@ -498,15 +498,15 @@ Use this field to help RESTool understand what's the path to get to the field's 
 
 ```
 [
-	{
-		name: 'Daniel',
-		email: 'daniel@awesome.com',
-		details: {
-			isAwesome: true,
-			numberOfChildrens: 1
-		}
-	},
-	...
+  {
+    name: 'Daniel',
+    email: 'daniel@awesome.com',
+    details: {
+      isAwesome: true,
+      numberOfChildrens: 1
+    }
+  },
+  ...
 ]
 ```
 
@@ -516,16 +516,17 @@ And you want to present the `numberOfChildrens` field in the main view, the data
 
 ```
 [
-	{
-		childrens: [
+  {
+    childrens: [
       {
         nickName: 'Spiderman'
-      }, { 
+      }, 
+      { 
         nickName: 'Ironman'
       }    
     ]
-	},
-	...
+  },
+  ...
 ]
 ```
 
@@ -535,12 +536,12 @@ Another usage of this field is to help RESTool to build up the request body. Let
 
 ```
 {
-	name: 'Daniel',
-	details: {
-		thumbnail: {
-			url: 'http://bit.ly/2fqDxfQ'
-		}
-	}
+  name: 'Daniel',
+  details: {
+    thumbnail: {
+    url: 'http://bit.ly/2fqDxfQ'
+    }
+  }
 }
 ```
 
