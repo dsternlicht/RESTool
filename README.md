@@ -163,7 +163,7 @@ RESTool allows you to control how to output the data. The display object has a `
   "display": {
     "type": "cards"
   },
-	...
+  ...
 }
 ```
 
