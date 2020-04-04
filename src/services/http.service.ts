@@ -90,7 +90,6 @@ class HttpService {
 
   private buildRequest(params: IFetchParams): { url: string, params: any } {
     const reqUrl: string = this.urlIsAbsolute(params.origUrl) ? params.origUrl : this.baseUrl + params.origUrl;
-    console.log(params.headers);
     const finalUrl: string = this.buildUrl(reqUrl, params.queryParams, params.headers, params.rawData);
     const requestParams = {
       method: params.method || 'get',
