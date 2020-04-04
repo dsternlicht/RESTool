@@ -48,7 +48,7 @@ class HttpService {
     return outputUrl;
   }
 
-  private buildUrl(url: string, queryParams: IConfigInputField[] = [], headers:{[k: string]:string} , rawData?: any): string { // clement
+  private buildUrl(url: string, queryParams: IConfigInputField[] = [], headers:{[k: string]:string} , rawData?: any): string {
     if (!queryParams || !queryParams.length) {
       return this.replaceParamsInUrl(url, rawData);
     }
@@ -62,20 +62,20 @@ class HttpService {
       }
 
       //eslint-disable-next-line
-      Object.entries(headers).map(([key, value]) => { // clement
-        if (value.includes(":"+param.name)){ // clement
-          headers[key] = headers[key].replace(":"+ param.name, param.value); // clement
-        } // clement
-      }) // clement
+      Object.entries(headers).map(([key, value]) => {
+        if (value.includes(":"+param.name)){
+          headers[key] = headers[key].replace(":"+ param.name, param.value);
+        }
+      })
 
       // TODO: Add docs to "urlReplaceOnly"
       if (param.urlReplaceOnly) {
         const urlParamName = `:${param.name}`;
         outputUrl = outputUrl.replace(urlParamName, param.value as string);
       } else {
-        if (url.includes(":"+param.name)) // clement
-          outputUrl = url.replace(":"+param.name, param.value); // clement
-        else // clement
+        if (url.includes(":"+param.name))
+          outputUrl = url.replace(":"+param.name, param.value);
+        else
           params.push(`${param.name}=${param.value || ''}`);
       }
     }
@@ -91,7 +91,7 @@ class HttpService {
   private buildRequest(params: IFetchParams): { url: string, params: any } {
     const reqUrl: string = this.urlIsAbsolute(params.origUrl) ? params.origUrl : this.baseUrl + params.origUrl;
     console.log(params.headers);
-    const finalUrl: string = this.buildUrl(reqUrl, params.queryParams, params.headers, params.rawData); // clement
+    const finalUrl: string = this.buildUrl(reqUrl, params.queryParams, params.headers, params.rawData);
     const requestParams = {
       method: params.method || 'get',
       headers: Object.assign({}, this.requestHeaders, params.headers || {}),
