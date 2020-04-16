@@ -82,9 +82,9 @@ class HttpService {
     const reqUrl: string = this.urlIsAbsolute(params.origUrl) ? params.origUrl : this.baseUrl + params.origUrl;
     const finalUrl: string = this.buildUrl(reqUrl, params.queryParams, params.rawData);
     const requestParams = {
-      method: params.method || 'get',
+      method: params.method ? params.method.toUpperCase() : 'GET',
       headers: Object.assign({}, this.requestHeaders, params.headers || {}),
-      body: params.method === 'post' || params.method === 'put' ? params.body : undefined
+      body: params.method === 'post' || params.method === 'put' || params.method === 'patch' ? params.body : undefined
     };
 
     return {
