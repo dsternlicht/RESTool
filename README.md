@@ -58,7 +58,7 @@ The `config.json` file should be placed in the root folder of the project, along
 
 Here's a detailed list of properties you could add to your configuration file (just in case, we added a [`config-sample.json`](https://github.com/dsternlicht/RESTool/blob/master/public/config-sample.json) file you could learn from).
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of your app.|
 | pages | `array` | true | A list of pages in your app, each page will be presented as a separated tab, and will have his own methods and properties. |
@@ -67,22 +67,24 @@ Here's a detailed list of properties you could add to your configuration file (j
 | unauthorizedRedirectUrl | `string` | false | Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"` |
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
- 
+| customLabels | `object` | false | [Custom labels](#custom-labels) |
+
 #### Dynamic configuration file
 RESTool also support dynamic js configuration file. 
 Just replace the `config.json` file with `config.js` file with this content:
+
 ```
 export default {
   // Content is the same as the json config file
 }
-``` 
+```
 <br />
 
 ### Pages
 
 Each **page** is an object and represents a resource in your API. It should have the following properties:
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of the page. This will be presented in the menu.|
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
@@ -90,6 +92,8 @@ Each **page** is an object and represents a resource in your API. It should have
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
+| customFormTitles | `object` | false | See `formTitles` in [custom labels](#custom-labels) |
+| customAddButtonTitle | `string` | false | The text within the button to add an item on the page. |
 
 <br />
 
@@ -105,9 +109,9 @@ A method object will tell RESTool how to work with your API. Available methods:
 
 Each method has the following common properties (which could be extended specifically for each use case):
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
-| url | `string` | true | The url for making the request. The url could be either relative or absolute. If a ``baseUrl`` is defined then you should only provide a relative path. For example: ``/users/:id``. <br /><br />The url could contain parameters that will be extracted if needed. For example: ``https://website.com/users/:id`` - note that the parameter name in the url should match the one you're returning in your API. | 
+| url | `string` | true | The url for making the request. The url could be either relative or absolute. If a ``baseUrl`` is defined then you should only provide a relative path. For example: ``/users/:id``. <br /><br />The url could contain parameters that will be extracted if needed. For example: ``https://website.com/users/:id`` - note that the parameter name in the url should match the one you're returning in your API. |
 | actualMethod | `string` ("get", "put", "post", "delete", "patch") | false | Since not everyone implements the RESTful standard, if you need to make a 'post' request in order to update an exiting document, you may use this property. |
 | requestHeaders | `object` | false | Same as above, but for specific method. |
 | queryParams | `array` | false | An array of query parameters fields that will be added to the request. <br /><br />If your url includes the name of the parameter, it will be used as part of the path rather than as a query parameter. For example if your url is ``/api/contact/234/address`` you might make a parameter called ``contactId`` then set the url as follows: ``/api/contact/:contactId/address``. <br /><br />Each query param item is an object. See [input fields](#input-fields) |
@@ -358,7 +362,7 @@ The `customStyles` property allows you to control the look & feel of your RESToo
 
 Here's a list of variable names you may change:
 
-| Name | Value | Description | 
+| Name | Value | Description |
 |--------------|-----|----------------------------------------------------------------|
 | appText | `string` | Root text color. |
 | appBackground | `string` | App background color. |
@@ -370,7 +374,7 @@ Here's a list of variable names you may change:
 | actionButtonBackground | `string` | Action button background color. |
 | actionButtonHoverBackground | `string` | Action button background color on hover event. |
 | actionButtonText | `string` | Action button text color. |
-  
+
 Usage example in `config.json` file:
 
 ```
@@ -388,11 +392,69 @@ Usage example in `config.json` file:
 
 <br />
 
+####  Custom Labels
+
+The `customLabels` property allows you to control the different labels that are shown across the pages of your RESTool app. The object has three fields that contain properties that you can customize: `buttons`, `formTitles` and `placeholders`.
+
+List of variable names you may change within the `buttons`property:
+
+| Name         | Value    | Description                                        | Default value |
+| ------------ | -------- | -------------------------------------------------- | ------------- |
+| addItem      | `string` | Content of the add button on a page.               | + Add Item    |
+| editItem     | `string` | Title of the edit button on a row or a card.       | Edit          |
+| deleteItem   | `string` | Title of the delete button on a row or a card.     | Delete        |
+| clearInput   | `string` | Title of the clear button on form inputs.          | Clear         |
+| closeForm    | `string` | Title of the close button in forms.                | Close         |
+| addArrayItem | `string` | Title of the add button on arrays inputs in forms. | Add Item      |
+
+List of variable names you may change within the `formTitles`property:
+
+| Name     | Value    | Description                                  | Default value |
+| -------- | -------- | -------------------------------------------- | ------------- |
+| addItem  | `string` | Content of the add button on a page.         | Add Item      |
+| editItem | `string` | Title of the edit button on a row or a card. | Edit Item     |
+
+List of variable names you may change within the `placeholders`property:
+
+| Name     | Value    | Description                   | Default value       |
+| -------- | -------- | ----------------------------- | ------------------- |
+| object   | `string` | JSON input placeholder.       | Enter JSON...       |
+| array    | `string` | JSON array input placeholder. | Enter JSON array... |
+| text     | `string` | Text input placeholder.       | Enter text...       |
+| number   | `string` | Number input placeholder.     | 0                   |
+| color    | `string` | Color input placeholder.      | Enter color...      |
+| email    | `string` | Email input placeholder.      | Enter email...      |
+| password | `string` | Password input placeholder.   | Enter password...   |
+| date     | `string` | Date input placeholder.       | Enter date...       |
+| file     | `string` | File input placeholder.       | Select file...      |
+
+Usage example in `config.json` file:
+
+```
+{
+  ...
+  "customLabels": {
+    "buttons": {
+      "addItem": "+ New item",
+      "editItem": "Modify"
+    },
+    "formTitles": {
+      "addItem": "New item form"
+    },
+    "placeholders": {
+      "color": "Enter color in HEX format..."
+    }
+  }
+}
+```
+
+<br />
+
 ### Display fields
 
 The list of fields you want to present in the main view of the app. Each one is an object and could have the following properties:
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The property name of the field that contains the value in the API result. |
 | type | `string` | true | This will help RESTool to render the main view. See a list of available type below. |
@@ -418,7 +480,7 @@ Here's a list of available display field types:
 
 A list of fields you want us to send as the body of the request. Each one is an object and could have the following properties:
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of the field / parameter to be sent. |
 | label | `string` | false | A label that describes the field. This will act as a label in RESTool's forms. |

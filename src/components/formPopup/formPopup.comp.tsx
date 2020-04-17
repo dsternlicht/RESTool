@@ -34,7 +34,7 @@ interface IProps {
 
 export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
   const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
-  const { httpService, activePage } = context;
+  const { httpService, activePage, config } = context;
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
@@ -198,6 +198,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       show={true}
       className="form-popup"
       closeCallback={() => closeCallback(false)}
+      customLabels={config?.customLabels}
     >
       <React.Fragment>
         <h2>{title}</h2>

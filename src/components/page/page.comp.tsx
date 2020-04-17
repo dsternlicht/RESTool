@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, ICustomFormTitleLabels } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -34,7 +34,7 @@ interface IPopupProps {
 const PageComp = ({ context }: IProps) => {
   const { page } = useParams();
   const { push, location } = useHistory();
-  const { activePage, error, setError, httpService } = context;
+  const { activePage, error, setError, httpService, config } = context;
   const pageHeaders: any = activePage?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];
@@ -43,6 +43,11 @@ const PageComp = ({ context }: IProps) => {
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
+  const customLabels: ICustomLabels | undefined = config?.customLabels;
+  const pageFormTitles: ICustomFormTitleLabels | undefined = activePage?.customFormTitles;
+  const addItemLabel = activePage?.customAddButtonTitle || customLabels?.buttons?.addItem || '+ Add Item';
+  const addItemFormTitle = pageFormTitles?.addItem || customLabels?.formTitles?.addItem || 'Add Item';
+  const editItemFormTitle = pageFormTitles?.editItem || customLabels?.formTitles?.editItem || 'Update Item';
   const [loading, setLoading] = useState<boolean>(false);
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
@@ -61,7 +66,7 @@ const PageComp = ({ context }: IProps) => {
     const params: IPopupProps = {
       rawData,
       type: 'update',
-      title: 'Update Item',
+      title: editItemFormTitle,
       config: putConfig as IConfigPutMethod,
       getSingleConfig,
       submitCallback: async (body: any, containFiles: boolean) => {
@@ -272,7 +277,7 @@ const PageComp = ({ context }: IProps) => {
     const callbacks = {
       delete: deleteConfig ? deleteItem : null,
       put: putConfig ? openEditPopup : null,
-      action: customActions.length ? openCustomActionPopup : () => {},
+      action: customActions.length ? openCustomActionPopup : () => { },
     };
 
     if (getAllConfig?.display.type === 'cards') {
@@ -282,6 +287,7 @@ const PageComp = ({ context }: IProps) => {
           fields={fields}
           items={filteredItems}
           customActions={customActions}
+          customLabels={customLabels}
         />
       );
     }
@@ -292,6 +298,7 @@ const PageComp = ({ context }: IProps) => {
         fields={fields}
         items={filteredItems}
         customActions={customActions}
+        customLabels={customLabels}
       />
     );
   }
@@ -312,8 +319,8 @@ const PageComp = ({ context }: IProps) => {
         }
         {
           error ?
-          <div className="app-error">{error}</div> :
-          renderTable()
+            <div className="app-error">{error}</div> :
+            renderTable()
         }
       </React.Fragment>
     )
@@ -348,7 +355,7 @@ const PageComp = ({ context }: IProps) => {
         </hgroup>
         {
           postConfig &&
-          <Button className="add-item" color="green" onClick={() => setOpenedPopup({ type: 'add', title: 'Add Item', config: postConfig, submitCallback: addItem })}>+ Add Item</Button>
+          <Button className="add-item" color="green" onClick={() => setOpenedPopup({ type: 'add', title: addItemFormTitle, config: postConfig, submitCallback: addItem })}>{addItemLabel}</Button>
         }
       </header>
       <main className="app-page-content">
