@@ -31,18 +31,34 @@ class ConfigService extends HTTPService {
       }
     }
     const configSchema = require('../assets/schemas/config.schema.json');
-    const ajv = new Ajv();
+    const ajv = new Ajv({
+      allErrors: true,
+      verbose: true,
+    });
     const validate = ajv.compile(configSchema);
     const isValid = validate(config);
     if (typeof isValid !== 'boolean') {
       throw new Error('Unexpected asynchronous JSON validation');
     }
-    if (!isValid) {
-      console.error('Configuration errors: ', validate.errors);
+    if (isValid) {
+      return {
+        isValid,
+        errorMessage: null,
+      }
     }
-    const errorMessage = validate.errors && validate.errors[0].message ?
-      `Error parsing configuration: ${validate.errors[0].message}` :
-      `Error parsing configuration`;
+    const firstError = validate.errors ? validate.errors[0] : undefined;
+    let errorMessage: string | null = null;
+    if (firstError?.message && firstError?.dataPath) {
+      errorMessage = `Error parsing configuration at "${firstError.dataPath}": ${firstError.message}`
+    } else if (firstError?.message) {
+      errorMessage = `Error parsing configuration: ${firstError.message}`
+    } else if (firstError?.dataPath) {
+      errorMessage = `Error parsing configuration at "${firstError.dataPath}"`
+    } else {
+      errorMessage = `Error parsing configuration`;
+    }
+    console.error(errorMessage);
+    console.error('All configuration errors: ', validate.errors);
     return {
       isValid,
       errorMessage,
