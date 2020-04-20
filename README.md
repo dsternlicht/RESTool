@@ -412,6 +412,7 @@ Here's a list of available display field types:
 * `url` - will render an anchor element with a clickable link 
 * `image` - will render an image from the url 
 * `colorbox` - will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string
+* `boolean` - will green or red dot
 
 <br />
 
