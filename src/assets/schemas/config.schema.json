@@ -3,6 +3,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "The configuration file used for a RESTool application, see https://github.com/dsternlicht/RESTool",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "name": {
       "type": "string",
@@ -50,6 +51,7 @@
     },
     "customStyles": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "appText": {
           "type": "string",
@@ -95,6 +97,7 @@
     },
     "page": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
@@ -130,6 +133,7 @@
     },
     "methods": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "getAll": {
           "$ref": "#/definitions/getAll"
@@ -289,6 +293,7 @@
       "description": "The delete method will be used to delete an existing item in your API resource."
     },
     "inputField": {
+      "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
@@ -382,6 +387,7 @@
       ]
     },
     "displayField": {
+      "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
@@ -421,6 +427,7 @@
       ]
     },
     "optionSource": {
+      "additionalProperties": false,
       "properties": {
         "url": {
           "type": "string",
