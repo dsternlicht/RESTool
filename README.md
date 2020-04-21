@@ -58,16 +58,17 @@ The `config.json` file should be placed in the root folder of the project, along
 
 Here's a detailed list of properties you could add to your configuration file (just in case, we added a [`config-sample.json`](https://github.com/dsternlicht/RESTool/blob/master/public/config-sample.json) file you could learn from).
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of your app.|
 | pages | `array` | true | A list of pages in your app, each page will be presented as a separated tab, and will have his own methods and properties. |
 | baseUrl | `string` | false | Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: `"https://restool-sample-app.herokuapp.com/api"` <br /><br /> Note: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method. |
+| requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | errorMessageDataPath | `string[]` | false | The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found. |
 | unauthorizedRedirectUrl | `string` | false | Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"` |
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
- 
+
 #### Dynamic configuration file
 RESTool also support dynamic js configuration file. 
 Just replace the `config.json` file with `config.js` file with this content:
@@ -75,14 +76,14 @@ Just replace the `config.json` file with `config.js` file with this content:
 export default {
   // Content is the same as the json config file
 }
-``` 
+```
 <br />
 
 ### Pages
 
 Each **page** is an object and represents a resource in your API. It should have the following properties:
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of the page. This will be presented in the menu.|
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
@@ -105,9 +106,9 @@ A method object will tell RESTool how to work with your API. Available methods:
 
 Each method has the following common properties (which could be extended specifically for each use case):
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
-| url | `string` | true | The url for making the request. The url could be either relative or absolute. If a ``baseUrl`` is defined then you should only provide a relative path. For example: ``/users/:id``. <br /><br />The url could contain parameters that will be extracted if needed. For example: ``https://website.com/users/:id`` - note that the parameter name in the url should match the one you're returning in your API. | 
+| url | `string` | true | The url for making the request. The url could be either relative or absolute. If a ``baseUrl`` is defined then you should only provide a relative path. For example: ``/users/:id``. <br /><br />The url could contain parameters that will be extracted if needed. For example: ``https://website.com/users/:id`` - note that the parameter name in the url should match the one you're returning in your API. |
 | actualMethod | `string` ("get", "put", "post", "delete", "patch") | false | Since not everyone implements the RESTful standard, if you need to make a 'post' request in order to update an exiting document, you may use this property. |
 | requestHeaders | `object` | false | Same as above, but for specific method. |
 | queryParams | `array` | false | An array of query parameters fields that will be added to the request. <br /><br />If your url includes the name of the parameter, it will be used as part of the path rather than as a query parameter. For example if your url is ``/api/contact/234/address`` you might make a parameter called ``contactId`` then set the url as follows: ``/api/contact/:contactId/address``. <br /><br />Each query param item is an object. See [input fields](#input-fields) |
@@ -358,7 +359,7 @@ The `customStyles` property allows you to control the look & feel of your RESToo
 
 Here's a list of variable names you may change:
 
-| Name | Value | Description | 
+| Name | Value | Description |
 |--------------|-----|----------------------------------------------------------------|
 | appText | `string` | Root text color. |
 | appBackground | `string` | App background color. |
@@ -370,7 +371,7 @@ Here's a list of variable names you may change:
 | actionButtonBackground | `string` | Action button background color. |
 | actionButtonHoverBackground | `string` | Action button background color on hover event. |
 | actionButtonText | `string` | Action button text color. |
-  
+
 Usage example in `config.json` file:
 
 ```
@@ -392,7 +393,7 @@ Usage example in `config.json` file:
 
 The list of fields you want to present in the main view of the app. Each one is an object and could have the following properties:
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The property name of the field that contains the value in the API result. |
 | type | `string` | true | This will help RESTool to render the main view. See a list of available type below. |
@@ -411,6 +412,7 @@ Here's a list of available display field types:
 * `url` - will render an anchor element with a clickable link 
 * `image` - will render an image from the url 
 * `colorbox` - will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string
+* `boolean` - will render as a green or red dot
 
 <br />
 
@@ -418,7 +420,7 @@ Here's a list of available display field types:
 
 A list of fields you want us to send as the body of the request. Each one is an object and could have the following properties:
 
-| Property | Type | Required? | Description | 
+| Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of the field / parameter to be sent. |
 | label | `string` | false | A label that describes the field. This will act as a label in RESTool's forms. |

@@ -1,0 +1,464 @@
+{
+  "$id": "https://github.com/dsternlicht/RESTool/blob/master/config.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The configuration file used for a RESTool application, see https://github.com/dsternlicht/RESTool",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of your app."
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/page"
+      }
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: \"https://restool-sample-app.herokuapp.com/api\"\n\nNote: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method."
+    },
+    "errorMessageDataPath": {
+      "$ref": "#/definitions/errorMessageDataPath"
+    },
+    "requestHeaders": {
+      "$ref": "#/definitions/requestHeaders"
+    },
+    "unauthorizedRedirectUrl": {
+      "type": "string",
+      "description": "Path to navigate to when the api returns a 401 (Unauthorized) error. You can use :returnUrl to pass a return location. For example: \"/login/myLoginPage?return=:returnUrl\""
+    },
+    "favicon": {
+      "type": "string",
+      "description": "A URL for you app's favicon."
+    },
+    "customStyles": {
+      "$ref": "#/definitions/customStyles"
+    }
+  },
+  "required": [
+    "name",
+    "pages"
+  ],
+  "definitions": {
+    "errorMessageDataPath": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found."
+    },
+    "customStyles": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "appText": {
+          "type": "string",
+          "description": "Root text color."
+        },
+        "appBackground": {
+          "type": "string",
+          "description": "App background color."
+        },
+        "navBackground": {
+          "type": "string",
+          "description": "Navigation menu background color."
+        },
+        "navText": {
+          "type": "string",
+          "description": "Navigation menu text color."
+        },
+        "navItemText": {
+          "type": "string",
+          "description": "Navigation item text color."
+        },
+        "navItemHoverBackground": {
+          "type": "string",
+          "description": "Navigation item background color on hover event."
+        },
+        "navItemActiveBackground": {
+          "type": "string",
+          "description": "Active navigation item background color."
+        },
+        "actionButtonBackground": {
+          "type": "string",
+          "description": "Action button background color."
+        },
+        "actionButtonHoverBackground": {
+          "type": "string",
+          "description": "Action button background color on hover event."
+        },
+        "actionButtonText": {
+          "type": "string",
+          "description": "Action button text  color."
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the page. This will be presented in the menu."
+        },
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the page. RESTool will use it to navigate between pages."
+        },
+        "description": {
+          "type": "string",
+          "description": "A short description about the page and its usage."
+        },
+        "requestHeaders": {
+          "$ref": "#/definitions/requestHeaders"
+        },
+        "methods": {
+          "$ref": "#/definitions/methods"
+        }
+      },
+      "required": [
+        "name",
+        "id"
+      ]
+    },
+    "requestHeaders": {
+      "patternProperties": {
+        "^": {
+          "type": "string"
+        }
+      },
+      "description": "A list of key-value headers you wish to add to every request we're making.\nFor example:\n{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }"
+    },
+    "methods": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "getAll": {
+          "$ref": "#/definitions/getAll"
+        },
+        "getSingle": {
+          "$ref": "#/definitions/getSingle"
+        },
+        "post": {
+          "$ref": "#/definitions/post"
+        },
+        "put": {
+          "$ref": "#/definitions/put"
+        },
+        "delete": {
+          "$ref": "#/definitions/delete"
+        }
+      },
+      "required": [
+        "getAll"
+      ]
+    },
+    "method": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The url for making the request. The url could be either relative or absolute. If a baseUrl is defined then you should only provide a relative path. For example: /users/:id.\nThe url could contain parameters that will be extracted if needed. For example: \nhttps://website.com/users/:id - note that the parameter name in the url should match the one you're returning in your API."
+        },
+        "actualMethod": {
+          "type": "string",
+          "enum": [
+            "get",
+            "put",
+            "post",
+            "delete",
+            "patch"
+          ]
+        },
+        "requestHeaders": {
+          "$ref": "#/definitions/requestHeaders"
+        },
+        "queryParams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/inputField"
+          },
+          "description": "An array of query parameters fields that will be added to the request.\nIf your url includes the name of the parameter, it will be used as part of the path rather than as a query parameter. For example if your url is /api/contact/234/address you might make a parameter called contactId then set the url as follows: /api/contact/:contactId/address.\nEach query param item is an object. See input fields."
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "getAll": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/method"
+        },
+        {
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/displayField"
+              }
+            },
+            "dataPath": {
+              "type": "string",
+              "description": "TODO"
+            },
+            "display": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "table",
+                    "cards"
+                  ]
+                }
+              },
+              "description": "RESTool allows you to control how to output the data. The display object has a type property that will define how to display the data. RESTool supports two display type: \"table\" and \"cards\"."
+            },
+            "sortBy": {
+              "type": [
+                "string",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "One or more paths to properties in the result object to sort the list by."
+            },
+            "dataTransform": {
+              "description": "Relevant only when using dynamic (js) config. A function to allow manipulation on the response data. Useful for changing/adding data for display purposes."
+            }
+          },
+          "required": [
+            "dataPath",
+            "display",
+            "fields"
+          ]
+        }
+      ]
+    },
+    "getSingle": {
+      "$ref": "#/definitions/method",
+      "description": "This method will be fired once you hit the edit button on an item in order to get a single item's data. By default, if this method hasn't been set, when editing an item, RESTool will take the raw data from the original getAll request."
+    },
+    "post": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/method"
+        },
+        {
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/inputField"
+              }
+            }
+          },
+          "required": [
+            "fields"
+          ]
+        }
+      ],
+      "description": "The post method will be used to create new items in your API resource."
+    },
+    "put": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/method"
+        },
+        {
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/inputField"
+              }
+            },
+            "includeOriginalFields": {
+              "type": "boolean",
+              "description": "When set to true, all fields from the original object are merged and sent in the request body. Default is false."
+            }
+          },
+          "required": [
+            "fields"
+          ]
+        }
+      ],
+      "description": "The put method will be used to update an existing item in your API resource."
+    },
+    "delete": {
+      "$ref": "#/definitions/method",
+      "description": "The delete method will be used to delete an existing item in your API resource."
+    },
+    "inputField": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the field / parameter to be sent."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "long-text",
+            "object",
+            "encode",
+            "integer",
+            "number",
+            "boolean",
+            "date",
+            "email",
+            "color",
+            "select",
+            "array",
+            "file",
+            "password",
+            "note",
+            "hidden"
+          ],
+          "description": "Use the type field to define the type of the field."
+        },
+        "label": {
+          "type": "string",
+          "description": "A label that describes the field. This will act as a label in RESTool's forms."
+        },
+        "dataPath": {
+          "type": "string",
+          "description": "Use this field to let RESTool know what is the path of this field in the body of the request."
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "display": {
+                    "type": "string"
+                  },
+                  "value": {}
+                }
+              }
+            ]
+          },
+          "description": "Add the options field if you chose a select as a type. This field should contain an array of options to be displayed in the select box."
+        },
+        "arrayType": {
+          "type": "string",
+          "enum": [
+            "text",
+            "object"
+          ],
+          "description": "For array field type, you should specify another property called arrayType so RESTool will know how to present & send the data in the POST and PUT methods."
+        },
+        "value": {
+          "description": "Set a default value to the field."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "If true, a field will be marked as required on PUT and POST forms."
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Input field placeholder."
+        },
+        "accept": {
+          "type": "string",
+          "description": "An optional setting for file type inputs. When set, the file input's accept property will perform file type filtering when browsing for files."
+        },
+        "useInUrl": {
+          "type": "boolean",
+          "description": "If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body."
+        },
+        "optionSource": {
+          "$ref": "#/definitions/optionSource",
+          "description": "Use the optionSource field to load options for a select box from a REST service. If this is used with options, the items from options will be added to the select box before those fetched from the api."
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ]
+    },
+    "displayField": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The property name of the field that contains the value in the API result."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "url",
+            "image",
+            "colorbox",
+            "boolean"
+          ],
+          "description": "This will help RESTool to render the main view.\ntext -  will parse the value as a text\nurl -  will render an anchor element with a clickable link\nimage -  will render an image from the url\ncolorbox -  will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A label that describes the field. Will be presented as table headers in the main view."
+        },
+        "dataPath": {
+          "type": "string",
+          "description": ""
+        },
+        "filterable": {
+          "type": "boolean",
+          "description": "Set to true to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields."
+        },
+        "truncate": {
+          "type": "boolean",
+          "description": "Causes long values to be truncated. By default, truncation is not enabled for fields."
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ]
+    },
+    "optionSource": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "url to fetch data from"
+        },
+        "dataPath": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "let us know where we should take the data from"
+        },
+        "displayPath": {
+          "type": "string",
+          "description": "property of the object to take the display value from"
+        },
+        "valuePath": {
+          "type": "string",
+          "description": "property of the object to take the option value from"
+        },
+        "sortBy": {
+          "type": [
+            "string",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "one or more properties to sort the objects by"
+        }
+      }
+    }
+  }
+}
