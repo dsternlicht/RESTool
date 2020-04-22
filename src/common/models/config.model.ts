@@ -10,6 +10,7 @@ export interface IConfig {
   requestHeaders: any
   pages: IConfigPage[]
   customStyles?: ICustomStyles
+  customLabels?: ICustomLabels
 }
 
 export interface ICustomStyles {
@@ -27,6 +28,43 @@ export interface ICustomStyles {
   }
 }
 
+export interface ICustomLabels {
+  buttons?: ICustomButtonLabels
+  formTitles?: ICustomFormTitleLabels
+  placeholders?: ICustomPlaceholderLabels
+  tableColumnHeaders?: ICustomTableColumnHeaders
+}
+
+export interface ICustomButtonLabels {
+  addItem?: string
+  editItem?: string
+  deleteItem?: string
+  clearInput?: string
+  closeForm?: string
+  addArrayItem?: string
+}
+
+export interface ICustomFormTitleLabels {
+  addItem: string
+  editItem: string
+}
+
+export interface ICustomPlaceholderLabels {
+  object?: string
+  array?: string
+  text?: string
+  number?: string
+  color?: string
+  email?: string
+  password?: string
+  date?: string
+  file?: string
+}
+
+export interface ICustomTableColumnHeaders {
+  actions?: string
+}
+
 export interface IConfigPage {
   name: string
   id: string
@@ -34,6 +72,7 @@ export interface IConfigPage {
   requestHeaders: any
   methods: IConfigMethods
   customActions: IConfigCustomAction[]
+  customLabels: ICustomLabels
 }
 
 export interface IConfigMethods {
@@ -121,7 +160,7 @@ export interface IConfigPutMethod extends IConfigMethod {
   includeOriginalFields: boolean
 }
 
-export interface IConfigDeleteMethod extends IConfigMethod {}
+export interface IConfigDeleteMethod extends IConfigMethod { }
 
 export interface IConfigCustomAction extends IConfigMethod {
   name: string

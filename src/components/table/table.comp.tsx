@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
+import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 
@@ -15,9 +15,10 @@ interface IProps {
   }
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
+  customLabels?: ICustomLabels
 }
 
-export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
+export const Table = ({ items, fields, callbacks, customActions, customLabels }: IProps) => {
   function renderTableCell(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -40,6 +41,10 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
     }
   }
 
+  const editLabel = customLabels?.buttons?.editItem || 'Edit';
+  const deleteLabel = customLabels?.buttons?.deleteItem || 'Delete';
+  const actionColumnHeader = customLabels?.tableColumnHeaders?.actions || 'Actions';
+
   return (
     <div className="table-wrapper">
       <table className="pure-table">
@@ -50,7 +55,7 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
                 return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
               })
             }
-            <th>Actions</th>
+            <th>{actionColumnHeader}</th>
           </tr>
         </thead>
         <tbody>
@@ -68,7 +73,7 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
                     <div className="actions-wrapper">
                       {
                         callbacks.put &&
-                        <Button onClick={() => callbacks.put?.(item)} title="Edit">
+                        <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
                           <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </Button>
                       }
@@ -82,7 +87,7 @@ export const Table = ({ items, fields, callbacks, customActions }: IProps) => {
                       }
                       {
                         callbacks.delete &&
-                        <Button onClick={() => callbacks.delete?.(item)} title="Delete">
+                        <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
                           <i className="fa fa-times" aria-hidden="true"></i>
                         </Button>
                       }

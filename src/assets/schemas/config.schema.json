@@ -35,6 +35,9 @@
     },
     "customStyles": {
       "$ref": "#/definitions/customStyles"
+    },
+    "customLabels": {
+      "$ref": "#/definitions/customLabels"
     }
   },
   "required": [
@@ -116,6 +119,16 @@
         },
         "methods": {
           "$ref": "#/definitions/methods"
+        },
+        "customActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/customAction"
+          },
+          "description": "A list of extra (non RESTful) endpoints available in your RESTful API. Specifically customActions is a list of PUT or POST method objects."
+        },
+        "customLabels": {
+          "$ref": "#/definitions/customLabels"
         }
       },
       "required": [
@@ -457,6 +470,150 @@
             "type": "string"
           },
           "description": "one or more properties to sort the objects by"
+        }
+      }
+    },
+    "customAction": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/put"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "icon": {
+              "type": "string",
+              "description": "You may configure the icon of the action. RESTool uses font-awesome and you may use any icon name you want from their collection."
+            }
+          }
+        }
+      ],
+      "description": "Specifically customActions is a list of PUT or POST method objects. For example this could enable an endpoint like: PUT /users/:id/disable"
+    },
+    "customLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "buttons": {
+          "$ref": "#/definitions/buttonLabels"
+        },
+        "formTitles": {
+          "$ref": "#/definitions/formTitleLabels"
+        },
+        "placeholders": {
+          "$ref": "#/definitions/placeholderLabels"
+        },
+        "tableColumnHeaders": {
+          "$ref": "#/definitions/tableColumnHeaders"
+        }
+      }
+    },
+    "buttonLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "addItem": {
+          "type": "string",
+          "description": "Content of the add button on a page.",
+          "default": "+ Add Item"
+        },
+        "editItem": {
+          "type": "string",
+          "description": "Title of the edit button on a row or a card.",
+          "default": "Edit"
+        },
+        "deleteItem": {
+          "type": "string",
+          "description": "Title of the delete button on a row or a card.",
+          "default": "Delete"
+        },
+        "clearInput": {
+          "type": "string",
+          "description": "Title of the clear button on form inputs.",
+          "default": "Clear"
+        },
+        "closeForm": {
+          "type": "string",
+          "description": "Title of the close button in forms.",
+          "default": "Close"
+        },
+        "addArrayItem": {
+          "type": "string",
+          "description": "Title of the add button on arrays inputs in forms.",
+          "default": "Add Item"
+        }
+      }
+    },
+    "formTitleLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "addItem": {
+          "type": "string",
+          "description": "Content of the add button on a page.",
+          "default": "Add Item"
+        },
+        "editItem": {
+          "type": "string",
+          "description": "Title of the edit button on a row or a card.",
+          "default": "Edit Item"
+        }
+      }
+    },
+    "placeholderLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "object": {
+          "type": "string",
+          "description": "JSON input placeholder.",
+          "default": "Enter JSON..."
+        },
+        "array": {
+          "type": "string",
+          "description": "JSON array input placeholder.",
+          "default": "Enter JSON array..."
+        },
+        "text": {
+          "type": "string",
+          "description": "Text input placeholder.",
+          "default": "Enter text..."
+        },
+        "number": {
+          "type": "string",
+          "description": "Number input placeholder.",
+          "default": 0
+        },
+        "color": {
+          "type": "string",
+          "description": "Color input placeholder.",
+          "default": "Enter color..."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email input placeholder.",
+          "default": "Enter email..."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password input placeholder.",
+          "default": "Enter password..."
+        },
+        "date": {
+          "type": "string",
+          "description": "Date input placeholder.",
+          "default": "Enter date..."
+        },
+        "file": {
+          "type": "string",
+          "description": "File input placeholder.",
+          "default": "Select file..."
+        }
+      }
+    },
+    "tableColumnHeaders": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "type": "string",
+          "description": "Header of the action column in tables.",
+          "default": "Actions"
         }
       }
     }

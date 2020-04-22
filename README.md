@@ -68,10 +68,12 @@ Here's a detailed list of properties you could add to your configuration file (j
 | unauthorizedRedirectUrl | `string` | false | Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"` |
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
+| customLabels | `object` | false | [Custom labels](#custom-labels) |
 
 #### Dynamic configuration file
 RESTool also support dynamic js configuration file. 
 Just replace the `config.json` file with `config.js` file with this content:
+
 ```
 export default {
   // Content is the same as the json config file
@@ -91,6 +93,8 @@ Each **page** is an object and represents a resource in your API. It should have
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
+| customFormTitles | `object` | false | See `formTitles` in [custom labels](#custom-labels) |
+| customAddButtonTitle | `string` | false | The text within the button to add an item on the page. |
 
 <br />
 
@@ -382,6 +386,64 @@ Usage example in `config.json` file:
       "appBackground": "#888",
       "navBackground": "#333"
       "navItemHoverBackground": "#454545"
+    }
+  }
+}
+```
+
+<br />
+
+####  Custom Labels
+
+The `customLabels` property allows you to control the different labels that are shown across the pages of your RESTool app. The object has three fields that contain properties that you can customize: `buttons`, `formTitles` and `placeholders`.
+
+List of variable names you may change within the `buttons`property:
+
+| Name         | Value    | Description                                        | Default value |
+| ------------ | -------- | -------------------------------------------------- | ------------- |
+| addItem      | `string` | Content of the add button on a page.               | + Add Item    |
+| editItem     | `string` | Title of the edit button on a row or a card.       | Edit          |
+| deleteItem   | `string` | Title of the delete button on a row or a card.     | Delete        |
+| clearInput   | `string` | Title of the clear button on form inputs.          | Clear         |
+| closeForm    | `string` | Title of the close button in forms.                | Close         |
+| addArrayItem | `string` | Title of the add button on arrays inputs in forms. | Add Item      |
+
+List of variable names you may change within the `formTitles`property:
+
+| Name     | Value    | Description                                  | Default value |
+| -------- | -------- | -------------------------------------------- | ------------- |
+| addItem  | `string` | Content of the add button on a page.         | Add Item      |
+| editItem | `string` | Title of the edit button on a row or a card. | Edit Item     |
+
+List of variable names you may change within the `placeholders`property:
+
+| Name     | Value    | Description                   | Default value       |
+| -------- | -------- | ----------------------------- | ------------------- |
+| object   | `string` | JSON input placeholder.       | Enter JSON...       |
+| array    | `string` | JSON array input placeholder. | Enter JSON array... |
+| text     | `string` | Text input placeholder.       | Enter text...       |
+| number   | `string` | Number input placeholder.     | 0                   |
+| color    | `string` | Color input placeholder.      | Enter color...      |
+| email    | `string` | Email input placeholder.      | Enter email...      |
+| password | `string` | Password input placeholder.   | Enter password...   |
+| date     | `string` | Date input placeholder.       | Enter date...       |
+| file     | `string` | File input placeholder.       | Select file...      |
+
+Usage example in `config.json` file:
+
+```
+{
+  ...
+  "customLabels": {
+    "buttons": {
+      "addItem": "+ New item",
+      "editItem": "Modify"
+    },
+    "formTitles": {
+      "addItem": "New item form"
+    },
+    "placeholders": {
+      "color": "Enter color in HEX format..."
     }
   }
 }

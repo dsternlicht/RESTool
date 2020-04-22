@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { orderBy } from 'natural-orderby';
 import { toast } from 'react-toastify';
 
-import { IConfigInputField, IConfigOptionSource } from '../../common/models/config.model';
+import { IConfigInputField, IConfigOptionSource, ICustomLabels } from '../../common/models/config.model';
 import { Button } from '../button/button.comp';
 import { withAppContext } from '../withContext/withContext.comp';
 import { IAppContext } from '../app.context';
@@ -20,8 +20,11 @@ interface IProps {
 
 export const FormRow = withAppContext(({ context, field, direction, showReset, onChange }: IProps) => {
   const [optionSources, setOptionSources] = useState<any>({});
-  const { httpService, activePage } = context;
+  const { httpService, activePage, config } = context;
   const pageHeaders: any = activePage?.requestHeaders || {};
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const addArrayItemLabel = customLabels?.buttons?.addArrayItem || 'Add Item';
+  const clearLabel = customLabels?.buttons?.clearInput || 'Clear';
 
   async function loadOptionSourceFromRemote(fieldName: string, optionSource: IConfigOptionSource) {
     try {
@@ -35,7 +38,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         method: actualMethod || 'get',
         origUrl: url,
         queryParams: [],
-        headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
+        headers: Object.assign({}, pageHeaders, requestHeaders || {}),
       });
 
       const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
@@ -110,12 +113,12 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             return (
               <div className="array-form-item" key={`array_form_${itemIdx}`}>
                 {inputField}
-                <i title="Clear" onClick={() => removeItemToFieldArray(originalField, itemIdx)} aria-label="Remove" className="clear-input fa fa-times"></i>
+                <i title={clearLabel} onClick={() => removeItemToFieldArray(originalField, itemIdx)} aria-label="Remove" className="clear-input fa fa-times"></i>
               </div>
             )
           })
         }
-        <Button className="add-array-item" onClick={(e) => addItemToFieldArray(e, originalField)} title="Add Item">
+        <Button className="add-array-item" onClick={(e) => addItemToFieldArray(e, originalField)} title={addArrayItemLabel}>
           <i className="fa fa-plus" aria-hidden="true"></i>
         </Button>
       </div>
@@ -165,36 +168,36 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
           );
         };
       case 'object':
-        return <textarea {...inputProps('Enter JSON...')}></textarea>;
+        return <textarea {...inputProps(customLabels?.placeholders?.object || 'Enter JSON...')}></textarea>;
       case 'array': {
         const { arrayType, value } = field;
         if (!value || !arrayType || arrayType === 'object') {
-          return <textarea {...inputProps('Enter JSON array...')}></textarea>;
+          return <textarea {...inputProps(customLabels?.placeholders?.array || 'Enter JSON array...')}></textarea>;
         }
         return renderArrayItems(field);
       }
       case 'long-text':
-        return <textarea {...inputProps('Enter text...')}></textarea>;
+        return <textarea {...inputProps(customLabels?.placeholders?.text || 'Enter text...')}></textarea>;
       case 'number':
       case 'integer':
-        return <input type="number"  {...inputProps('0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} />;
+        return <input type="number"  {...inputProps(customLabels?.placeholders?.number || '0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} />;
       case 'color':
-        return <input type="color" {...inputProps('Enter color...')}/>;
+        return <input type="color" {...inputProps(customLabels?.placeholders?.color || 'Enter color...')} />;
       case 'email':
-        return <input type="email" {...inputProps('Enter email...')}/>;
+        return <input type="email" {...inputProps(customLabels?.placeholders?.email || 'Enter email...')} />;
       case 'password':
-        return <input type="password" {...inputProps('Enter password...')}/>;
+        return <input type="password" {...inputProps(customLabels?.placeholders?.password || 'Enter password...')} />;
       case 'hidden':
         return <input type="hidden" value={field.value} />;
       case 'file':
-        return <input type="file" accept={field.accept || '*'} placeholder={field.placeholder || 'Select file...'} name={field.name || 'file'} disabled={field.readonly} required={field.required} />;
+        return <input type="file" accept={field.accept || '*'} placeholder={field.placeholder || customLabels?.placeholders?.file || 'Select file...'} name={field.name || 'file'} disabled={field.readonly} required={field.required} />;
       case 'note':
         return <p className="note">{field.value}</p>;
       case 'date':
-        return <input type="date" {...inputProps('Enter date...')}/>;
+        return <input type="date" {...inputProps(customLabels?.placeholders?.date || 'Enter date...')} />;
       case 'text':
       default:
-        return <input type="text" {...inputProps('Enter text...')}/>;
+        return <input type="text" {...inputProps(customLabels?.placeholders?.text || 'Enter text...')} />;
     }
   }
 
@@ -207,7 +210,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       {renderFieldInput(field, onChange)}
       {
         (showReset && !field.readonly && field.value && field.value.length > 0) &&
-        <i title="Clear" onClick={() => onChange(field.name, '', true)} aria-label="Clear" className="clear-input fa fa-times"></i>
+        <i title={clearLabel} onClick={() => onChange(field.name, '', true)} aria-label="Clear" className="clear-input fa fa-times"></i>
       }
     </div>
   );
