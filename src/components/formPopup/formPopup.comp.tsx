@@ -6,7 +6,8 @@ import {
   IConfigInputField,
   IConfigGetSingleMethod,
   IConfigPostMethod,
-  IConfigPutMethod
+  IConfigPutMethod,
+  ICustomLabels
 } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
@@ -39,6 +40,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
   const pageHeaders: any = activePage?.requestHeaders || {};
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
 
   async function initFormFields() {
     let finalRawData: any = rawData || {};
@@ -198,7 +200,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       show={true}
       className="form-popup"
       closeCallback={() => closeCallback(false)}
-      customLabels={config?.customLabels}
+      customLabels={customLabels}
     >
       <React.Fragment>
         <h2>{title}</h2>

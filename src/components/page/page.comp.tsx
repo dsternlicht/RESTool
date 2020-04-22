@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, ICustomFormTitleLabels } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -43,11 +43,10 @@ const PageComp = ({ context }: IProps) => {
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
-  const customLabels: ICustomLabels | undefined = config?.customLabels;
-  const pageFormTitles: ICustomFormTitleLabels | undefined = activePage?.customFormTitles;
-  const addItemLabel = activePage?.customAddButtonTitle || customLabels?.buttons?.addItem || '+ Add Item';
-  const addItemFormTitle = pageFormTitles?.addItem || customLabels?.formTitles?.addItem || 'Add Item';
-  const editItemFormTitle = pageFormTitles?.editItem || customLabels?.formTitles?.editItem || 'Update Item';
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const addItemLabel = customLabels?.buttons?.addItem || '+ Add Item';
+  const addItemFormTitle = customLabels?.formTitles?.addItem || 'Add Item';
+  const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
   const [loading, setLoading] = useState<boolean>(false);
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);

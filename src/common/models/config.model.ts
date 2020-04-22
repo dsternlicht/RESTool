@@ -32,6 +32,7 @@ export interface ICustomLabels {
   buttons?: ICustomButtonLabels
   formTitles?: ICustomFormTitleLabels
   placeholders?: ICustomPlaceholderLabels
+  tableColumnHeaders?: ICustomTableColumnHeaders
 }
 
 export interface ICustomButtonLabels {
@@ -60,6 +61,10 @@ export interface ICustomPlaceholderLabels {
   file?: string
 }
 
+export interface ICustomTableColumnHeaders {
+  actions?: string
+}
+
 export interface IConfigPage {
   name: string
   id: string
@@ -67,8 +72,7 @@ export interface IConfigPage {
   requestHeaders: any
   methods: IConfigMethods
   customActions: IConfigCustomAction[]
-  customFormTitles: ICustomFormTitleLabels
-  customAddButtonTitle: string
+  customLabels: ICustomLabels
 }
 
 export interface IConfigMethods {

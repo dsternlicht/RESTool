@@ -41,8 +41,9 @@ export const Table = ({ items, fields, callbacks, customActions, customLabels }:
     }
   }
 
-  const editLabel: string = customLabels?.buttons?.editItem || 'Edit';
-  const deleteLabel: string = customLabels?.buttons?.deleteItem || 'Delete';
+  const editLabel = customLabels?.buttons?.editItem || 'Edit';
+  const deleteLabel = customLabels?.buttons?.deleteItem || 'Delete';
+  const actionColumnHeader = customLabels?.tableColumnHeaders?.actions || 'Actions';
 
   return (
     <div className="table-wrapper">
@@ -54,7 +55,7 @@ export const Table = ({ items, fields, callbacks, customActions, customLabels }:
                 return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
               })
             }
-            <th>Actions</th>
+            <th>{actionColumnHeader}</th>
           </tr>
         </thead>
         <tbody>

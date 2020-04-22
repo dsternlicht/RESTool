@@ -37,7 +37,7 @@
       "$ref": "#/definitions/customStyles"
     },
     "customLabels": {
-      "$ref": "#/definitions/customStyles"
+      "$ref": "#/definitions/customLabels"
     }
   },
   "required": [
@@ -127,12 +127,8 @@
           },
           "description": "A list of extra (non RESTful) endpoints available in your RESTful API. Specifically customActions is a list of PUT or POST method objects."
         },
-        "customFormTitles": {
-          "$ref": "#/definitions/formTitleLabels"
-        },
-        "customAddButtonTitle": {
-          "type": "string",
-          "description": "The text within the button to add an item on the page"
+        "customLabels": {
+          "$ref": "#/definitions/customLabels"
         }
       },
       "required": [
@@ -505,6 +501,9 @@
         },
         "placeholders": {
           "$ref": "#/definitions/placeholderLabels"
+        },
+        "tableColumnHeaders": {
+          "$ref": "#/definitions/tableColumnHeaders"
         }
       }
     },
@@ -605,6 +604,16 @@
           "type": "string",
           "description": "File input placeholder.",
           "default": "Select file..."
+        }
+      }
+    },
+    "tableColumnHeaders": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "type": "string",
+          "description": "Header of the action column in tables.",
+          "default": "Actions"
         }
       }
     }
