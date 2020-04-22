@@ -63,6 +63,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | name | `string` | true | The name of your app.|
 | pages | `array` | true | A list of pages in your app, each page will be presented as a separated tab, and will have his own methods and properties. |
 | baseUrl | `string` | false | Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: `"https://restool-sample-app.herokuapp.com/api"` <br /><br /> Note: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method. |
+| requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | errorMessageDataPath | `string[]` | false | The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found. |
 | unauthorizedRedirectUrl | `string` | false | Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"` |
 | favicon | `string` | false | A URL for you app's favicon. |
@@ -473,6 +474,7 @@ Here's a list of available display field types:
 * `url` - will render an anchor element with a clickable link 
 * `image` - will render an image from the url 
 * `colorbox` - will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string
+* `boolean` - will render as a green or red dot
 
 <br />
 
