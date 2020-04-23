@@ -15,6 +15,7 @@ import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
 import { FilterField } from '../filterField/filterField.comp';
+import { matchPath, useLocation } from 'react-router';
 
 import './page.scss';
 
@@ -33,6 +34,10 @@ interface IPopupProps {
 
 const PageComp = ({ context }: IProps) => {
   const { page } = useParams();
+  let { pathname } = useLocation();
+  if (pathname[0] === '/') {
+    pathname = pathname.slice(1);
+  }
   const { push, location } = useHistory();
   const { activePage, error, setError, httpService } = context;
   const pageHeaders: any = activePage?.requestHeaders || {};
@@ -130,6 +135,7 @@ const PageComp = ({ context }: IProps) => {
       const result = await httpService.fetch({
         method: actualMethod || 'get',
         origUrl: url,
+        rawData: context.activePathVars,
         queryParams: extractQueryParams(),
         headers: Object.assign({}, pageHeaders, requestHeaders || {})
       });
@@ -247,7 +253,7 @@ const PageComp = ({ context }: IProps) => {
     if (loading) {
       return <Loader />;
     }
-
+    
     const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
     const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
     let filteredItems = items;
@@ -312,18 +318,25 @@ const PageComp = ({ context }: IProps) => {
         }
         {
           error ?
-          <div className="app-error">{error}</div> :
-          renderTable()
+            <div className="app-error">{error}</div> :
+            renderTable()
         }
       </React.Fragment>
     )
   }
 
   useEffect(() => {
-    const nextActivePage: IConfigPage | null = context?.config?.pages?.filter((p, pIdx) => p.id === page || (pIdx + 1) === parseInt(page || ''))[0] || null;
+    let pathVars = {};
+    const nextActivePage: IConfigPage | null = context?.config?.pages?.find((p, pIdx) => {
+        const match = matchPath(pathname, p.id);
+        pathVars = match ? match.params : {};
+        return match?.isExact || (pIdx + 1) === parseInt(pathname || '')
+      }) || null;
+
+    context.setActivePathVars(pathVars);
     context.setActivePage(nextActivePage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, pathname]);
 
   useEffect(() => {
     setQueryParams(extractQueryParams());

@@ -31,6 +31,7 @@ function App() {
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [config, setConfig] = useState<IConfig | null>(null);
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
+  const [activePathVars, setActivePathVars] = useState<{[key: string]: string}>({});
   const [error, setError] = useState<string | null>(null);
 
   async function loadConfig(url?: string): Promise<void> {
@@ -105,6 +106,7 @@ function App() {
   }, [config]);
 
   const appName: string = config?.name || defaultAppName;
+  const routes: string[] = config?.pages?.map(p => `/${p.id}`) || [];
 
   return (
     <div className="restool-app">
@@ -113,7 +115,7 @@ function App() {
         <div className="app-error">
           {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
         </div> :
-        <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
+        <AppContext.Provider value={{ config, activePage, setActivePage, activePathVars, setActivePathVars, error, setError, httpService }}>
           {
             config.customStyles &&
             <CustomStyles
@@ -130,7 +132,7 @@ function App() {
             {
               config &&
               <Switch>
-                <Route exact path="/:page" component={Page} />
+                <Route exact path={routes} component={Page} />
                 <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
               </Switch>
             }
