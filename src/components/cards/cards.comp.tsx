@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { IConfigDisplayField, IConfigCustomAction } from '../../common/models/config.model';
+import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 
@@ -15,9 +15,10 @@ interface IProps {
   }
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
+  customLabels?: ICustomLabels
 }
 
-export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
+export const Cards = ({ items, fields, callbacks, customActions, customLabels }: IProps) => {
   function renderRow(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -39,6 +40,9 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
         return value;
     }
   }
+
+  const editLabel: string = customLabels?.buttons?.editItem || 'Edit';
+  const deleteLabel: string = customLabels?.buttons?.deleteItem || 'Delete';
 
   return (
     <div className="cards-wrapper">
@@ -63,7 +67,7 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
               <div className="actions-wrapper">
                 {
                   callbacks.put &&
-                  <Button onClick={() => callbacks.put?.(item)} title="Edit">
+                  <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
                     <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                   </Button>
                 }
@@ -77,7 +81,7 @@ export const Cards = ({ items, fields, callbacks, customActions }: IProps) => {
                 }
                 {
                   callbacks.delete &&
-                  <Button onClick={() => callbacks.delete?.(item)} title="Delete">
+                  <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
                     <i className="fa fa-times" aria-hidden="true"></i>
                   </Button>
                 }

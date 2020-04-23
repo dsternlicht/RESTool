@@ -101,8 +101,10 @@ function App() {
     const { isValid, errorMessage } = ConfigService.validateConfig(config);
     if (!isValid) {
       setError(errorMessage);
+      toast.error(errorMessage);
       return;
     }
+    return;
   }, [config]);
 
   const appName: string = config?.name || defaultAppName;
