@@ -8,17 +8,11 @@ import './details.scss';
 
 interface IProps {
   item: any
-  callbacks: {
-    delete: ((item: any) => void) | null
-    put: ((item: any) => void) | null
-    action: (item: any, action: IConfigCustomAction) => void
-  }
   fields: IConfigDisplayField[]
-  customActions?: IConfigCustomAction[]
   customLabels?: ICustomLabels
 }
 
-export const Details = ({ item, fields, callbacks, customActions, customLabels }: IProps) => {
+export const Details = ({ item, fields, customLabels }: IProps) => {
   function renderRow(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -60,28 +54,6 @@ export const Details = ({ item, fields, callbacks, customActions, customLabels }
           );
         })
       }
-      <div className="actions-wrapper">
-        {
-          callbacks.put &&
-          <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
-            <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
-          </Button>
-        }
-        {
-          (customActions && customActions.length > 0) &&
-          customActions.map((action, idx) => (
-            <Button key={`action_${idx}`} onClick={() => callbacks.action(item, action)} title={action.name}>
-              <i className={`fa fa-${action.icon || 'cogs'}`} aria-hidden="true"></i>
-            </Button>
-          ))
-        }
-        {
-          callbacks.delete &&
-          <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
-            <i className="fa fa-times" aria-hidden="true"></i>
-          </Button>
-        }
-      </div>
     </div>
   );
 }

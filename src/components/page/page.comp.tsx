@@ -292,7 +292,7 @@ const PageComp = ({ context }: IProps) => {
     const callbacks = {
       delete: deleteConfig ? deleteItem : null,
       put: putConfig ? openEditPopup : null,
-      details: getSingleConfig ? toItemDetails : null,
+      details: getSingleConfig?.detailPage ? toItemDetails : null,
       action: customActions.length ? openCustomActionPopup : () => { },
     };
 

@@ -50,15 +50,13 @@ const DetailPageComp = ({ context }: IProps) => {
   const [activeResourceIndex, setActiveResourceIndex] = useState<number>(0);
   const resources = detailPage?.resources;
   const pageHeaders: any = activePage?.requestHeaders || {};
-  const pageMethods: IConfigMethods | undefined = resources?.[activeResourceIndex]?.methods;
+  const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = resources?.[activeResourceIndex]?.customActions || [];
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
   const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels, ...resources?.[activeResourceIndex]?.customLabels };
-  const addItemLabel = customLabels?.buttons?.addItem || '+ Add Item';
-  const addItemFormTitle = customLabels?.formTitles?.addItem || 'Add Item';
   const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
   const [loading, setLoading] = useState<boolean>(false);
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
@@ -385,26 +383,45 @@ const DetailPageComp = ({ context }: IProps) => {
   }, [activeResourceIndex, page, pathname]);
 
   return (
-    <div className="app-page">
-      <header className="app-page-header">
+    <div className="app-details-page">
+      <header className="app-details-page-header">
         <hgroup>
           <h2>{pageName}</h2>
           <div className="details-wrapper">
             <Details
-              callbacks={callbacks}
               fields={fields}
               item={activeItem}
-              customActions={customActions}
               customLabels={customLabels}
             />
           </div>
         </hgroup>
         {
-          postConfig &&
-          <Button className="add-item" color="green" onClick={() => setOpenedPopup({ type: 'add', title: addItemFormTitle, config: postConfig, submitCallback: addItem })}>{addItemLabel}</Button>
+          (callbacks.put || callbacks.delete || (customActions && customActions.length > 0)) &&
+          <div className="details-actions-wrapper">
+            {
+              callbacks.put &&
+              <Button onClick={() => callbacks.put?.(activeItem)} title={'editLabel'}>
+                <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+              </Button>
+            }
+            {
+              (customActions && customActions.length > 0) &&
+              customActions.map((action, idx) => (
+                <Button key={`action_${idx}`} onClick={() => callbacks.action(activeItem, action)} title={action.name}>
+                  <i className={`fa fa-${action.icon || 'cogs'}`} aria-hidden="true"></i>
+                </Button>
+              ))
+            }
+            {
+              callbacks.delete &&
+              <Button onClick={() => callbacks.delete?.(activeItem)} title={'deleteLabel'}>
+                <i className="fa fa-times" aria-hidden="true"></i>
+              </Button>
+            }
+          </div>
         }
       </header>
-      <main className="app-page-content">
+      <main className="app-details-page-content">
         {renderPageContent()}
       </main>
       {

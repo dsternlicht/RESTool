@@ -1,6 +1,6 @@
 
 
-.app-page {
+.app-details-page {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -9,13 +9,13 @@
   min-height: 100vh;
 }
 
-.app-page-header {
+.app-details-page-header {
   position: relative;
   padding: 30px;
   background: rgba(255,255,255,0.4);
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   display: flex;
-  align-items: center;
+  align-items: start;
 
   @media screen and (max-width: 800px) { 
     padding: 15px;
@@ -58,7 +58,7 @@
   }
 }
 
-.app-page-content {
+.app-details-page-content {
   position: relative;
   padding: 30px;
 
@@ -139,6 +139,30 @@
 
     &--selected {
       display: block;
+    }
+  }
+}
+
+.details-actions-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin: 10px;
+  z-index: 10;
+
+  > * {
+    margin: 0 5px;
+    border-radius: 50em;
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    cursor: pointer;
+    background: v(actionButtonBackground, #e6e6e6);
+    color: v(actionButtonText, #000000cc);
+
+    &:hover {
+      background: v(actionButtonHoverBackground, #ebebeb);
     }
   }
 }
