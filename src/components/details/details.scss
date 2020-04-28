@@ -1,0 +1,101 @@
+@import '../../common/styles/functions';
+
+.details-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  // align-items: stretch;
+  align-items: center;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+
+  .details {
+    font-weight: 300;
+    margin: 20px 0 0 0;
+    // min-width: 340px;
+    flex-basis: 340px;
+
+    @media screen and (max-width: 800px) {
+      width: 100%;
+    }
+
+  }
+
+  .details-row {
+    margin: 0 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+      width: 120px;
+      flex-shrink: 0;
+    }
+
+    > *:not(label) {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    &.image {
+      margin: 0 0 10px;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: no-repeat center center;
+    background-size: cover;
+  }
+
+  .colorbox {
+    width: 80px;
+    height: 20px;
+  }
+
+  .bool {
+    max-width: 15px;
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border-radius: 50em;
+
+    &.true {
+      background-color: #118711;
+    }
+
+    &.false {
+      background-color: #871111;
+    }
+  }
+
+  .actions-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 10px;
+    z-index: 10;
+
+    > * {
+      margin: 0 5px;
+      border-radius: 50em;
+      width: 42px;
+      height: 42px;
+      font-size: 18px;
+      cursor: pointer;
+      background: v(actionButtonBackground, #e6e6e6);
+      color: v(actionButtonText, #000000cc);
+
+      &:hover {
+        background: v(actionButtonHoverBackground, #ebebeb);
+      }
+    }
+  }
+}

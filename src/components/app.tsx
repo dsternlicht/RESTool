@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import ConfigService from '../services/config.service';
 import { IConfig, IConfigPage } from '../common/models/config.model';
 import { Page } from '../components/page/page.comp';
+import { DetailPage } from './detailPage/detailPage.comp';
 import { Navigation } from '../components/navigation/navigation.comp';
 import { AppContext } from './app.context';
 import HttpService from '../services/http.service';
@@ -33,6 +34,7 @@ function App() {
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [activePathVars, setActivePathVars] = useState<{[key: string]: string}>({});
   const [error, setError] = useState<string | null>(null);
+  const [activeItem, setActiveItem] = useState<any | null>(null);
 
   async function loadConfig(url?: string): Promise<void> {
     try {
@@ -108,8 +110,15 @@ function App() {
   }, [config]);
 
   const appName: string = config?.name || defaultAppName;
-  const routes: string[] = config?.pages?.map(p => `/${p.id}`) || [];
-
+  const mainRoutes: string[] = config?.pages?.map(p => `/${p.id}`) || [];
+  const detailRoutes: string[] = config?.pages?.reduce((acc: string[], p) => {
+    const detailPageId = p.methods?.getSingle?.detailPage?.id;
+    if(detailPageId){
+      acc.push(`/${detailPageId}`);
+    } 
+    return acc;
+  }, []) || [];
+  
   return (
     <div className="restool-app">
       {
@@ -117,7 +126,7 @@ function App() {
         <div className="app-error">
           {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
         </div> :
-        <AppContext.Provider value={{ config, activePage, setActivePage, activePathVars, setActivePathVars, error, setError, httpService }}>
+        <AppContext.Provider value={{ config, activePage, setActivePage, activePathVars, setActivePathVars, activeItem, setActiveItem, error, setError, httpService }}>
           {
             config.customStyles &&
             <CustomStyles
@@ -134,7 +143,8 @@ function App() {
             {
               config &&
               <Switch>
-                <Route exact path={routes} component={Page} />
+                <Route exact path={mainRoutes} component={Page} />
+                <Route exact path={detailRoutes} component={DetailPage} />
                 <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
               </Switch>
             }

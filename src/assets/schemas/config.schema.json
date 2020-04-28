@@ -120,6 +120,12 @@
         "methods": {
           "$ref": "#/definitions/methods"
         },
+        "subResourcePages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/subResourcePage"
+          }
+        },
         "customActions": {
           "type": "array",
           "items": {
@@ -134,6 +140,18 @@
       "required": [
         "name",
         "id"
+      ]
+    },
+    "subResourcePage": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/page"
+        },
+        {
+          "properties": {
+            "parentResource": {}
+          }
+        }
       ]
     },
     "requestHeaders": {

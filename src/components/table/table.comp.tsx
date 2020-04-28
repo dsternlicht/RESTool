@@ -11,6 +11,7 @@ interface IProps {
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
+    details: ((item: any) => void) | null
     action: (item: any, action: IConfigCustomAction) => void
   }
   fields: IConfigDisplayField[]
@@ -71,6 +72,12 @@ export const Table = ({ items, fields, callbacks, customActions, customLabels }:
                   }
                   <td>
                     <div className="actions-wrapper">
+                      {
+                        callbacks.details &&
+                        <Button onClick={() => callbacks.details?.(item)} title='detailLabel'>
+                          <i className="fa fa-search" aria-hidden="true"></i>
+                        </Button>
+                      }
                       {
                         callbacks.put &&
                         <Button onClick={() => callbacks.put?.(item)} title={editLabel}>

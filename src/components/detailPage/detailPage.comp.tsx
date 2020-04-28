@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigDetailPage, IConfigResourcePage, IConfigDisplayField } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -15,12 +15,18 @@ import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
 import { FilterField } from '../filterField/filterField.comp';
-import { matchPath, useLocation } from 'react-router';
+import { matchPath, useLocation, match } from 'react-router';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Details } from '../details/details.comp';
+import { TabContent } from '../tab/tabContent.comp';
 
-import './page.scss';
+
+// import 'react-tabs/style/react-tabs.css';
+import './detailPage.scss';
 
 interface IProps {
   context: IAppContext
+  // item: any
 }
 
 interface IPopupProps {
@@ -32,38 +38,59 @@ interface IPopupProps {
   rawData?: {}
 }
 
-const PageComp = ({ context }: IProps) => {
+const DetailPageComp = ({ context }: IProps) => {
   const { page } = useParams();
   let { pathname } = useLocation();
   if (pathname[0] === '/') {
     pathname = pathname.slice(1);
   }
   const { push, location } = useHistory();
-  const { activePage, error, setError, httpService, config, setActiveItem } = context;
-  const resources = config?.resources;
+  const { activePage, error, setError, httpService, config, activeItem, activePathVars, setActivePathVars } = context;
+  const detailPage = activePage?.methods?.getSingle.detailPage;
+  const [activeResourceIndex, setActiveResourceIndex] = useState<number>(0);
+  const resources = detailPage?.resources;
   const pageHeaders: any = activePage?.requestHeaders || {};
-  const pageMethods: IConfigMethods | undefined = activePage?.methods;
-  const customActions: IConfigCustomAction[] = activePage?.customActions || [];
-  const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
+  const pageMethods: IConfigMethods | undefined = resources?.[activeResourceIndex]?.methods;
+  const customActions: IConfigCustomAction[] = resources?.[activeResourceIndex]?.customActions || [];
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
-  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels, ...resources?.[activeResourceIndex]?.customLabels };
   const addItemLabel = customLabels?.buttons?.addItem || '+ Add Item';
   const addItemFormTitle = customLabels?.formTitles?.addItem || 'Add Item';
   const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
   const [loading, setLoading] = useState<boolean>(false);
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
-  const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
+  const [queryParams, setQueryParams] = useState<IConfigInputField[]>(resources?.[activeResourceIndex]?.methods.getAll.queryParams || []);
   const [items, setItems] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>('');
+  const staticPathVars = detailPage ? matchPath(pathname, detailPage.id)?.params : {};
+  let pageName = detailPage?.name;
+
+  const dynamicMatches = pageName?.match(/\${([\w.]*)}/gm);
+  const dynamicVars = dynamicMatches?.map(m => m.replace(/[\${}]/gm, ''));
+  const replacements = dynamicVars?.map(key => activeItem[key]);
+  dynamicMatches?.forEach((match, index) => { pageName = pageName?.replace(match, replacements?.[index] || 'undefined') })
+
+  const [resourceLoading, setResourceLoading] = useState<boolean[]>(Array(resources?.length).fill(false));
+  const [resourceItems, setResourceItems] = useState<any[][]>(Array(resources?.length).fill([]));
+
+  const callbacks = {
+    delete: deleteConfig ? deleteItem : null,
+    put: putConfig ? openEditPopup : null,
+    action: customActions.length ? openCustomActionPopup : () => { },
+  };
+
+
+  const getAllConfig = activePage?.methods?.getAll;
+  const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
 
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
 
     if (refreshData === true) {
-      getAllRequest();
+      //TODO refresh data
     }
   }
 
@@ -127,47 +154,6 @@ const PageComp = ({ context }: IProps) => {
     return finalQueryParams
   }
 
-  async function getAllRequest() {
-    setLoading(true);
-    setError(null);
-
-    try {
-      if (!getAllConfig) {
-        throw new Error('Get all method is not defined.');
-      }
-
-      const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
-      const result = await httpService.fetch({
-        method: actualMethod || 'get',
-        origUrl: url,
-        rawData: context.activePathVars,
-        queryParams: extractQueryParams(),
-        headers: Object.assign({}, pageHeaders, requestHeaders || {})
-      });
-      let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
-
-      if (!extractedData) {
-        throw new Error('Could not extract data from response.');
-      }
-
-      if (!Array.isArray(extractedData)) {
-        throw new Error('Extracted data is invalid.');
-      }
-
-      if (typeof dataTransform === 'function') {
-        extractedData = await dataTransform(extractedData);
-      }
-
-      const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
-
-      setItems(orderedItems);
-    } catch (e) {
-      setError(e.message);
-    }
-
-    setLoading(false);
-  }
-
   async function addItem(body: any, containFiles?: boolean) {
     if (!postConfig) {
       throw new Error('Post method is not defined.');
@@ -186,15 +172,6 @@ const PageComp = ({ context }: IProps) => {
       },
       responseType: 'boolean'
     });
-  }
-
-  async function toItemDetails(item: any) {
-    if (!getSingleConfig) {
-      throw new Error('Get single method is not defined.');
-    }
-    setActiveItem(item);
-    const detailPath = `${pathname}/${item.code}`;
-    push(detailPath);
   }
 
   async function updateItem(body: any, rawData: any, containFiles?: boolean) {
@@ -240,7 +217,7 @@ const PageComp = ({ context }: IProps) => {
       });
 
       if (success) {
-        getAllRequest();
+        // TODO, redirect to parent page
       }
     } catch (e) {
       toast.error(e.message);
@@ -263,65 +240,36 @@ const PageComp = ({ context }: IProps) => {
     push(queryState);
   }
 
-  function renderTable() {
-    if (loading) {
-      return <Loader />;
+  function ControlledTabs() {
+
+    if (resources === null) {
+      return null;
     }
-
-    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
-    const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
-    let filteredItems = items;
-
-    if (filter && fieldsToFilter.length) {
-      filteredItems = items.filter((item) => {
-        let passFilter = false;
-        fieldsToFilter.forEach((fieldName) => {
-          const value = item[fieldName];
-          if (typeof value === 'string' && value.toLowerCase().indexOf(filter) >= 0) {
-            passFilter = true;
-          }
-        })
-        return passFilter;
-      });
-    }
-
-    if (!filteredItems.length) {
-      return <div className="app-error">Nothing to see here. Result is empty.</div>;
-    }
-
-    const callbacks = {
-      delete: deleteConfig ? deleteItem : null,
-      put: putConfig ? openEditPopup : null,
-      details: getSingleConfig ? toItemDetails : null,
-      action: customActions.length ? openCustomActionPopup : () => { },
-    };
-
-    if (getAllConfig?.display.type === 'cards') {
-      return (
-        <Cards
-          callbacks={callbacks}
-          fields={fields}
-          items={filteredItems}
-          customActions={customActions}
-          customLabels={customLabels}
-        />
-      );
-    }
-
     return (
-      <Table
-        callbacks={callbacks}
-        fields={fields}
-        items={filteredItems}
-        customActions={customActions}
-        customLabels={customLabels}
-      />
+      <Tabs selectedIndex={activeResourceIndex} onSelect={tabIndex => setActiveResourceIndex(tabIndex)}>
+        <TabList>
+          {
+            resources &&
+            resources.map((resource, index) => <Tab key={`resource_tablist_${index}`}>{resource.name}</Tab>)
+          }
+        </TabList>
+        {
+          resources &&
+          resources.map((resource, index) =>
+            <TabContent
+              key={`resource_tabcontent_${index}`}
+              context={context}
+              resource={resource}
+              loading={resourceLoading[index]}
+              items={resourceItems[index]}
+            />
+          )
+        }
+      </Tabs>
     );
   }
 
   function renderPageContent() {
-    const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
-    const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
 
     return (
       <React.Fragment>
@@ -330,67 +278,126 @@ const PageComp = ({ context }: IProps) => {
           submitCallback={submitQueryParams}
         />
         {
-          fieldsToFilter.length > 0 &&
-          <FilterField onChange={setFilter} />
-        }
-        {
           error ?
             <div className="app-error">{error}</div> :
-            renderTable()
+            <ControlledTabs />
         }
       </React.Fragment>
     )
   }
 
-  function getPageMatch(pages: IConfigPage[] | undefined): { matchPage: IConfigPage, pathVars: { [key: string]: string } } | null {
+  function getPageMatch(pages: IConfigDetailPage[] | undefined): { matchPage: IConfigDetailPage, pathVars: { [key: string]: string } } | null {
     if (pages === undefined || pages.length === 0) {
       return null;
     }
     let pathVars = {};
-    const nextActivePage: IConfigPage | undefined = pages?.find((page, pIdx) => {
-      let match = matchPath(pathname, page.id);
+    const nextActivePage: IConfigDetailPage | undefined = pages?.find(detailPage => {
+      let match = matchPath(pathname, detailPage.id);
       pathVars = match ? match.params : {};
-      return match?.isExact || (pIdx + 1) === parseInt(pathname || '')
+      return match?.isExact;
     });
-    if (nextActivePage !== undefined) {
-      return { matchPage: nextActivePage, pathVars };
-    }
 
-    if (!resources || resources.length === 0) {
+    if (nextActivePage === undefined) {
       return null;
     }
 
-    return getPageMatch(resources);
+    return { matchPage: nextActivePage, pathVars };
   }
 
   useEffect(() => {
-    const { matchPage, pathVars } = getPageMatch(context?.config?.pages) || { matchPage: null, pathVars: {} };
+    const { matchPage, pathVars } = getPageMatch(context?.config?.pages.flatMap(page => page.methods?.getSingle?.detailPage)) || { matchPage: undefined, pathVars: {} };
 
     context.setActivePathVars(pathVars);
-    context.setActivePage(matchPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pathname]);
+  }, [page, pathname, activeResourceIndex]);
 
   useEffect(() => {
     setQueryParams(extractQueryParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);
 
+  function setActiveResourceLoading(state: boolean) {
+    const updated = [...resourceLoading];
+    updated[activeResourceIndex] = state;
+    setResourceLoading(updated);
+  }
+
+  function setActiveResourceItems(items: any[]) {
+    const updated = [...resourceItems];
+    updated[activeResourceIndex] = items;
+    setResourceItems(updated);
+  }
+
+  async function getAllResourceRequest() {
+    if (resourceItems[activeResourceIndex] && resourceItems[activeResourceIndex].length) {
+      return;
+    }
+    const resource = resources?.[activeResourceIndex];
+    const newResourceLoading = resourceLoading;
+    resourceLoading[activeResourceIndex] = true;
+    setActiveResourceLoading(true);
+    setError(null);
+
+    const getAllConfig = resource?.methods.getAll;
+
+    try {
+      if (!getAllConfig) {
+        throw new Error('Get all method is not defined.');
+      }
+
+      const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
+      const result = await httpService.fetch({
+        method: actualMethod || 'get',
+        origUrl: url,
+        // rawData: activePathVars,
+        rawData: staticPathVars,
+        // queryParams: extractQueryParams(),
+        queryParams: queryParams,
+        headers: Object.assign({}, pageHeaders, requestHeaders || {})
+      });
+      let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+
+      if (!extractedData) {
+        throw new Error('Could not extract data from response.');
+      }
+
+      if (!Array.isArray(extractedData)) {
+        throw new Error('Extracted data is invalid.');
+      }
+
+      if (typeof dataTransform === 'function') {
+        extractedData = await dataTransform(extractedData);
+      }
+
+      const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
+      setActiveResourceItems(orderedItems);
+    } catch (e) {
+      setError(e.message);
+    }
+
+    setActiveResourceLoading(false);
+  }
+
   useEffect(() => {
-    // Load data when query params changed
-    getAllRequest();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParams]);
+    if (resources?.[activeResourceIndex]) {
+      getAllResourceRequest();
+    }
+  }, [activeResourceIndex, page, pathname]);
 
   return (
     <div className="app-page">
       <header className="app-page-header">
         <hgroup>
-          <h2>{activePage?.name}</h2>
-          {
-            activePage?.description &&
-            <h4>{activePage?.description}</h4>
-          }
+          <h2>{pageName}</h2>
+          <div className="details-wrapper">
+            <Details
+              callbacks={callbacks}
+              fields={fields}
+              item={activeItem}
+              customActions={customActions}
+              customLabels={customLabels}
+            />
+          </div>
         </hgroup>
         {
           postConfig &&
@@ -416,4 +423,4 @@ const PageComp = ({ context }: IProps) => {
   );
 }
 
-export const Page = withAppContext(PageComp);
+export const DetailPage = withAppContext(DetailPageComp);

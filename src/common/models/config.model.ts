@@ -9,6 +9,7 @@ export interface IConfig {
   unauthorizedRedirectUrl: string
   requestHeaders: any
   pages: IConfigPage[]
+  resources: IConfigResourcePage[]
   customStyles?: ICustomStyles
   customLabels?: ICustomLabels
 }
@@ -74,6 +75,15 @@ export interface IConfigPage {
   customActions: IConfigCustomAction[]
   customLabels: ICustomLabels
 }
+
+export interface IConfigDetailPage {
+  id: string
+  name: string
+  description: string
+  resources: IConfigResourcePage[]
+}
+
+export interface IConfigResourcePage extends IConfigPage { }
 
 export interface IConfigMethods {
   getAll: IConfigGetAllMethod
@@ -149,6 +159,7 @@ export interface IConfigGetAllMethod extends IConfigMethod {
 
 export interface IConfigGetSingleMethod extends IConfigMethod {
   dataPath: string
+  detailPage: IConfigDetailPage
 }
 
 export interface IConfigPostMethod extends IConfigMethod {
