@@ -1,5 +1,6 @@
 import React from 'react';
 
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
@@ -8,17 +9,19 @@ import './cards.scss';
 
 interface IProps {
   items: any[]
+  hasMore: boolean
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
     action: (item: any, action: IConfigCustomAction) => void
+    getNextPage: (() => void) | null
   }
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
   customLabels?: ICustomLabels
 }
 
-export const Cards = ({ items, fields, callbacks, customActions, customLabels }: IProps) => {
+export const Cards = ({ items, fields, callbacks, customActions, customLabels, hasMore }: IProps) => {
   function renderRow(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -45,7 +48,12 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels }:
   const deleteLabel: string = customLabels?.buttons?.deleteItem || 'Delete';
 
   return (
-    <div className="cards-wrapper">
+    <InfiniteScroll className="cards-wrapper"
+      dataLength={items.length}
+      next={callbacks.getNextPage || (() => null)}
+      hasMore={hasMore}
+      loader={<div></div>} // TODO: find a elegant solution
+    >
       {
         items.map((item, cardIdx) => {
           return (
@@ -90,6 +98,6 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels }:
           );
         })
       }
-    </div>
+    </InfiniteScroll>
   );
 }

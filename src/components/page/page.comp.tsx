@@ -319,24 +319,21 @@ const PageComp = ({ context }: IProps) => {
       return <div className="app-error">Nothing to see here. Result is empty.</div>;
     }
 
+    const getNextPage = paginationConfig ? () => {
+      setDataPage(dataPage + 1);
+    } : null;
+
     const callbacks = {
       delete: deleteConfig ? deleteItem : null,
       put: putConfig ? openEditPopup : null,
       action: customActions.length ? openCustomActionPopup : () => { },
-    };
-
-    const getNextPage = () => {
-      setDataPage(dataPage + 1);
-    };
-
-    const tableCallbacks = {
-      ...callbacks,
       getNextPage,
-    }
+    };
 
     if (getAllConfig?.display.type === 'cards') {
       return (
         <Cards
+          hasMore={hasMore}
           callbacks={callbacks}
           fields={fields}
           items={filteredItems}
@@ -349,7 +346,7 @@ const PageComp = ({ context }: IProps) => {
     return (
       <Table
         hasMore={hasMore}
-        callbacks={tableCallbacks}
+        callbacks={callbacks}
         fields={fields}
         items={filteredItems}
         customActions={customActions}
