@@ -39,6 +39,8 @@ const PageComp = ({ context }: IProps) => {
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
+  const paginationConfig = getAllConfig?.pagination;
+  const infiniteScroll = paginationConfig?.type === 'lazy-loading';
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
@@ -52,6 +54,12 @@ const PageComp = ({ context }: IProps) => {
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
   const [items, setItems] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>('');
+  const [dataPage, setDataPage] = useState<number>(parseInt(paginationConfig?.params.page.value || '1'));
+  const [dataLimit, setDataLimit] = useState<number>(parseInt(paginationConfig?.params.limit?.value || '10'));
+  const [dataDescending, setDataDescending] = useState<boolean>(paginationConfig?.params.descending?.value === 'true' || false);
+  const [dataSortBy, setDataSortBy] = useState<string | null>(paginationConfig?.params.sortBy?.value || null);
+  const [dataTotal, setDataTotal] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
@@ -109,7 +117,21 @@ const PageComp = ({ context }: IProps) => {
 
   function extractQueryParams(): IConfigInputField[] {
     const parsedParams = QueryString.parse(location.search);
-    const finalQueryParams: IConfigInputField[] = (getAllConfig?.queryParams || []).map((queryParam) => {
+    const paginationParams: IConfigInputField[] = paginationConfig ? [
+      { name: paginationConfig.params.page.name, value: dataPage },
+    ] : [];
+    if (paginationConfig?.params.limit) {
+      paginationParams.push({ name: paginationConfig.params.limit.name, value: dataLimit });
+    }
+    if (paginationConfig?.params.descending) {
+      paginationParams.push({ name: paginationConfig.params.descending.name, value: dataDescending });
+    }
+    if (paginationConfig?.params.sortBy) {
+      paginationParams.push({ name: paginationConfig.params.sortBy.name, value: dataSortBy });
+    }
+    const queryParams = (getAllConfig?.queryParams || [])
+    const params = [...queryParams, ...paginationParams];
+    const finalQueryParams = params.map((queryParam) => {
       if (typeof parsedParams[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
       } else {
@@ -122,7 +144,11 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function getAllRequest() {
-    setLoading(true);
+    if (infiniteScroll && dataPage !== 1) { // add if we are NOT at page 1
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     setError(null);
 
     try {
@@ -153,7 +179,27 @@ const PageComp = ({ context }: IProps) => {
 
       const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
 
-      setItems(orderedItems);
+      if (paginationConfig) {
+        const currentDataPage = paginationConfig.fields?.page ? dataHelpers.extractDataByDataPath(result, paginationConfig.fields.page.dataPath) : dataPage;
+        if (currentDataPage !== dataPage) {
+          throw new Error('Got different current page from API and UI - API: ' + currentDataPage + ' UI: ' + dataPage);
+        }
+        if (paginationConfig.fields?.total) {
+          const currentDataTotal = dataHelpers.extractDataByDataPath(result, paginationConfig.fields.total.dataPath);
+          setDataTotal(currentDataTotal);
+          const currentHasMore = currentDataPage * dataLimit < currentDataTotal;
+          setHasMore(currentHasMore);
+        } else {
+          setHasMore(true);
+        }
+      }
+
+      if (infiniteScroll) {
+        setItems([...items, ...orderedItems]);
+      } else {
+        setItems(orderedItems);
+      }
+
     } catch (e) {
       setError(e.message);
     }
@@ -279,6 +325,15 @@ const PageComp = ({ context }: IProps) => {
       action: customActions.length ? openCustomActionPopup : () => { },
     };
 
+    const getNextPage = () => {
+      setDataPage(dataPage + 1);
+    };
+
+    const tableCallbacks = {
+      ...callbacks,
+      getNextPage,
+    }
+
     if (getAllConfig?.display.type === 'cards') {
       return (
         <Cards
@@ -293,7 +348,8 @@ const PageComp = ({ context }: IProps) => {
 
     return (
       <Table
-        callbacks={callbacks}
+        hasMore={hasMore}
+        callbacks={tableCallbacks}
         fields={fields}
         items={filteredItems}
         customActions={customActions}
@@ -310,6 +366,7 @@ const PageComp = ({ context }: IProps) => {
       <React.Fragment>
         <QueryParams
           initialParams={queryParams}
+          paginationConfig={paginationConfig}
           submitCallback={submitQueryParams}
         />
         {
@@ -332,6 +389,12 @@ const PageComp = ({ context }: IProps) => {
   }, [page]);
 
   useEffect(() => {
+    setItems([]);
+    setDataPage(1);
+    setDataLimit(10);
+    setDataTotal(0);
+    setDataDescending(false);
+    setDataSortBy(null);
     setQueryParams(extractQueryParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);
@@ -340,7 +403,7 @@ const PageComp = ({ context }: IProps) => {
     // Load data when query params changed
     getAllRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParams]);
+  }, [queryParams, dataPage]);
 
   return (
     <div className="app-page">

@@ -3,22 +3,26 @@ import React from 'react';
 import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { InfiniteLoader } from '../infiniteLoader/infiniteLoader.comp';
 
 import './table.scss';
 
 interface IProps {
   items: any[]
+  hasMore: boolean
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
     action: (item: any, action: IConfigCustomAction) => void
+    getNextPage: (() => void) | null
   }
   fields: IConfigDisplayField[]
   customActions?: IConfigCustomAction[]
   customLabels?: ICustomLabels
 }
 
-export const Table = ({ items, fields, callbacks, customActions, customLabels }: IProps) => {
+export const Table = ({ items, fields, callbacks, customActions, customLabels, hasMore }: IProps) => {
   function renderTableCell(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -47,58 +51,65 @@ export const Table = ({ items, fields, callbacks, customActions, customLabels }:
 
   return (
     <div className="table-wrapper">
-      <table className="pure-table">
-        <thead>
-          <tr>
+      <InfiniteScroll
+        dataLength={items.length}
+        next={callbacks.getNextPage || (() => null)}
+        hasMore={hasMore}
+        loader={<InfiniteLoader />}
+      >
+        <table className="pure-table">
+          <thead>
+            <tr>
+              {
+                fields.map((field) => {
+                  return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
+                })
+              }
+              <th>{actionColumnHeader}</th>
+            </tr>
+          </thead>
+          <tbody>
             {
-              fields.map((field) => {
-                return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
+              items.map((item, rowIdx) => {
+                return (
+                  <tr key={`tr_${rowIdx}`}>
+                    {
+                      fields.map((field, fieldIdx) => {
+                        const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
+                        return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
+                      })
+                    }
+                    <td>
+                      <div className="actions-wrapper">
+                        {
+                          callbacks.put &&
+                          <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
+                            <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </Button>
+                        }
+                        {
+                          (customActions && customActions.length > 0) &&
+                          customActions.map((action, idx) => (
+                            <Button key={`action_${rowIdx}_${idx}`} onClick={() => callbacks.action(item, action)} title={action.name}>
+                              <i className={`fa fa-${action.icon || 'cogs'}`} aria-hidden="true"></i>
+                            </Button>
+                          ))
+                        }
+                        {
+                          callbacks.delete &&
+                          <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
+                            <i className="fa fa-times" aria-hidden="true"></i>
+                          </Button>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                );
               })
             }
-            <th>{actionColumnHeader}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            items.map((item, rowIdx) => {
-              return (
-                <tr key={`tr_${rowIdx}`}>
-                  {
-                    fields.map((field, fieldIdx) => {
-                      const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
-                      return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
-                    })
-                  }
-                  <td>
-                    <div className="actions-wrapper">
-                      {
-                        callbacks.put &&
-                        <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
-                          <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        </Button>
-                      }
-                      {
-                        (customActions && customActions.length > 0) &&
-                        customActions.map((action, idx) => (
-                          <Button key={`action_${rowIdx}_${idx}`} onClick={() => callbacks.action(item, action)} title={action.name}>
-                            <i className={`fa fa-${action.icon || 'cogs'}`} aria-hidden="true"></i>
-                          </Button>
-                        ))
-                      }
-                      {
-                        callbacks.delete &&
-                        <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
-                          <i className="fa fa-times" aria-hidden="true"></i>
-                        </Button>
-                      }
-                    </div>
-                  </td>
-                </tr>
-              );
-            })
-          }
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </InfiniteScroll>
     </div>
   );
 }

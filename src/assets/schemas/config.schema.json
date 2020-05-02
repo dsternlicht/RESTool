@@ -239,6 +239,7 @@
               },
               "description": "One or more paths to properties in the result object to sort the list by."
             },
+            "pagination": {},
             "dataTransform": {
               "description": "Relevant only when using dynamic (js) config. A function to allow manipulation on the response data. Useful for changing/adding data for display purposes."
             }
@@ -470,6 +471,80 @@
             "type": "string"
           },
           "description": "one or more properties to sort the objects by"
+        }
+      }
+    },
+    "pagination": {
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "type",
+        "params"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "query"
+          ],
+          "description": ""
+        },
+        "type": {
+          "enum": [
+            "lazy-loading"
+          ],
+          "description": ""
+        },
+        "params": {
+          "$ref": "paginationParams"
+        },
+        "fields": {
+          "$ref": "paginationFields"
+        }
+      }
+    },
+    "paginationParams": {
+      "additionalProperties": false,
+      "required": [
+        "page"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "queryParamConfig"
+        },
+        "limit": {
+          "$ref": "queryParamConfig"
+        },
+        "sortBy": {
+          "$ref": "queryParamConfig"
+        },
+        "descending": {
+          "$ref": "queryParamConfig"
+        }
+      }
+    },
+    "paginationFields": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "$ref": "paginationField"
+        },
+        "total": {
+          "$ref": "paginationField"
+        }
+      }
+    },
+    "paginationField": {
+      "additionalProperties": false,
+      "required": [
+        "dataPath",
+        "display"
+      ],
+      "properties": {
+        "dataPath": {
+          "type": "string"
+        },
+        "display": {
+          "type": "boolean"
         }
       }
     },
