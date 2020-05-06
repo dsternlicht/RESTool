@@ -96,11 +96,11 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         return field;
       }
 
-      if (flattenData[key]) {
+      if (typeof flattenData[key] !== 'undefined') {
         field.value = flattenData[key];
       } else {
         // important in order to prevent controlled / uncontrolled components error
-        field.value = field.value || '';
+        field.value = typeof field.value === 'undefined' ? '' : field.value;
       }
 
       return field;
