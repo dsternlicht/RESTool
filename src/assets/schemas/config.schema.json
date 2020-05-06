@@ -391,6 +391,10 @@
           "type": "boolean",
           "description": "If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body."
         },
+        "urlReplaceOnly": {
+          "type": "boolean",
+          "description": "If true, a field will only be replaced in the URL and is not appended to the final query string."
+        },
         "optionSource": {
           "$ref": "#/definitions/optionSource",
           "description": "Use the optionSource field to load options for a select box from a REST service. If this is used with options, the items from options will be added to the select box before those fetched from the api."
