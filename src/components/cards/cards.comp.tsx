@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Skeleton from 'react-loading-skeleton';
@@ -14,7 +14,7 @@ interface IProps {
   pagination?: 'buttons' | 'lazy-loading'
   hasPreviousPage: boolean
   hasNextPage: boolean
-  limit: number
+  limit: number | null
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
@@ -128,6 +128,16 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, h
     const skeletonsIndexes = Array.from(Array(limit).keys()).map(value => value + startingIndex);
     return skeletonsIndexes.map(renderCardSkeleton);
   }
+
+  useEffect(() => {
+    if (
+      pagination === 'lazy-loading'
+      && document.body.clientHeight <= window.innerHeight
+      && callbacks.getNextPage
+    ) {
+      callbacks.getNextPage();
+    }
+  }, []);
 
   if (pagination === 'lazy-loading') {
     return (

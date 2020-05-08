@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -110,13 +110,19 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
     </table>
   }
 
-  console.log('callbacks.getNextPage ', callbacks.getNextPage)
+  useEffect(() => {
+    if (pagination === 'lazy-loading' && document.body.clientHeight <= window.innerHeight) {
+      paginationCallbacks.nextPage();
+    }
+  }, []);
+
   const paginationCallbacks = {
     nextPage: callbacks.getNextPage || (() => { return; }),
     previousPage: callbacks.getPreviousPage || (() => { return; }),
   }
 
   if (pagination === 'lazy-loading') {
+
     return (
       <InfiniteScroll
         dataLength={items.length}
