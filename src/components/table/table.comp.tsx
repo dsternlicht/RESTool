@@ -5,16 +5,20 @@ import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { InfiniteLoader } from '../infiniteLoader/infiniteLoader.comp';
+import { Pagination } from '../pagination/pagination.comp';
 
 import './table.scss';
 
 interface IProps {
   items: any[]
-  hasMore: boolean
+  pagination?: 'buttons' | 'lazy-loading'
+  hasPreviousPage: boolean
+  hasNextPage: boolean
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
     action: (item: any, action: IConfigCustomAction) => void
+    getPreviousPage: (() => void) | null
     getNextPage: (() => void) | null
   }
   fields: IConfigDisplayField[]
@@ -22,7 +26,7 @@ interface IProps {
   customLabels?: ICustomLabels
 }
 
-export const Table = ({ items, fields, callbacks, customActions, customLabels, hasMore }: IProps) => {
+export const Table = ({ items, fields, pagination, callbacks, customActions, customLabels, hasPreviousPage, hasNextPage }: IProps) => {
   function renderTableCell(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -49,67 +53,93 @@ export const Table = ({ items, fields, callbacks, customActions, customLabels, h
   const deleteLabel = customLabels?.buttons?.deleteItem || 'Delete';
   const actionColumnHeader = customLabels?.tableColumnHeaders?.actions || 'Actions';
 
-  return (
-    <div className="table-wrapper">
+  function renderTableRow(item: any, rowIdx: number) {
+    return (
+      <tr key={`tr_${rowIdx}`}>
+        {
+          fields.map((field, fieldIdx) => {
+            const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
+            return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
+          })
+        }
+        <td>
+          <div className="actions-wrapper">
+            {
+              callbacks.put &&
+              <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
+                <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+              </Button>
+            }
+            {
+              (customActions && customActions.length > 0) &&
+              customActions.map((action, idx) => (
+                <Button key={`action_${rowIdx}_${idx}`} onClick={() => callbacks.action(item, action)} title={action.name}>
+                  <i className={`fa fa-${action.icon || 'cogs'}`} aria-hidden="true"></i>
+                </Button>
+              ))
+            }
+            {
+              callbacks.delete &&
+              <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
+                <i className="fa fa-times" aria-hidden="true"></i>
+              </Button>
+            }
+          </div>
+        </td>
+      </tr>
+    );
+  }
+
+  function renderTableContent() {
+    return <table className="pure-table">
+      <thead>
+        <tr>
+          {
+            fields.map((field) => {
+              return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
+            })
+          }
+          <th>{actionColumnHeader}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.map(renderTableRow)
+        }
+      </tbody>
+    </table>
+  }
+
+  console.log('callbacks.getNextPage ', callbacks.getNextPage)
+  const paginationCallbacks = {
+    nextPage: callbacks.getNextPage || (() => { return; }),
+    previousPage: callbacks.getPreviousPage || (() => { return; }),
+  }
+
+  if (pagination === 'lazy-loading') {
+    return (
       <InfiniteScroll
         dataLength={items.length}
         next={callbacks.getNextPage || (() => null)}
-        hasMore={hasMore}
+        hasMore={hasNextPage}
         loader={<InfiniteLoader />}
       >
-        <table className="pure-table">
-          <thead>
-            <tr>
-              {
-                fields.map((field) => {
-                  return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
-                })
-              }
-              <th>{actionColumnHeader}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              items.map((item, rowIdx) => {
-                return (
-                  <tr key={`tr_${rowIdx}`}>
-                    {
-                      fields.map((field, fieldIdx) => {
-                        const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
-                        return <td key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
-                      })
-                    }
-                    <td>
-                      <div className="actions-wrapper">
-                        {
-                          callbacks.put &&
-                          <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
-                            <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                          </Button>
-                        }
-                        {
-                          (customActions && customActions.length > 0) &&
-                          customActions.map((action, idx) => (
-                            <Button key={`action_${rowIdx}_${idx}`} onClick={() => callbacks.action(item, action)} title={action.name}>
-                              <i className={`fa fa-${action.icon || 'cogs'}`} aria-hidden="true"></i>
-                            </Button>
-                          ))
-                        }
-                        {
-                          callbacks.delete &&
-                          <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
-                            <i className="fa fa-times" aria-hidden="true"></i>
-                          </Button>
-                        }
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            }
-          </tbody>
-        </table>
+        {renderTableContent()}
       </InfiniteScroll>
-    </div>
+    );
+  }
+
+  return (
+    <div className="table-wrapper">
+      {renderTableContent()}
+      {
+        pagination === 'buttons' &&
+        <Pagination
+          callbacks={paginationCallbacks}
+          hasNextPage={hasNextPage}
+          hasPreviousPage={hasPreviousPage}
+        ></Pagination>
+      }
+    </div >
   );
 }

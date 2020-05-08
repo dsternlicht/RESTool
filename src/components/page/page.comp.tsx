@@ -59,7 +59,7 @@ const PageComp = ({ context }: IProps) => {
   const [dataDescending, setDataDescending] = useState<boolean>(paginationConfig?.params.descending?.value === 'true' || false);
   const [dataSortBy, setDataSortBy] = useState<string | null>(paginationConfig?.params.sortBy?.value || null);
   const [dataTotal, setDataTotal] = useState<number>(0);
-  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<{ previous: boolean, next: boolean }>({ previous: false, next: false });
 
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
@@ -187,10 +187,16 @@ const PageComp = ({ context }: IProps) => {
         if (paginationConfig.fields?.total) {
           const currentDataTotal = dataHelpers.extractDataByDataPath(result, paginationConfig.fields.total.dataPath);
           setDataTotal(currentDataTotal);
-          const currentHasMore = currentDataPage * dataLimit < currentDataTotal;
+          const currentHasMore = {
+            previous: currentDataPage > 1,
+            next: currentDataPage * dataLimit < currentDataTotal,
+          };
           setHasMore(currentHasMore);
         } else {
-          setHasMore(true);
+          setHasMore({
+            previous: currentDataPage > 1,
+            next: true,
+          });
         }
       }
 
@@ -323,17 +329,27 @@ const PageComp = ({ context }: IProps) => {
       setDataPage(dataPage + 1);
     } : null;
 
+    const getPreviousPage = paginationConfig ? () => {
+      if (dataPage > 1) {
+        setDataPage(dataPage - 1);
+      }
+    } : null;
+
     const callbacks = {
       delete: deleteConfig ? deleteItem : null,
       put: putConfig ? openEditPopup : null,
       action: customActions.length ? openCustomActionPopup : () => { },
       getNextPage,
+      getPreviousPage,
     };
 
     if (getAllConfig?.display.type === 'cards') {
       return (
         <Cards
-          hasMore={hasMore}
+          pagination={paginationConfig?.type}
+          limit={dataLimit}
+          hasNextPage={hasMore.next}
+          hasPreviousPage={hasMore.previous}
           callbacks={callbacks}
           fields={fields}
           items={filteredItems}
@@ -345,7 +361,9 @@ const PageComp = ({ context }: IProps) => {
 
     return (
       <Table
-        hasMore={hasMore}
+        pagination={paginationConfig?.type}
+        hasNextPage={hasMore.next}
+        hasPreviousPage={hasMore.previous}
         callbacks={callbacks}
         fields={fields}
         items={filteredItems}
@@ -387,11 +405,11 @@ const PageComp = ({ context }: IProps) => {
 
   useEffect(() => {
     setItems([]);
-    setDataPage(1);
-    setDataLimit(10);
+    setDataPage(parseInt(paginationConfig?.params.page.value || '1'));
+    setDataLimit(parseInt(paginationConfig?.params.limit?.value || '10'));
     setDataTotal(0);
-    setDataDescending(false);
-    setDataSortBy(null);
+    setDataDescending(paginationConfig?.params.descending?.value === 'true' || false);
+    setDataSortBy(paginationConfig?.params.sortBy?.value || null);
     setQueryParams(extractQueryParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);

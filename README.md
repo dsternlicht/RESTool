@@ -180,6 +180,12 @@ One or more paths to properties in the result object to sort the list by.
 
 <br />
 
+###### `pagination` ([Pagination](#pagination))
+
+Optional. This allows to handle pagination. See [Pagination](#pagination).
+
+<br />
+
 ###### `dataTransform` (Function | async Function)
 
 Optional. Relevant only when using dynamic (js) config.
@@ -291,6 +297,25 @@ Example:
   }
 }
 ```
+
+<br />
+
+#### Pagination
+
+The `pagination` property allows you to handle pagination on .
+
+Here's a list of variable names you may change:
+
+| Name   | Value            | Description                       |
+| ------ | ---------------- | --------------------------------- |
+| type   | `'lazy-loading'` | Root text color.                  |
+| source | `'query'`        | App background color.             |
+| params | `object`         | Navigation menu background color. |
+| fields | `string`         | Navigation menu text color.       |
+
+<br />
+
+
 
 <br />
 
