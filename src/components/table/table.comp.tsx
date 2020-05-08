@@ -12,8 +12,8 @@ import './table.scss';
 interface IProps {
   items: any[]
   pagination?: 'buttons' | 'lazy-loading'
-  hasPreviousPage: boolean
-  hasNextPage: boolean
+  hasPreviousPage?: boolean
+  hasNextPage?: boolean
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
@@ -127,7 +127,7 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
       <InfiniteScroll
         dataLength={items.length}
         next={callbacks.getNextPage || (() => null)}
-        hasMore={hasNextPage}
+        hasMore={hasNextPage || false}
         loader={<InfiniteLoader />}
       >
         {renderTableContent()}

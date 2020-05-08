@@ -12,9 +12,9 @@ import './cards.scss';
 interface IProps {
   items: any[]
   pagination?: 'buttons' | 'lazy-loading'
-  hasPreviousPage: boolean
-  hasNextPage: boolean
-  limit: number | null
+  hasPreviousPage?: boolean
+  hasNextPage?: boolean
+  limit?: number
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
@@ -144,7 +144,7 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, h
       <InfiniteScroll className="cards-wrapper"
         dataLength={items.length}
         next={callbacks.getNextPage || (() => null)}
-        hasMore={hasNextPage}
+        hasMore={hasNextPage || false}
         loader={renderSkeletons()}
       >
         {

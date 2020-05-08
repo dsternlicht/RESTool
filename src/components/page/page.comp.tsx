@@ -31,6 +31,20 @@ interface IPopupProps {
   rawData?: {}
 }
 
+interface IPaginationParams {
+  page: number,
+}
+
+interface IPaginationState {
+  page: number,
+  limit: number,
+  descending?: boolean,
+  total?: number,
+  sortBy?: string,
+  hasPreviousPage?: boolean,
+  hasNextPage?: boolean,
+}
+
 const PageComp = ({ context }: IProps) => {
   const { page } = useParams();
   const { push, location } = useHistory();
@@ -54,12 +68,16 @@ const PageComp = ({ context }: IProps) => {
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(getAllConfig?.queryParams || []);
   const [items, setItems] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>('');
-  const [dataPage, setDataPage] = useState<number>(parseInt(paginationConfig?.params.page.value || '1'));
-  const [dataLimit, setDataLimit] = useState<number>(parseInt(paginationConfig?.params.limit?.value || '10'));
-  const [dataDescending, setDataDescending] = useState<boolean>(paginationConfig?.params.descending?.value === 'true' || false);
-  const [dataSortBy, setDataSortBy] = useState<string | null>(paginationConfig?.params.sortBy?.value || null);
-  const [dataTotal, setDataTotal] = useState<number>(0);
-  const [hasMore, setHasMore] = useState<{ previous: boolean, next: boolean }>({ previous: false, next: false });
+  const initialPagination = paginationConfig ? {
+    page: parseInt(paginationConfig?.params.page.value || '1'),
+    limit: parseInt(paginationConfig?.params.limit?.value || '10'),
+    descending: paginationConfig?.params.descending?.value === 'true' || false,
+    hasPreviousPage: false,
+    hasNextPage: false,
+    sortBy: paginationConfig?.params.sortBy?.value,
+  } : null;
+  const [paginationParams, setPaginationParams] = useState<IPaginationParams | null>(initialPagination ? { page: initialPagination.page } : null);
+  const [pagination, setPagination] = useState<IPaginationState | null>(initialPagination);
 
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
@@ -117,20 +135,22 @@ const PageComp = ({ context }: IProps) => {
 
   function extractQueryParams(): IConfigInputField[] {
     const parsedParams = QueryString.parse(location.search);
-    const paginationParams: IConfigInputField[] = paginationConfig ? [
-      { name: paginationConfig.params.page.name, value: dataPage },
+    const paginationQueryParams: IConfigInputField[] = paginationConfig && paginationParams ? [
+      { name: paginationConfig.params.page.name, value: paginationParams.page },
     ] : [];
-    if (paginationConfig?.params.limit) {
-      paginationParams.push({ name: paginationConfig.params.limit.name, value: dataLimit });
-    }
-    if (paginationConfig?.params.descending) {
-      paginationParams.push({ name: paginationConfig.params.descending.name, value: dataDescending });
-    }
-    if (paginationConfig?.params.sortBy) {
-      paginationParams.push({ name: paginationConfig.params.sortBy.name, value: dataSortBy });
+    if (pagination && paginationConfig) {
+      if (paginationConfig?.params.limit) {
+        paginationQueryParams.push({ name: paginationConfig?.params.limit.name, value: pagination.limit });
+      }
+      if (paginationConfig?.params.descending) {
+        paginationQueryParams.push({ name: paginationConfig.params.descending.name, value: pagination.descending });
+      }
+      if (paginationConfig?.params.sortBy) {
+        paginationQueryParams.push({ name: paginationConfig.params.sortBy.name, value: pagination.sortBy });
+      }
     }
     const queryParams = (getAllConfig?.queryParams || [])
-    const params = [...queryParams, ...paginationParams];
+    const params = [...queryParams, ...paginationQueryParams];
     const finalQueryParams = params.map((queryParam) => {
       if (typeof parsedParams[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
@@ -144,7 +164,7 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function getAllRequest() {
-    if (infiniteScroll && dataPage !== 1) { // add if we are NOT at page 1
+    if (infiniteScroll && pagination?.page !== 1) {
       setLoading(false);
     } else {
       setLoading(true);
@@ -154,6 +174,14 @@ const PageComp = ({ context }: IProps) => {
     try {
       if (!getAllConfig) {
         throw new Error('Get all method is not defined.');
+      }
+
+      if (paginationConfig && !paginationParams) {
+        throw new Error('Pagination params not initialized.');
+      }
+
+      if (paginationConfig && !pagination) {
+        throw new Error('Pagination not initialized.');
       }
 
       const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
@@ -180,22 +208,26 @@ const PageComp = ({ context }: IProps) => {
       const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
 
       if (paginationConfig) {
-        const currentDataPage = paginationConfig.fields?.page ? dataHelpers.extractDataByDataPath(result, paginationConfig.fields.page.dataPath) : dataPage;
-        if (currentDataPage !== dataPage) {
-          throw new Error('Got different current page from API and UI - API: ' + currentDataPage + ' UI: ' + dataPage);
-        }
-        if (paginationConfig.fields?.total) {
-          const currentDataTotal = dataHelpers.extractDataByDataPath(result, paginationConfig.fields.total.dataPath);
-          setDataTotal(currentDataTotal);
-          const currentHasMore = {
-            previous: currentDataPage > 1,
-            next: currentDataPage * dataLimit < currentDataTotal,
-          };
-          setHasMore(currentHasMore);
+        const currentPage = paginationConfig.fields?.page ? dataHelpers.extractDataByDataPath(result, paginationConfig.fields.page.dataPath) : paginationParams?.page;
+        const currentLimit = parseInt(paginationConfig?.params.limit?.value || '10');
+        if (paginationConfig.fields?.total && pagination?.limit) {
+          const total = dataHelpers.extractDataByDataPath(result, paginationConfig.fields.total.dataPath);
+          const hasPreviousPage = currentPage > 1;
+          const hasNextPage = currentPage * pagination.limit < total;
+          setPagination({
+            ...pagination,
+            page: currentPage,
+            total,
+            hasPreviousPage,
+            hasNextPage,
+          });
         } else {
-          setHasMore({
-            previous: currentDataPage > 1,
-            next: true,
+          setPagination({
+            ...pagination,
+            page: currentPage,
+            limit: currentLimit,
+            hasPreviousPage: currentPage > 1,
+            hasNextPage: true,
           });
         }
       }
@@ -207,6 +239,7 @@ const PageComp = ({ context }: IProps) => {
       }
 
     } catch (e) {
+      console.error('from getall ', e)
       setError(e.message);
     }
 
@@ -326,12 +359,18 @@ const PageComp = ({ context }: IProps) => {
     }
 
     const getNextPage = paginationConfig ? () => {
-      setDataPage(dataPage + 1);
+      if (pagination?.page) {
+        setPaginationParams({
+          page: pagination.page + 1,
+        })
+      }
     } : null;
 
     const getPreviousPage = paginationConfig ? () => {
-      if (dataPage > 1) {
-        setDataPage(dataPage - 1);
+      if (pagination?.page && pagination.page > 1) {
+        setPaginationParams({
+          page: pagination.page - 1,
+        })
       }
     } : null;
 
@@ -347,9 +386,9 @@ const PageComp = ({ context }: IProps) => {
       return (
         <Cards
           pagination={paginationConfig?.type}
-          limit={dataLimit}
-          hasNextPage={hasMore.next}
-          hasPreviousPage={hasMore.previous}
+          limit={pagination?.limit}
+          hasNextPage={pagination?.hasNextPage}
+          hasPreviousPage={pagination?.hasPreviousPage}
           callbacks={callbacks}
           fields={fields}
           items={filteredItems}
@@ -362,8 +401,8 @@ const PageComp = ({ context }: IProps) => {
     return (
       <Table
         pagination={paginationConfig?.type}
-        hasNextPage={hasMore.next}
-        hasPreviousPage={hasMore.previous}
+        hasNextPage={pagination?.hasNextPage}
+        hasPreviousPage={pagination?.hasPreviousPage}
         callbacks={callbacks}
         fields={fields}
         items={filteredItems}
@@ -405,20 +444,17 @@ const PageComp = ({ context }: IProps) => {
 
   useEffect(() => {
     setItems([]);
-    setDataPage(parseInt(paginationConfig?.params.page.value || '1'));
-    setDataLimit(parseInt(paginationConfig?.params.limit?.value || '10'));
-    setDataTotal(0);
-    setDataDescending(paginationConfig?.params.descending?.value === 'true' || false);
-    setDataSortBy(paginationConfig?.params.sortBy?.value || null);
+    setPagination(initialPagination);
+    setPaginationParams(initialPagination ? { page: initialPagination.page } : null);
     setQueryParams(extractQueryParams());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);
 
   useEffect(() => {
-    // Load data when query params changed
+    // Load data when query params 
     getAllRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParams, dataPage]);
+  }, [queryParams, paginationParams]);
 
   return (
     <div className="app-page">

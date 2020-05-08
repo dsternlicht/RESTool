@@ -4,8 +4,8 @@ import { Button } from '../button/button.comp';
 import './pagination.scss';
 
 interface IProps {
-  hasPreviousPage: boolean,
-  hasNextPage: boolean,
+  hasPreviousPage?: boolean,
+  hasNextPage?: boolean,
   callbacks: {
     previousPage: () => void,
     nextPage: () => void,
@@ -13,8 +13,6 @@ interface IProps {
 }
 
 export const Pagination = ({ callbacks, hasNextPage, hasPreviousPage }: IProps) => {
-  console.log('hasPreviousPage=', hasPreviousPage);
-  console.log('hasNextPage=', hasNextPage);
   return (
     <div className="pagination-wrapper">
       <Button disabled={!hasPreviousPage} onClick={() => callbacks.previousPage()} title='Previous page'>
