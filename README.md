@@ -306,16 +306,22 @@ The `pagination` property allows you to handle pagination on .
 
 Here's a list of variable names you may change:
 
-| Name   | Value            | Description                       |
-| ------ | ---------------- | --------------------------------- |
-| type   | `'lazy-loading'` | Root text color.                  |
-| source | `'query'`        | App background color.             |
-| params | `object`         | Navigation menu background color. |
-| fields | `string`         | Navigation menu text color.       |
+| Name   | Value                        | Description                                                  |
+| ------ | ---------------------------- | ------------------------------------------------------------ |
+| type   | `'buttons' | 'lazy-loading'` | Type of pagination. Buttons is the standard one. You can also have a "inifite scroll" with lazy loading. |
+| source | `'query'`                    | Where the pagination parameters are written to. Only supports query parameters for now. |
+| params | `object`                     | Parameters definition for pagniation purposes. See below.    |
 
 <br />
 
+The `params` field has the following properties that all can be defined with a  [input field](#input-fields)
 
+| Name       | Value    | Required? | Description                                                  |
+| ---------- | -------- | --------- | ------------------------------------------------------------ |
+| page       | `object` | true      | The parameter definition of the page number.                 |
+| limit      | `object` | false     | The parameter definition of the maximum number of items to be returned by the API. |
+| sortBy     | `object` | false     | The parameter definition of the sorting value.               |
+| descending | `object` | false     | The parameter definition of the order in which the API should return items. `false` by default. |
 
 <br />
 

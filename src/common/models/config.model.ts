@@ -170,8 +170,8 @@ export interface IConfigCustomAction extends IConfigMethod {
 }
 
 export interface IConfigPagination {
-  source: 'query' // TODO: add 'headers'
-  type: 'lazy-loading' // TODO: add 'buttons'
+  source: 'query'
+  type: 'lazy-loading' | 'buttons'
   params: IConfigPaginationParams
   fields?: IConfigPaginationFields
 }
@@ -186,11 +186,11 @@ export interface IConfigPaginationParams {
 export interface IConfigPaginationFields {
   page?: {
     dataPath: string,
-    display: boolean,
+    display?: boolean,
   },
   total?: {
     dataPath: string,
-    display: boolean,
+    display?: boolean,
   },
 }
 
