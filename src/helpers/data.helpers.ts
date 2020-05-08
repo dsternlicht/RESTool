@@ -21,7 +21,7 @@ class DataHelpers {
       }
     }
 
-    if (!extractedData) {
+    if (typeof extractedData === 'undefined') {
       return null;
     }
 

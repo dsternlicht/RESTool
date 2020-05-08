@@ -180,7 +180,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         return <textarea {...inputProps(customLabels?.placeholders?.text || 'Enter text...')}></textarea>;
       case 'number':
       case 'integer':
-        return <input type="number"  {...inputProps(customLabels?.placeholders?.number || '0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} />;
+        return <input type="number" {...inputProps(customLabels?.placeholders?.number || '0')} onChange={(e) => changeCallback(field.name, e.target.valueAsNumber)} />;
       case 'color':
         return <input type="color" {...inputProps(customLabels?.placeholders?.color || 'Enter color...')} />;
       case 'email':

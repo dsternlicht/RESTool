@@ -37,6 +37,8 @@ object-assign
  * LICENSE file in the root directory of this source tree.
  */
 
+/** @license URI.js v4.2.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
+
 /*!
  * Determine if an object is a Buffer
  *

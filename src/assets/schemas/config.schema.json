@@ -247,7 +247,6 @@
             }
           },
           "required": [
-            "dataPath",
             "display",
             "fields"
           ]
@@ -337,6 +336,9 @@
           ],
           "description": "Use the type field to define the type of the field."
         },
+        "readonly": {
+          "type": "boolean"
+        },
         "label": {
           "type": "string",
           "description": "A label that describes the field. This will act as a label in RESTool's forms."
@@ -391,6 +393,10 @@
         "useInUrl": {
           "type": "boolean",
           "description": "If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body."
+        },
+        "urlReplaceOnly": {
+          "type": "boolean",
+          "description": "If true, a field will only be replaced in the URL and is not appended to the final query string."
         },
         "optionSource": {
           "$ref": "#/definitions/optionSource",
