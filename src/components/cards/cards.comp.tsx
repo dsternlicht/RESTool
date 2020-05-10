@@ -30,6 +30,9 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels }:
       case 'boolean':
         return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
       case 'image':
+        if (!value) {
+          return <React.Fragment></React.Fragment>;
+        }
         return <img src={value || ''} alt={value || origField.label || origField.name} />;
       case 'url':
         const url: string = (origField.url || value || '').replace(`:${origField.name}`, value);
