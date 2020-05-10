@@ -431,6 +431,10 @@
           "type": "string",
           "description": ""
         },
+        "url": {
+          "type": "string",
+          "description": "URL for url typed fields"
+        },
         "filterable": {
           "type": "boolean",
           "description": "Set to true to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields."
