@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Skeleton from 'react-loading-skeleton';
 import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
+import { IPaginationState } from '../../common/models/states.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 import { Pagination } from '../pagination/pagination.comp';
@@ -11,10 +12,7 @@ import './cards.scss';
 
 interface IProps {
   items: any[]
-  pagination?: 'buttons' | 'lazy-loading'
-  hasPreviousPage?: boolean
-  hasNextPage?: boolean
-  limit?: number
+  pagination?: IPaginationState
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
@@ -27,7 +25,7 @@ interface IProps {
   customLabels?: ICustomLabels
 }
 
-export const Cards = ({ items, fields, callbacks, customActions, customLabels, hasPreviousPage, hasNextPage, limit, pagination }: IProps) => {
+export const Cards = ({ items, fields, callbacks, customActions, customLabels, pagination }: IProps) => {
   function renderRow(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -125,26 +123,28 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, h
 
   function renderSkeletons() {
     const startingIndex = items.length;
-    const skeletonsIndexes = Array.from(Array(limit).keys()).map(value => value + startingIndex);
+    const skeletonsIndexes = Array.from(Array(pagination?.limit).keys()).map(value => value + startingIndex);
     return skeletonsIndexes.map(renderCardSkeleton);
   }
 
   useEffect(() => {
     if (
-      pagination === 'lazy-loading'
+      pagination?.type === 'lazy-loading'
       && document.body.clientHeight <= window.innerHeight
       && callbacks.getNextPage
+      && pagination?.hasNextPage
     ) {
       callbacks.getNextPage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (pagination === 'lazy-loading') {
+  if (pagination?.type === 'lazy-loading') {
     return (
       <InfiniteScroll className="cards-wrapper"
         dataLength={items.length}
         next={callbacks.getNextPage || (() => null)}
-        hasMore={hasNextPage || false}
+        hasMore={pagination?.hasNextPage || false}
         loader={renderSkeletons()}
       >
         {
@@ -166,11 +166,11 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, h
       </div>
       <div>
         {
-          pagination === 'buttons' &&
+          pagination &&
+          pagination.type === 'buttons' &&
           <Pagination
             callbacks={paginationCallbacks}
-            hasPreviousPage={hasPreviousPage}
-            hasNextPage={hasNextPage}
+            pagination={pagination}
           ></Pagination>
         }
       </div>

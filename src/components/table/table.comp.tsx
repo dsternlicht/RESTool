@@ -5,15 +5,14 @@ import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { InfiniteLoader } from '../infiniteLoader/infiniteLoader.comp';
+import { IPaginationState } from '../../common/models/states.model';
 import { Pagination } from '../pagination/pagination.comp';
 
 import './table.scss';
 
 interface IProps {
   items: any[]
-  pagination?: 'buttons' | 'lazy-loading'
-  hasPreviousPage?: boolean
-  hasNextPage?: boolean
+  pagination?: IPaginationState
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
@@ -26,7 +25,7 @@ interface IProps {
   customLabels?: ICustomLabels
 }
 
-export const Table = ({ items, fields, pagination, callbacks, customActions, customLabels, hasPreviousPage, hasNextPage }: IProps) => {
+export const Table = ({ items, fields, pagination, callbacks, customActions, customLabels }: IProps) => {
   function renderTableCell(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -111,9 +110,14 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
   }
 
   useEffect(() => {
-    if (pagination === 'lazy-loading' && document.body.clientHeight <= window.innerHeight) {
+    if (
+      pagination?.type === 'lazy-loading'
+      && document.body.clientHeight <= window.innerHeight
+      && pagination?.hasNextPage
+    ) {
       paginationCallbacks.nextPage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const paginationCallbacks = {
@@ -121,13 +125,12 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
     previousPage: callbacks.getPreviousPage || (() => { return; }),
   }
 
-  if (pagination === 'lazy-loading') {
-
+  if (pagination?.type === 'lazy-loading') {
     return (
       <InfiniteScroll
         dataLength={items.length}
         next={callbacks.getNextPage || (() => null)}
-        hasMore={hasNextPage || false}
+        hasMore={pagination?.hasNextPage || false}
         loader={<InfiniteLoader />}
       >
         {renderTableContent()}
@@ -139,11 +142,11 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
     <div className="table-wrapper">
       {renderTableContent()}
       {
-        pagination === 'buttons' &&
+        pagination &&
+        pagination.type === 'buttons' &&
         <Pagination
           callbacks={paginationCallbacks}
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
+          pagination={pagination}
         ></Pagination>
       }
     </div >

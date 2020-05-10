@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { IConfigInputField, IConfigPagination, IQueryParamConfig } from '../../common/models/config.model';
+import { IConfigInputField, IConfigPagination } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
 
@@ -8,7 +8,7 @@ import './queryParams.scss';
 
 interface IProps {
   initialParams: IConfigInputField[]
-  paginationConfig: IConfigPagination | undefined
+  paginationConfig?: IConfigPagination
   submitCallback: (queryParams: IConfigInputField[]) => void
 }
 
@@ -40,13 +40,12 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
   }
 
   useEffect(() => {
-    const paramsToIgnore = paginationConfig ?
-      Object.values(paginationConfig.params).map((conf: IQueryParamConfig) => {
-        return conf.name;
-      }) :
-      [];
-    const filteredParams = initialParams.filter(param => !paramsToIgnore.includes(param.name));
-    setQueryParams(filteredParams);
+    if (paginationConfig && paginationConfig.type === 'lazy-loading') {
+      const filteredParams = initialParams.filter(param => !['page', 'limit'].includes(param.name));
+      setQueryParams(filteredParams);
+    } else {
+      setQueryParams(initialParams);
+    }
   }, [paginationConfig, initialParams]);
 
   if (!queryParams.length) {
