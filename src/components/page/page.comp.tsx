@@ -342,7 +342,16 @@ const PageComp = ({ context }: IProps) => {
 
     // Building query string
     const queryState: string = paramsToUrl.map((queryParam, idx) => {
-      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
+      let value = queryParam.value;
+
+      if (queryParam.type === 'select' && value === '-- Select --') {
+          // default value means nothing was selected and thus we explicitly
+          // empty out the value in this case; otherwise the string '-- Select --'
+          // is used as the value for the given queryParams
+          value = '';
+      }
+
+      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(value || '')}`;
     }).join('&');
 
     // Pushing query state to url
