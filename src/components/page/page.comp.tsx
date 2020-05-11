@@ -36,40 +36,40 @@ interface IPopupProps {
 const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginationConfig?: IConfigPagination): { initQueryParams: any[], initialPagination?: IPaginationState } => {
   const initialPagination: IPaginationState | undefined = paginationConfig ? {
     type: paginationConfig.type,
-    page: parseInt(paginationConfig.params.page.value || '1'),
-    limit: parseInt(paginationConfig.params.limit?.value || '10'),
-    descending: paginationConfig.params.descending?.value === 'true' || false,
+    page: parseInt(paginationConfig.params?.page?.value || '1'),
+    limit: parseInt(paginationConfig.params?.limit?.value || '10'),
+    descending: paginationConfig.params?.descending?.value === 'true' || false,
     hasPreviousPage: false,
     hasNextPage: false,
-    sortBy: paginationConfig.params.sortBy?.value,
+    sortBy: paginationConfig.params?.sortBy?.value,
   } : undefined;
 
   if (paginationConfig) {
     initQueryParams.push({
-      name: paginationConfig?.params.page.name,
+      name: paginationConfig?.params?.page?.name,
       label: 'Page',
       value: initialPagination?.page
     });
 
-    if (paginationConfig?.params.limit) {
+    if (paginationConfig?.params?.limit) {
       initQueryParams.push({
-        name: paginationConfig?.params.limit.name,
-        label: 'Items per page',
+        name: paginationConfig?.params?.limit.name,
+        label: 'Limit',
         value: initialPagination?.limit
       });
     }
 
-    if (paginationConfig?.params.descending) {
+    if (paginationConfig?.params?.descending) {
       initQueryParams.push({
-        name: paginationConfig?.params.descending.name,
+        name: paginationConfig?.params?.descending.name,
         label: 'Descending',
-        value: paginationConfig?.params.descending?.value || 'false'
+        value: paginationConfig?.params?.descending?.value || 'false'
       });
     }
 
-    if (paginationConfig?.params.sortBy) {
+    if (paginationConfig?.params?.sortBy) {
       initQueryParams.push({
-        name: paginationConfig?.params.sortBy.name,
+        name: paginationConfig?.params?.sortBy.name,
         label: 'Sort by',
         value: initialPagination?.sortBy
       });
@@ -342,18 +342,18 @@ const PageComp = ({ context }: IProps) => {
     }
     const newState: IPaginationState = pagination ? pagination : {
       type: paginationConfig.type,
-      page: parseInt(paginationConfig.params.page.value || '1'),
-      limit: parseInt(paginationConfig.params.limit?.value || '10'),
-      descending: paginationConfig.params.descending?.value === 'true' || false,
+      page: parseInt(paginationConfig.params?.page?.value || '1'),
+      limit: parseInt(paginationConfig.params?.limit?.value || '10'),
+      descending: paginationConfig.params?.descending?.value === 'true' || false,
       hasPreviousPage: false,
       hasNextPage: false,
-      sortBy: paginationConfig.params.sortBy?.value,
+      sortBy: paginationConfig.params?.sortBy?.value,
     };
     newState.total = total || pagination?.total;
-    newState.page = parseInt(updatedParams.find(param => param.name === paginationConfig?.params.page.name)?.value) || newState.page;
-    newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params.limit?.name)?.value) || newState.limit;
-    newState.descending = updatedParams.find(param => param.name === paginationConfig?.params.descending?.name)?.value === 'true' || newState.descending;
-    newState.sortBy = updatedParams.find(param => param.name === paginationConfig?.params.sortBy?.name)?.value || newState.sortBy;
+    newState.page = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.page?.name)?.value) || newState.page;
+    newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value) || newState.limit;
+    newState.descending = updatedParams.find(param => param.name === paginationConfig?.params?.descending?.name)?.value === 'true' || newState.descending;
+    newState.sortBy = updatedParams.find(param => param.name === paginationConfig?.params?.sortBy?.name)?.value || newState.sortBy;
     newState.hasPreviousPage = paginationHelpers.hasPreviousPage(newState.page);
     newState.hasNextPage = paginationHelpers.hasNextPage(newState.page, newState.limit, newState.total);
     return newState;
@@ -389,7 +389,7 @@ const PageComp = ({ context }: IProps) => {
       if (pagination?.page && queryParams.length > 0) {
         const newPage = pagination?.page + 1;
         const updatedParams = queryParams.map((param) => {
-          if (param.name === paginationConfig.params.page.name) {
+          if (param.name === paginationConfig.params?.page?.name) {
             return {
               ...param,
               value: newPage
@@ -405,7 +405,7 @@ const PageComp = ({ context }: IProps) => {
       if (pagination?.page && pagination.page > 1 && queryParams.length > 0) {
         const newPage = pagination?.page - 1;
         const updatedParams = queryParams.map((param) => {
-          if (param.name === paginationConfig.params.page.name) {
+          if (param.name === paginationConfig.params?.page?.name) {
             return {
               ...param,
               value: newPage

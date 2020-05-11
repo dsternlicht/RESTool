@@ -15,10 +15,10 @@ interface IProps {
 export const Pagination = ({ callbacks, pagination }: IProps) => {
   return (
     <div className="pagination-wrapper">
-      <Button disabled={!pagination.hasPreviousPage} onClick={() => callbacks.previousPage()} title='Previous page'>
+      <Button disabled={!pagination.hasPreviousPage} onClick={() => callbacks.previousPage()} title="Previous page">
         <i className="fa fa-arrow-left" aria-hidden="true"></i>
       </Button>
-      <Button disabled={!pagination.hasNextPage} onClick={() => callbacks.nextPage()} title='Next page'>
+      <Button disabled={!pagination.hasNextPage} onClick={() => callbacks.nextPage()} title="Next page">
         <i className="fa fa-arrow-right" aria-hidden="true" ></i>
       </Button>
     </div>
