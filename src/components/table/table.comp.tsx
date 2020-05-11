@@ -66,7 +66,7 @@ export const Table = ({ items, fields, callbacks, customActions, customLabels }:
                   {
                     fields.map((field, fieldIdx) => {
                       const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
-                      return <td className={field.truncate ? "truncate" : ""} key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
+                      return <td className={field.truncate ? 'truncate' : ''} key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
                     })
                   }
                   <td>
