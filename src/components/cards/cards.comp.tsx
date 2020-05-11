@@ -132,7 +132,7 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
 
   useEffect(() => {
     if (
-      pagination?.type === 'lazy-loading'
+      pagination?.type === 'infinite-scroll'
       && document.body.clientHeight <= window.innerHeight
       && callbacks.getNextPage
       && pagination?.hasNextPage
@@ -142,7 +142,7 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (pagination?.type === 'lazy-loading') {
+  if (pagination?.type === 'infinite-scroll') {
     return (
       <InfiniteScroll className="cards-wrapper"
         dataLength={items.length}

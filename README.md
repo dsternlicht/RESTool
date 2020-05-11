@@ -307,7 +307,7 @@ Here's a list of variable names you may change:
 
 | Name   | Value                        | Description                                                  |
 | ------ | ---------------------------- | ------------------------------------------------------------ |
-| type   | `'buttons' | 'lazy-loading'` | Type of pagination. Buttons is the standard one. You can also have a "inifite scroll" with lazy loading. |
+| type   | `'buttons' | 'infinite-scroll'` | Type of pagination. Buttons is the standard one. You can also have a "inifite scroll" with lazy loading. |
 | source | `'query'`                    | Where the pagination parameters are written to. Only supports query parameters for now. |
 | params | `object`                     | Parameters definition for pagniation purposes. See below.    |
 | fields | `object`                     | Definition of informations that will be returned by the API. See below. |
@@ -472,7 +472,7 @@ List of variable names you may change within the `pagination` property:
 
 | Name       | Value    | Description                                                  | Default value                                  |
 | ---------- | -------- | ------------------------------------------------------------ | ---------------------------------------------- |
-| itemsCount | `string` | Label displaying the items count when `pagination` option is on with type `lazy-loading`. Use `:currentCount` and `:totalCount` to display relevant data anywhere in your custom label. | Showing :currentCount out of :totalCount items |
+| itemsCount | `string` | Label displaying the items count when `pagination` option is on with type `infinite-scroll`. Use `:currentCountFrom`, `:currentCountTo` and `:totalCount` to display relevant data anywhere in your custom label. | Showing :currentCountFrom-:currentCountTo out of :totalCount items |
 | editItem   | `string` | Title of the edit button on a row or a card.                 | Edit Item                                      |
 
 Usage example in `config.json` file:

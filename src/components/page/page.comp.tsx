@@ -100,7 +100,7 @@ const PageComp = ({ context }: IProps) => {
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
   const paginationConfig = getAllConfig?.pagination;
-  const infiniteScroll = paginationConfig?.type === 'lazy-loading';
+  const infiniteScroll = paginationConfig?.type === 'infinite-scroll';
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
@@ -336,7 +336,7 @@ const PageComp = ({ context }: IProps) => {
 
     let paramsToUrl = [...updatedParams];
 
-    if (paginationConfig?.type === 'lazy-loading') {
+    if (paginationConfig?.type === 'infinite-scroll') {
       paramsToUrl = paramsToUrl.filter(param => !['page', 'limit'].includes(param.name));
     }
 
@@ -374,7 +374,7 @@ const PageComp = ({ context }: IProps) => {
     return newState;
   }
 
-  function renderTable() {
+  function renderItemsUI() {
     if (loading) {
       return <Loader />;
     }
@@ -465,15 +465,31 @@ const PageComp = ({ context }: IProps) => {
     );
   }
 
-  function generateItemsCountLabel() {
-    if (customLabels?.pagination?.itemsCount) {
-      const label = customLabels?.pagination?.itemsCount
-        .replace(':currentCount', JSON.stringify(items.length))
-        .replace(':totalCount', JSON.stringify(pagination?.total));
-
-      return label;
+  function renderPaginationStateLabel() {
+    if (loading || !items.length) {
+      return;
     }
-    return `Showing ${items.length} out of ${pagination?.total} items`;
+
+    const currentCountFrom = (((pagination?.page || 1) - 1) * (pagination?.limit || 10)) + 1;
+    const currentCountTo = currentCountFrom + items.length - 1;
+    let label: string = `Showing results ${currentCountFrom}-${currentCountTo} out of ${pagination?.total} items`;
+
+    if (pagination?.type === 'infinite-scroll') {
+      label = `Showing ${pagination?.total} items`;
+    }
+
+    if (customLabels?.pagination?.itemsCount) {
+      label = customLabels?.pagination?.itemsCount
+              .replace(':currentCountFrom', currentCountFrom as any)
+              .replace(':currentCountTo', currentCountFrom as any)
+              .replace(':totalCount', pagination?.total as any);
+    }
+
+    return (
+      <p className="center pagination-state">
+        {label}
+      </p>
+    );
   }
 
   function renderPageContent() {
@@ -492,14 +508,13 @@ const PageComp = ({ context }: IProps) => {
           <FilterField onChange={setFilter} />
         }
         {
-          pagination?.type === 'lazy-loading' &&
           pagination?.total &&
-          <p>{generateItemsCountLabel()}</p>
+          renderPaginationStateLabel()
         }
         {
           error ?
-            <div className="app-error">{error}</div> :
-            renderTable()
+          <div className="app-error">{error}</div> :
+          renderItemsUI()
         }
       </React.Fragment>
     )

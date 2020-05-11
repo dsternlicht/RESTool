@@ -67,7 +67,7 @@ export interface ICustomTableColumnHeaders {
 }
 
 export interface ICustomPaginationLabels {
-  itemsCount?: string // :currentCount and :totalCount usable in string
+  itemsCount?: string // :currentCountFrom, :currentCountTo and :totalCount usable in string
   previousPageTitle?: string
   nextPageTitle?: string
 }
@@ -178,7 +178,7 @@ export interface IConfigCustomAction extends IConfigMethod {
 
 export interface IConfigPagination {
   source: 'query'
-  type: 'lazy-loading' | 'buttons'
+  type: 'infinite-scroll' | 'buttons'
   params: IConfigPaginationParams
   fields?: IConfigPaginationFields
 }

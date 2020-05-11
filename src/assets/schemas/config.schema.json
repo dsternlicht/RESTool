@@ -503,7 +503,7 @@
         "type": {
           "enum": [
             "buttons",
-            "lazy-loading"
+            "infinite-scroll"
           ],
           "description": "Type of pagination. Buttons is the standard one. You can also have a inifite scroll with lazy loading."
         },
@@ -737,7 +737,7 @@
         "itemsCount": {
           "type": "string",
           "description": "",
-          "default": "Showing :currentCount out of :totalCount items"
+          "default": "Showing :currentCountFrom-:currentCountTo out of :totalCount items"
         },
         "previousPageTitle": {
           "type": "string",

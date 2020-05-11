@@ -60,6 +60,10 @@
   position: relative;
   padding: 30px;
 
+  .pagination-state {
+    margin: 20px 0;
+  }
+
   @media screen and (max-width: 800px) { 
     .app-loader, .app-error {
       position: relative;

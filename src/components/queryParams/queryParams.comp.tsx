@@ -20,7 +20,7 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
       e.preventDefault();
     }
 
-    if (paginationConfig && paginationConfig.type === 'lazy-loading') {
+    if (paginationConfig && paginationConfig.type === 'infinite-scroll') {
       submitCallback(queryParams, true);
     } else {
       submitCallback(queryParams);
@@ -44,7 +44,7 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
   }
 
   useEffect(() => {
-    if (paginationConfig && paginationConfig.type === 'lazy-loading') {
+    if (paginationConfig && paginationConfig.type === 'infinite-scroll') {
       const filteredParams = initialParams.filter(param => !['page', 'limit'].includes(param.name));
       setQueryParams(filteredParams);
     } else {

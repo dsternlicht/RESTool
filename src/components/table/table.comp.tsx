@@ -90,28 +90,30 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
   }
 
   function renderTableContent() {
-    return <table className="pure-table">
-      <thead>
-        <tr>
+    return (
+      <table className="pure-table">
+        <thead>
+          <tr>
+            {
+              fields.map((field) => {
+                return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
+              })
+            }
+            <th>{actionColumnHeader}</th>
+          </tr>
+        </thead>
+        <tbody>
           {
-            fields.map((field) => {
-              return <th key={`th_${field.name}`}>{field.label || field.name}</th>;
-            })
+            items.map(renderTableRow)
           }
-          <th>{actionColumnHeader}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          items.map(renderTableRow)
-        }
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    );
   }
 
   useEffect(() => {
     if (
-      pagination?.type === 'lazy-loading'
+      pagination?.type === 'infinite-scroll'
       && document.body.clientHeight <= window.innerHeight
       && pagination?.hasNextPage
     ) {
@@ -125,7 +127,7 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
     previousPage: callbacks.getPreviousPage || (() => { return; }),
   }
 
-  if (pagination?.type === 'lazy-loading') {
+  if (pagination?.type === 'infinite-scroll') {
     return (
       <InfiniteScroll
         dataLength={items.length}

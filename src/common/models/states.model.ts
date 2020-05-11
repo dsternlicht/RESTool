@@ -1,5 +1,5 @@
 export interface IPaginationState {
-  type: 'lazy-loading' | 'buttons'
+  type: 'infinite-scroll' | 'buttons'
   page: number
   limit: number
   descending?: boolean
