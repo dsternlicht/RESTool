@@ -239,6 +239,9 @@
               },
               "description": "One or more paths to properties in the result object to sort the list by."
             },
+            "pagination": {
+              "$ref": "#/definitions/pagination"
+            },
             "dataTransform": {
               "description": "Relevant only when using dynamic (js) config. A function to allow manipulation on the response data. Useful for changing/adding data for display purposes."
             }
@@ -483,6 +486,104 @@
         }
       }
     },
+    "pagination": {
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "type",
+        "params"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "query"
+          ],
+          "description": "Where the pagination parameters are written to. Only supports query parameters for now."
+        },
+        "type": {
+          "enum": [
+            "buttons",
+            "lazy-loading"
+          ],
+          "description": "Type of pagination. Buttons is the standard one. You can also have a inifite scroll with lazy loading."
+        },
+        "params": {
+          "$ref": "#/definitions/paginationParams"
+        },
+        "fields": {
+          "$ref": "#/definitions/paginationFields"
+        }
+      }
+    },
+    "paginationParams": {
+      "additionalProperties": false,
+      "required": [
+        "page"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the page number."
+        },
+        "limit": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the maximum number of items to be returned by the API."
+        },
+        "sortBy": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the sorting value."
+        },
+        "descending": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the order in which the API should return items. false by default."
+        }
+      }
+    },
+    "paginationFields": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/paginationField"
+        },
+        "total": {
+          "$ref": "#/definitions/paginationField"
+        }
+      }
+    },
+    "paginationField": {
+      "additionalProperties": false,
+      "required": [
+        "dataPath"
+      ],
+      "properties": {
+        "dataPath": {
+          "type": "string"
+        },
+        "display": {
+          "type": "boolean"
+        }
+      }
+    },
+    "queryParamConfig": {
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "urlReplaceOnly": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
     "customAction": {
       "allOf": [
         {
@@ -514,6 +615,9 @@
         },
         "tableColumnHeaders": {
           "$ref": "#/definitions/tableColumnHeaders"
+        },
+        "pagination": {
+          "$ref": "#/definitions/paginationLabels"
         }
       }
     },
@@ -624,6 +728,26 @@
           "type": "string",
           "description": "Header of the action column in tables.",
           "default": "Actions"
+        }
+      }
+    },
+    "paginationLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "itemsCount": {
+          "type": "string",
+          "description": "",
+          "default": "Showing :currentCount out of :totalCount items"
+        },
+        "previousPageTitle": {
+          "type": "string",
+          "description": "",
+          "default": "Previous page"
+        },
+        "nextPageTitle": {
+          "type": "string",
+          "description": "",
+          "default": "Next page"
         }
       }
     }

@@ -33,6 +33,7 @@ export interface ICustomLabels {
   formTitles?: ICustomFormTitleLabels
   placeholders?: ICustomPlaceholderLabels
   tableColumnHeaders?: ICustomTableColumnHeaders
+  pagination?: ICustomPaginationLabels
 }
 
 export interface ICustomButtonLabels {
@@ -63,6 +64,12 @@ export interface ICustomPlaceholderLabels {
 
 export interface ICustomTableColumnHeaders {
   actions?: string
+}
+
+export interface ICustomPaginationLabels {
+  itemsCount?: string // :currentCount and :totalCount usable in string
+  previousPageTitle?: string
+  nextPageTitle?: string
 }
 
 export interface IConfigPage {
@@ -96,21 +103,21 @@ export interface IConfigMethod {
 export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'integer' | 'number' | 'boolean' | 'email' | 'color' | 'select' | 'array' | 'file' | 'password' | 'note' | 'hidden' | 'date';
 
 export interface IConfigInputField {
-  originalName: string
+  originalName?: string
   name: string
   value: any
-  type: TConfigInputField
-  label: string
-  dataPath: string
-  placeholder: string
-  readonly: boolean
-  options: [string | { display: string, value: string }],
-  optionSource: IConfigOptionSource
-  arrayType: 'object' | 'text' | 'number' | 'integer'
-  required: boolean
-  useInUrl: boolean
-  accept: string
-  urlReplaceOnly: boolean
+  type?: TConfigInputField
+  label?: string
+  dataPath?: string
+  placeholder?: string
+  readonly?: boolean
+  options?: [string | { display: string, value: string }],
+  optionSource?: IConfigOptionSource
+  arrayType?: 'object' | 'text' | 'number' | 'integer'
+  required?: boolean
+  useInUrl?: boolean
+  accept?: string
+  urlReplaceOnly?: boolean
 }
 
 export interface IConfigOptionSource {
@@ -145,6 +152,7 @@ export interface IConfigGetAllMethod extends IConfigMethod {
   sortBy: string
   fields: IConfigDisplayField[]
   dataTransform?: ConfigFunction
+  pagination?: IConfigPagination
 }
 
 export interface IConfigGetSingleMethod extends IConfigMethod {
@@ -166,4 +174,41 @@ export interface IConfigCustomAction extends IConfigMethod {
   name: string
   icon: string
   fields: IConfigInputField[]
+}
+
+export interface IConfigPagination {
+  source: 'query'
+  type: 'lazy-loading' | 'buttons'
+  params: IConfigPaginationParams
+  fields?: IConfigPaginationFields
+}
+
+export interface IConfigPaginationParams {
+  page: IQueryParamConfig
+  limit?: IQueryParamConfig
+  sortBy?: IQueryParamConfig
+  descending?: IQueryParamConfig
+}
+
+export interface IConfigPaginationFields {
+  page?: {
+    dataPath: string,
+    display?: boolean,
+  },
+  total?: {
+    dataPath: string,
+    display?: boolean,
+  },
+}
+
+export interface IQueryParamConfig {
+  name: string
+  value?: string
+  label?: string
+  urlReplaceOnly?: boolean
+}
+
+
+export interface IQueryParam extends IQueryParamConfig {
+  value: string
 }
