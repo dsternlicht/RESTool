@@ -20,6 +20,24 @@
               "type": "text"
             }
           ],
+          "pagination": {
+            "type": "infinite-scroll",
+            "source": "query",
+            "params": {
+              "page": {
+                "name": "page"
+              },
+              "limit": {
+                "name": "limit",
+                "value": "3"
+              }
+            },
+            "fields": {
+              "total": {
+                "dataPath": "total"
+              }
+            }
+          },
           "display": {
             "type": "cards"
           },
