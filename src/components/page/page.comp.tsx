@@ -121,7 +121,7 @@ const PageComp = ({ context }: IProps) => {
     setOpenedPopup(null);
 
     if (refreshData === true) {
-      if (pagination?.type === 'lazy-loading') {
+      if (pagination?.type === 'infinite-scroll') {
         setItems([]);
         const updatedParams = [...queryParams];
         remove(updatedParams, param => ['page', 'limit'].includes(param.name));
@@ -319,7 +319,7 @@ const PageComp = ({ context }: IProps) => {
       });
 
       if (success) {
-        if (pagination?.type === 'lazy-loading') {
+        if (pagination?.type === 'infinite-scroll') {
           setItems([]);
           const updatedParams = [...queryParams];
           remove(updatedParams, param => ['page', 'limit'].includes(param.name));
