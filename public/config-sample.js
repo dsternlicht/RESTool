@@ -11,6 +11,7 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/character",
           "queryParams": [
             {
@@ -166,6 +167,7 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/employee",
           "queryParams": [
             {
@@ -260,6 +262,7 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/dead",
           "queryParams": [
             {
@@ -338,6 +341,7 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/extra",
           "queryParams": [
             {

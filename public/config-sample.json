@@ -10,6 +10,7 @@
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/character",
           "queryParams": [
             {
@@ -165,6 +166,7 @@
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/employee",
           "queryParams": [
             {
@@ -259,6 +261,7 @@
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/dead",
           "queryParams": [
             {
@@ -336,6 +339,7 @@
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/extra",
           "queryParams": [
             {
