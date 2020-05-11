@@ -121,7 +121,14 @@ const PageComp = ({ context }: IProps) => {
     setOpenedPopup(null);
 
     if (refreshData === true) {
-      getAllRequest();
+      if (pagination?.type === 'lazy-loading') {
+        setItems([]);
+        const updatedParams = [...queryParams];
+        remove(updatedParams, param => ['page', 'limit'].includes(param.name));
+        setQueryParams(buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams);
+      } else {
+        getAllRequest();
+      }
     }
   }
 
@@ -312,7 +319,14 @@ const PageComp = ({ context }: IProps) => {
       });
 
       if (success) {
-        getAllRequest();
+        if (pagination?.type === 'lazy-loading') {
+          setItems([]);
+          const updatedParams = [...queryParams];
+          remove(updatedParams, param => ['page', 'limit'].includes(param.name));
+          setQueryParams(buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams);
+        } else {
+          getAllRequest();
+        }
       }
     } catch (e) {
       toast.error(e.message);
