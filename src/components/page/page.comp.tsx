@@ -121,7 +121,14 @@ const PageComp = ({ context }: IProps) => {
     setOpenedPopup(null);
 
     if (refreshData === true) {
-      getAllRequest();
+      if (pagination?.type === 'lazy-loading') {
+        setItems([]);
+        const updatedParams = [...queryParams];
+        remove(updatedParams, param => ['page', 'limit'].includes(param.name));
+        setQueryParams(buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams);
+      } else {
+        getAllRequest();
+      }
     }
   }
 
@@ -312,7 +319,14 @@ const PageComp = ({ context }: IProps) => {
       });
 
       if (success) {
-        getAllRequest();
+        if (pagination?.type === 'lazy-loading') {
+          setItems([]);
+          const updatedParams = [...queryParams];
+          remove(updatedParams, param => ['page', 'limit'].includes(param.name));
+          setQueryParams(buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams);
+        } else {
+          getAllRequest();
+        }
       }
     } catch (e) {
       toast.error(e.message);
@@ -342,7 +356,16 @@ const PageComp = ({ context }: IProps) => {
 
     // Building query string
     const queryState: string = paramsToUrl.map((queryParam, idx) => {
-      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
+      let value = queryParam.value;
+
+      if (queryParam.type === 'select' && value === '-- Select --') {
+          // default value means nothing was selected and thus we explicitly
+          // empty out the value in this case; otherwise the string '-- Select --'
+          // is used as the value for the given queryParams
+          value = '';
+      }
+
+      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(value || '')}`;
     }).join('&');
 
     // Pushing query state to url
