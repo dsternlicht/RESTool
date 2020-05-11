@@ -93,8 +93,7 @@ Each **page** is an object and represents a resource in your API. It should have
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
-| customFormTitles | `object` | false | See `formTitles` in [custom labels](#custom-labels) |
-| customAddButtonTitle | `string` | false | The text within the button to add an item on the page. |
+| customLabels | `object` | false | [Custom labels](#custom-labels) |
 
 <br />
 
@@ -439,14 +438,14 @@ List of variable names you may change within the `buttons`property:
 | closeForm    | `string` | Title of the close button in forms.                | Close         |
 | addArrayItem | `string` | Title of the add button on arrays inputs in forms. | Add Item      |
 
-List of variable names you may change within the `formTitles`property:
+List of variable names you may change within the `formTitles` property:
 
 | Name     | Value    | Description                                  | Default value |
 | -------- | -------- | -------------------------------------------- | ------------- |
 | addItem  | `string` | Content of the add button on a page.         | Add Item      |
 | editItem | `string` | Title of the edit button on a row or a card. | Edit Item     |
 
-List of variable names you may change within the `placeholders`property:
+List of variable names you may change within the `placeholders` property:
 
 | Name     | Value    | Description                   | Default value       |
 | -------- | -------- | ----------------------------- | ------------------- |
@@ -459,6 +458,13 @@ List of variable names you may change within the `placeholders`property:
 | password | `string` | Password input placeholder.   | Enter password...   |
 | date     | `string` | Date input placeholder.       | Enter date...       |
 | file     | `string` | File input placeholder.       | Select file...      |
+
+List of variable names you may change within the `pagination`property:
+
+| Name       | Value    | Description                                                  | Default value                                  |
+| ---------- | -------- | ------------------------------------------------------------ | ---------------------------------------------- |
+| itemsCount | `string` | Label displaying the items count when `pagination` option is on with type `lazy-loading`. Use `:currentCount` and `:totalCount` to display relevant data anywhere in your custom label. | Showing :currentCount out of :totalCount items |
+| editItem   | `string` | Title of the edit button on a row or a card.                 | Edit Item                                      |
 
 Usage example in `config.json` file:
 

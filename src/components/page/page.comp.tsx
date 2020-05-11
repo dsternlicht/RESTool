@@ -47,14 +47,14 @@ const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginati
   if (paginationConfig) {
     initQueryParams.push({
       name: paginationConfig?.params?.page?.name,
-      label: 'Page',
+      label: paginationConfig?.params?.page?.label || 'Page',
       value: initialPagination?.page
     });
 
     if (paginationConfig?.params?.limit) {
       initQueryParams.push({
         name: paginationConfig?.params?.limit.name,
-        label: 'Limit',
+        label: paginationConfig?.params?.limit.label || 'Limit',
         value: initialPagination?.limit
       });
     }
@@ -62,8 +62,8 @@ const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginati
     if (paginationConfig?.params?.descending) {
       initQueryParams.push({
         name: paginationConfig?.params?.descending.name,
-        label: 'Descending',
-        value: paginationConfig?.params?.descending?.value || 'false'
+        label: paginationConfig?.params?.descending.label || 'Descending',
+        value: initialPagination?.descending
       });
     }
 
@@ -450,6 +450,17 @@ const PageComp = ({ context }: IProps) => {
     );
   }
 
+  function generateItemsCountLabel() {
+    if (customLabels?.pagination?.itemsCount) {
+      const label = customLabels?.pagination?.itemsCount
+        .replace(':currentCount', JSON.stringify(items.length))
+        .replace(':totalCount', JSON.stringify(pagination?.total));
+
+      return label;
+    }
+    return `Showing ${items.length} out of ${pagination?.total} items`;
+  }
+
   function renderPageContent() {
     const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
     const fieldsToFilter = fields.filter((field) => (field.filterable)).map((field) => field.name);
@@ -464,6 +475,11 @@ const PageComp = ({ context }: IProps) => {
         {
           fieldsToFilter.length > 0 &&
           <FilterField onChange={setFilter} />
+        }
+        {
+          pagination?.type === 'lazy-loading' &&
+          pagination?.total &&
+          <p>{generateItemsCountLabel()}</p>
         }
         {
           error ?

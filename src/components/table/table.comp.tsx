@@ -147,6 +147,7 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
         <Pagination
           callbacks={paginationCallbacks}
           pagination={pagination}
+          customLabels={customLabels}
         ></Pagination>
       }
     </div >

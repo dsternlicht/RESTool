@@ -33,6 +33,7 @@ export interface ICustomLabels {
   formTitles?: ICustomFormTitleLabels
   placeholders?: ICustomPlaceholderLabels
   tableColumnHeaders?: ICustomTableColumnHeaders
+  pagination?: ICustomPaginationLabels
 }
 
 export interface ICustomButtonLabels {
@@ -63,6 +64,12 @@ export interface ICustomPlaceholderLabels {
 
 export interface ICustomTableColumnHeaders {
   actions?: string
+}
+
+export interface ICustomPaginationLabels {
+  itemsCount?: string // :currentCount and :totalCount usable in string
+  previousPageTitle?: string
+  nextPageTitle?: string
 }
 
 export interface IConfigPage {
@@ -197,6 +204,7 @@ export interface IConfigPaginationFields {
 export interface IQueryParamConfig {
   name: string
   value?: string
+  label?: string
   urlReplaceOnly?: boolean
 }
 

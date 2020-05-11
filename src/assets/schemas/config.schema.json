@@ -578,6 +578,9 @@
         },
         "urlReplaceOnly": {
           "type": "boolean"
+        },
+        "label": {
+          "type": "string"
         }
       }
     },
@@ -612,6 +615,9 @@
         },
         "tableColumnHeaders": {
           "$ref": "#/definitions/tableColumnHeaders"
+        },
+        "pagination": {
+          "$ref": "#/definitions/paginationLabels"
         }
       }
     },
@@ -722,6 +728,26 @@
           "type": "string",
           "description": "Header of the action column in tables.",
           "default": "Actions"
+        }
+      }
+    },
+    "paginationLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "itemsCount": {
+          "type": "string",
+          "description": "",
+          "default": "Showing :currentCount out of :totalCount items"
+        },
+        "previousPageTitle": {
+          "type": "string",
+          "description": "",
+          "default": "Previous page"
+        },
+        "nextPageTitle": {
+          "type": "string",
+          "description": "",
+          "default": "Next page"
         }
       }
     }
