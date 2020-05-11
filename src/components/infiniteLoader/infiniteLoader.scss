@@ -1,4 +1,3 @@
-
 $firstColor: #E5957C;
 $secondColor: #57578F;
 
@@ -43,7 +42,7 @@ $speed4x: .5s;
 .app-infinite-loader.cp-balls {
   animation: infinite-cp-balls-animate $speed3x linear infinite;
 
-  &:before{
+  &:before {
     border-radius: 50%;
     content: " ";
     @include infinite-bounding-box($boxSize/2, $boxSize/2);
@@ -54,7 +53,7 @@ $speed4x: .5s;
     animation: infinite-cp-balls-animate-before $speed3x ease-in-out infinite;
   }
 
-  &:after{
+  &:after {
     border-radius: 50%;
     content: " ";
     @include infinite-bounding-box($boxSize/2, $boxSize/2);
@@ -66,7 +65,7 @@ $speed4x: .5s;
   }
 }
 
-@keyframes infinite-cp-balls-animate{
+@keyframes infinite-cp-balls-animate {
   0%{
     transform: rotate(0deg);
   }
@@ -75,7 +74,7 @@ $speed4x: .5s;
   }
 }
 
-@keyframes infinite-cp-balls-animate-before{
+@keyframes infinite-cp-balls-animate-before {
   0%{
     transform: translate(-5px, -5px);
   }
@@ -87,7 +86,7 @@ $speed4x: .5s;
   }
 }
 
-@keyframes infinite-cp-balls-animate-after{
+@keyframes infinite-cp-balls-animate-after {
   0%{
     transform: translate(5px, 5px);
   }

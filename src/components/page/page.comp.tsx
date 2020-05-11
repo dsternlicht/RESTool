@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels } from '../../common/models/config.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IQueryParam, IConfigPagination } from '../../common/models/config.model';
 import { IPaginationState } from '../../common/models/states.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
@@ -33,27 +33,8 @@ interface IPopupProps {
   rawData?: {}
 }
 
-const PageComp = ({ context }: IProps) => {
-  const { page } = useParams();
-  const { push, location } = useHistory();
-  const { activePage, error, setError, httpService, config } = context;
-  const pageHeaders: any = activePage?.requestHeaders || {};
-  const pageMethods: IConfigMethods | undefined = activePage?.methods;
-  const customActions: IConfigCustomAction[] = activePage?.customActions || [];
-  const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
-  const paginationConfig = getAllConfig?.pagination;
-  const infiniteScroll = paginationConfig?.type === 'lazy-loading';
-  const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
-  const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
-  const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
-  const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
-  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
-  const addItemLabel = customLabels?.buttons?.addItem || '+ Add Item';
-  const addItemFormTitle = customLabels?.formTitles?.addItem || 'Add Item';
-  const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
-  const [loading, setLoading] = useState<boolean>(false);
-  const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
-  const initialPagination = paginationConfig ? {
+const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginationConfig?: IConfigPagination): { initQueryParams: any[], initialPagination?: IPaginationState } => {
+  const initialPagination: IPaginationState | undefined = paginationConfig ? {
     type: paginationConfig.type,
     page: parseInt(paginationConfig.params.page.value || '1'),
     limit: parseInt(paginationConfig.params.limit?.value || '10'),
@@ -63,7 +44,6 @@ const PageComp = ({ context }: IProps) => {
     sortBy: paginationConfig.params.sortBy?.value,
   } : undefined;
 
-  const initQueryParams = getAllConfig?.queryParams || [];
   if (paginationConfig) {
     initQueryParams.push({
       name: paginationConfig?.params.page.name,
@@ -96,6 +76,33 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
+  return {
+    initQueryParams,
+    initialPagination
+  };
+};
+
+const PageComp = ({ context }: IProps) => {
+  const { page } = useParams();
+  const { push, location } = useHistory();
+  const { activePage, error, setError, httpService, config } = context;
+  const pageHeaders: any = activePage?.requestHeaders || {};
+  const pageMethods: IConfigMethods | undefined = activePage?.methods;
+  const customActions: IConfigCustomAction[] = activePage?.customActions || [];
+  const getAllConfig: IConfigGetAllMethod | undefined = pageMethods?.getAll;
+  const paginationConfig = getAllConfig?.pagination;
+  const infiniteScroll = paginationConfig?.type === 'lazy-loading';
+  const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
+  const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
+  const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
+  const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const addItemLabel = customLabels?.buttons?.addItem || '+ Add Item';
+  const addItemFormTitle = customLabels?.formTitles?.addItem || 'Add Item';
+  const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
+  const { initQueryParams, initialPagination } = buildInitQueryParamsAndPaginationState(getAllConfig?.queryParams || [], paginationConfig);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(initQueryParams);
   const [pagination, setPagination] = useState<IPaginationState | undefined>(initialPagination);
   const [items, setItems] = useState<any[]>([]);
