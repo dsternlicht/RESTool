@@ -509,6 +509,19 @@ The list of fields you want to present in the main view of the app. Each one is 
 | dataPath | `string` | false | Read more about dataPath [here](#data-path).
 | filterable | `boolean` | false | Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields. |
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
+| url | `string` | false | If the type of the field is set to `url`, this property can be used to provide a custom URL that receives the `value` of this field as a parameter. If `url` is not provided, the value of the field will be the target of the anchor. Example below. |
+
+Example for URL field:
+```json
+fields: [
+  {
+    "name": "someValue",
+    "type": "url",
+    "label": "External",
+    "url": "https://example.com/products/:someValue"
+  }
+]
+```
 
 <br />
 
