@@ -310,6 +310,7 @@ Here's a list of variable names you may change:
 | type   | `'buttons' | 'lazy-loading'` | Type of pagination. Buttons is the standard one. You can also have a "inifite scroll" with lazy loading. |
 | source | `'query'`                    | Where the pagination parameters are written to. Only supports query parameters for now. |
 | params | `object`                     | Parameters definition for pagniation purposes. See below.    |
+| fields | `object`                     | Definition of informations that will be returned by the API. See below. |
 
 <br />
 
@@ -321,6 +322,14 @@ The `params` field has the following properties that all can be defined with a  
 | limit      | `object` | false     | The parameter definition of the maximum number of items to be returned by the API. |
 | sortBy     | `object` | false     | The parameter definition of the sorting value.               |
 | descending | `object` | false     | The parameter definition of the order in which the API should return items. `false` by default. |
+
+<br />
+
+The `fields` field has the following properties that all can be defined with a `{ dataPath: string }` object
+
+| Name  | Value    | Required? | Description                                                  |
+| ----- | -------- | --------- | ------------------------------------------------------------ |
+| total | `object` | False     | The total of items available on the API endpoint. This will allow RESTool to know when there is no more pages to navigate to. |
 
 <br />
 
