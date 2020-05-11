@@ -194,6 +194,24 @@
               "type": "text"
             }
           ],
+          "pagination": {
+            "type": "buttons",
+            "source": "query",
+            "params": {
+              "page": {
+                "name": "page"
+              },
+              "limit": {
+                "name": "limit",
+                "value": "3"
+              }
+            },
+            "fields": {
+              "total": {
+                "dataPath": "total"
+              }
+            }
+          },
           "display": {
             "type": "table"
           },
