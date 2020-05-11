@@ -468,7 +468,7 @@ List of variable names you may change within the `placeholders` property:
 | date     | `string` | Date input placeholder.       | Enter date...       |
 | file     | `string` | File input placeholder.       | Select file...      |
 
-List of variable names you may change within the `pagination`property:
+List of variable names you may change within the `pagination` property:
 
 | Name       | Value    | Description                                                  | Default value                                  |
 | ---------- | -------- | ------------------------------------------------------------ | ---------------------------------------------- |

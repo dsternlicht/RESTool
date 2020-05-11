@@ -62,23 +62,23 @@ const buildInitQueryParamsAndPaginationState = (
 
     if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
       initQueryParams.push({
-        name: paginationConfig?.params?.limit.name,
-        label: paginationConfig?.params?.limit.label || 'Limit',
+        name: paginationConfig.params.limit.name,
+        label: paginationConfig.params.limit.label || 'Limit',
         value: initialPagination?.limit
       });
     }
 
     if (paginationConfig?.params?.descending && !find(initQueryParams, { name: 'descending' })) {
       initQueryParams.push({
-        name: paginationConfig?.params?.descending.name,
-        label: paginationConfig?.params?.descending.label || 'Descending',
+        name: paginationConfig.params.descending.name,
+        label: paginationConfig.params.descending.label || 'Descending',
         value: initialPagination?.descending
       });
     }
 
     if (paginationConfig?.params?.sortBy && !find(initQueryParams, { name: 'sortBy' })) {
       initQueryParams.push({
-        name: paginationConfig?.params?.sortBy.name,
+        name: paginationConfig.params.sortBy.name,
         label: 'Sort by',
         value: initialPagination?.sortBy
       });
