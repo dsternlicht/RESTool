@@ -121,6 +121,9 @@ const PageComp = ({ context }: IProps) => {
     setOpenedPopup(null);
 
     if (refreshData === true) {
+      if (pagination?.type === 'lazy-loading') {
+        setItems([]);
+      }
       getAllRequest();
     }
   }
