@@ -26,6 +26,14 @@ interface IProps {
 }
 
 export const Table = ({ items, fields, pagination, callbacks, customActions, customLabels }: IProps) => {
+  const editLabel = customLabels?.buttons?.editItem || 'Edit';
+  const deleteLabel = customLabels?.buttons?.deleteItem || 'Delete';
+  const actionColumnHeader = customLabels?.tableColumnHeaders?.actions || 'Actions';
+  const paginationCallbacks = {
+    nextPage: callbacks.getNextPage || (() => { return; }),
+    previousPage: callbacks.getPreviousPage || (() => { return; }),
+  };
+
   function renderTableCell(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -47,10 +55,6 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
         return value;
     }
   }
-
-  const editLabel = customLabels?.buttons?.editItem || 'Edit';
-  const deleteLabel = customLabels?.buttons?.deleteItem || 'Delete';
-  const actionColumnHeader = customLabels?.tableColumnHeaders?.actions || 'Actions';
 
   function renderTableRow(item: any, rowIdx: number) {
     return (
@@ -121,11 +125,6 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const paginationCallbacks = {
-    nextPage: callbacks.getNextPage || (() => { return; }),
-    previousPage: callbacks.getPreviousPage || (() => { return; }),
-  }
 
   if (pagination?.type === 'infinite-scroll') {
     return (

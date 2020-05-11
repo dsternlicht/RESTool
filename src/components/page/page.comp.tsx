@@ -178,9 +178,8 @@ const PageComp = ({ context }: IProps) => {
     });
   }
 
-  function extractQueryParams(): IConfigInputField[] {
+  function extractQueryParams(params: IConfigInputField[]): IConfigInputField[] {
     const parsedParams = QueryString.parse(location.search);
-    const params = initQueryParams;
     const finalQueryParams = params.map((queryParam) => {
       if (typeof parsedParams[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
@@ -190,9 +189,9 @@ const PageComp = ({ context }: IProps) => {
       return queryParam;
     });
 
-    setPagination(updateParamsToPaginationState(finalQueryParams))
+    setPagination(getUpdatedPaginationState(finalQueryParams))
 
-    return finalQueryParams
+    return finalQueryParams;
   }
 
   async function getAllRequest() {
@@ -201,6 +200,7 @@ const PageComp = ({ context }: IProps) => {
     } else {
       setLoading(true);
     }
+
     setError(null);
 
     try {
@@ -237,7 +237,7 @@ const PageComp = ({ context }: IProps) => {
 
       if (paginationConfig) {
         const total = paginationConfig.fields?.total ? dataHelpers.extractDataByDataPath(result, paginationConfig.fields.total.dataPath) : undefined;
-        const newPaginationState = updateParamsToPaginationState(queryParams, total);
+        const newPaginationState = getUpdatedPaginationState(queryParams, total);
         if (newPaginationState) {
           setPagination(newPaginationState);
         }
@@ -334,6 +334,10 @@ const PageComp = ({ context }: IProps) => {
   }
 
   function submitQueryParams(updatedParams: IConfigInputField[], reset?: boolean) {
+    if (loading) {
+      return;
+    }
+    
     if (reset) {
       setItems([]);
       remove(updatedParams, param => ['page', 'limit'].includes(param.name));
@@ -341,12 +345,7 @@ const PageComp = ({ context }: IProps) => {
     }
 
     setQueryParams(updatedParams);
-
-    setPagination(updateParamsToPaginationState(updatedParams))
-
-    if (loading) {
-      return;
-    }
+    setPagination(getUpdatedPaginationState(updatedParams));
 
     let paramsToUrl = [...updatedParams];
 
@@ -374,10 +373,11 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
-  function updateParamsToPaginationState(updatedParams: IConfigInputField[], total?: number): IPaginationState | undefined {
+  function getUpdatedPaginationState(updatedParams: IConfigInputField[], total?: number): IPaginationState | undefined {
     if (!paginationConfig) {
-      return undefined;
+      return;
     }
+
     const newState: IPaginationState = pagination ? pagination : {
       type: paginationConfig.type,
       page: parseInt(paginationConfig.params?.page?.value || '1'),
@@ -387,6 +387,7 @@ const PageComp = ({ context }: IProps) => {
       hasNextPage: false,
       sortBy: paginationConfig.params?.sortBy?.value,
     };
+
     newState.total = total || pagination?.total;
     newState.page = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.page?.name)?.value) || newState.page;
     newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value) || newState.limit;
@@ -394,6 +395,7 @@ const PageComp = ({ context }: IProps) => {
     newState.sortBy = updatedParams.find(param => param.name === paginationConfig?.params?.sortBy?.name)?.value || newState.sortBy;
     newState.hasPreviousPage = paginationHelpers.hasPreviousPage(newState.page);
     newState.hasNextPage = paginationHelpers.hasNextPage(newState.page, newState.limit, newState.total);
+    
     return newState;
   }
 
@@ -550,10 +552,11 @@ const PageComp = ({ context }: IProps) => {
   }, [page]);
 
   useEffect(() => {
-    setQueryParams(extractQueryParams());
-    return () => {
-      setItems([]);
-    }
+    const { initQueryParams, initialPagination } = buildInitQueryParamsAndPaginationState(getAllConfig?.queryParams || [], paginationConfig);
+
+    setItems([]);
+    setQueryParams(extractQueryParams(initQueryParams));
+    setPagination(initialPagination);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);
 

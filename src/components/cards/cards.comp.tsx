@@ -26,6 +26,13 @@ interface IProps {
 }
 
 export const Cards = ({ items, fields, callbacks, customActions, customLabels, pagination }: IProps) => {
+  const editLabel: string = customLabels?.buttons?.editItem || 'Edit';
+  const deleteLabel: string = customLabels?.buttons?.deleteItem || 'Delete';
+  const paginationCallbacks = {
+    nextPage: callbacks.getNextPage || (() => { return; }),
+    previousPage: callbacks.getPreviousPage || (() => { return; }),
+  };
+
   function renderRow(origField: IConfigDisplayField, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
@@ -50,9 +57,6 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
         return value;
     }
   }
-
-  const editLabel: string = customLabels?.buttons?.editItem || 'Edit';
-  const deleteLabel: string = customLabels?.buttons?.deleteItem || 'Delete';
 
   function renderActions(item: any, cardIdx: number) {
     return (
@@ -155,26 +159,19 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
     );
   }
 
-  const paginationCallbacks = {
-    nextPage: callbacks.getNextPage || (() => { return; }),
-    previousPage: callbacks.getPreviousPage || (() => { return; }),
-  }
-
   return (
-    <div>
+    <React.Fragment>
       <div className="cards-wrapper">
         {items.map(renderCard)}
       </div>
-      <div>
-        {
-          pagination &&
-          pagination.type === 'buttons' &&
-          <Pagination
-            callbacks={paginationCallbacks}
-            pagination={pagination}
-          ></Pagination>
-        }
-      </div>
-    </div>
+      {
+        pagination &&
+        pagination.type === 'buttons' &&
+        <Pagination
+          callbacks={paginationCallbacks}
+          pagination={pagination}
+        ></Pagination>
+      }
+    </React.Fragment>
   )
 }
