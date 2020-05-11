@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Skeleton from 'react-loading-skeleton';
+
 import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
 import { IPaginationState } from '../../common/models/states.model';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -150,9 +150,7 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
         hasMore={pagination?.hasNextPage || false}
         loader={renderSkeletons()}
       >
-        {
-          items.map(renderCard)
-        }
+        {items.map(renderCard)}
       </InfiniteScroll>
     );
   }

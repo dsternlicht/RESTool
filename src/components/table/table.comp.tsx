@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { Button } from '../button/button.comp';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { InfiniteLoader } from '../infiniteLoader/infiniteLoader.comp';
 import { IPaginationState } from '../../common/models/states.model';
 import { Pagination } from '../pagination/pagination.comp';
