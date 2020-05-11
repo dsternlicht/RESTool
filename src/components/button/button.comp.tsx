@@ -9,6 +9,7 @@ interface IProps {
   className?: string
   onClick?: (e: any) => void
   color?: 'gray' | 'blue' | 'green' | 'red'
+  disabled?: boolean
 }
 
 export const Button = (props: IProps) => {
