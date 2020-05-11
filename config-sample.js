@@ -1,4 +1,5 @@
-{
+// A dynamic config sample
+export default {
   "name": "RESTool App",
   "favicon": "https://www.commoninja.com/public/favicon.ico",
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
@@ -290,7 +291,8 @@
               "type": "text",
               "label": "Death Reason"
             }
-          ]
+          ],
+          "dataTransform": item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` })
         },
         "getSingle": {
           "url": "/dead/:id",
@@ -397,3 +399,4 @@
     }
   ]
 }
+
