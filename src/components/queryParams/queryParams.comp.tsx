@@ -9,7 +9,7 @@ import './queryParams.scss';
 interface IProps {
   initialParams: IConfigInputField[]
   paginationConfig?: IConfigPagination
-  submitCallback: (queryParams: IConfigInputField[]) => void
+  submitCallback: (queryParams: IConfigInputField[], reset?: boolean) => void
 }
 
 export const QueryParams = ({ initialParams, paginationConfig, submitCallback }: IProps) => {
@@ -20,7 +20,11 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
       e.preventDefault();
     }
 
-    submitCallback(queryParams);
+    if (paginationConfig && paginationConfig.type === 'lazy-loading') {
+      submitCallback(queryParams, true);
+    } else {
+      submitCallback(queryParams);
+    }
   }
 
   function formChanged(fieldName: string, value: any, submitAfterChange?: boolean) {

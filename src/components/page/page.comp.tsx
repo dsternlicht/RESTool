@@ -3,6 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
+import { find, remove } from 'lodash';
 
 import { IAppContext } from '../app.context';
 import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination } from '../../common/models/config.model';
@@ -33,7 +34,13 @@ interface IPopupProps {
   rawData?: {}
 }
 
-const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginationConfig?: IConfigPagination): { initQueryParams: any[], initialPagination?: IPaginationState } => {
+const buildInitQueryParamsAndPaginationState = (
+  initQueryParams: IConfigInputField[],
+  paginationConfig?: IConfigPagination,
+): {
+  initQueryParams: IConfigInputField[],
+  initialPagination?: IPaginationState,
+} => {
   const initialPagination: IPaginationState | undefined = paginationConfig ? {
     type: paginationConfig.type,
     page: parseInt(paginationConfig.params?.page?.value || '1'),
@@ -45,13 +52,15 @@ const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginati
   } : undefined;
 
   if (paginationConfig) {
-    initQueryParams.push({
-      name: paginationConfig?.params?.page?.name,
-      label: paginationConfig?.params?.page?.label || 'Page',
-      value: initialPagination?.page
-    });
+    if (!find(initQueryParams, { name: 'page' })) {
+      initQueryParams.push({
+        name: paginationConfig?.params?.page?.name,
+        label: paginationConfig?.params?.page?.label || 'Page',
+        value: initialPagination?.page
+      });
+    }
 
-    if (paginationConfig?.params?.limit) {
+    if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
       initQueryParams.push({
         name: paginationConfig?.params?.limit.name,
         label: paginationConfig?.params?.limit.label || 'Limit',
@@ -59,7 +68,7 @@ const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginati
       });
     }
 
-    if (paginationConfig?.params?.descending) {
+    if (paginationConfig?.params?.descending && !find(initQueryParams, { name: 'descending' })) {
       initQueryParams.push({
         name: paginationConfig?.params?.descending.name,
         label: paginationConfig?.params?.descending.label || 'Descending',
@@ -67,7 +76,7 @@ const buildInitQueryParamsAndPaginationState = (initQueryParams: any[], paginati
       });
     }
 
-    if (paginationConfig?.params?.sortBy) {
+    if (paginationConfig?.params?.sortBy && !find(initQueryParams, { name: 'sortBy' })) {
       initQueryParams.push({
         name: paginationConfig?.params?.sortBy.name,
         label: 'Sort by',
@@ -310,7 +319,13 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
-  function submitQueryParams(updatedParams: IConfigInputField[]) {
+  function submitQueryParams(updatedParams: IConfigInputField[], reset?: boolean) {
+    if (reset) {
+      setItems([]);
+      remove(updatedParams, param => ['page', 'limit'].includes(param.name));
+      updatedParams = buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams;
+    }
+
     setQueryParams(updatedParams);
 
     setPagination(updateParamsToPaginationState(updatedParams))
