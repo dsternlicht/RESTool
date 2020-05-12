@@ -140,6 +140,7 @@ export interface IConfigDisplayField {
   filterable: boolean
   truncate: boolean
   url: string
+  urlLabel?: string
 }
 
 export interface IConfigGetAllMethod extends IConfigMethod {

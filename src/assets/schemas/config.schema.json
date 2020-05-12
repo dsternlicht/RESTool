@@ -438,6 +438,10 @@
           "type": "string",
           "description": "URL for url typed fields"
         },
+        "urlLabel": {
+          "type": "string",
+          "description": "Display the url label rather than the entire value."
+        },
         "filterable": {
           "type": "boolean",
           "description": "Set to true to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields."

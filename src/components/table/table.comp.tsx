@@ -34,7 +34,7 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
     previousPage: callbacks.getPreviousPage || (() => { return; }),
   };
 
-  function renderTableCell(origField: IConfigDisplayField, value: any) {
+  function renderTableCell(origField: IConfigDisplayField, origItem: any, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
     }
@@ -47,8 +47,15 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
       case 'image':
         return <img src={value || ''} alt={value || origField.label || origField.name} />;
       case 'url':
-        const url: string = (origField.url || value || '').replace(`:${origField.name}`, value);
-        return <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>;
+        let url: string = origField.url || value || '';
+
+        // Replace all url vars
+        fields.forEach((field) => {
+          const fieldValue = dataHelpers.extractDataByDataPath(origItem, field.dataPath, field.name);
+          url = url.replace(`:${field.name}`, fieldValue);
+        });
+
+        return <a href={url} target="_blank" rel="noopener noreferrer">{origField.urlLabel || value}</a>;
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
       default:
@@ -62,7 +69,11 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
         {
           fields.map((field, fieldIdx) => {
             const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
-            return <td className={field.truncate ? 'truncate' : ''} key={`td_${rowIdx}_${fieldIdx}`}>{renderTableCell(field, value)}</td>
+            return (
+              <td className={field.truncate ? 'truncate' : ''} key={`td_${rowIdx}_${fieldIdx}`}>
+                {renderTableCell(field, item, value)}
+              </td>
+            );
           })
         }
         <td>

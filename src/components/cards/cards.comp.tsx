@@ -33,7 +33,7 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
     previousPage: callbacks.getPreviousPage || (() => { return; }),
   };
 
-  function renderRow(origField: IConfigDisplayField, value: any) {
+  function renderRow(origField: IConfigDisplayField, origItem: any, value: any) {
     if (value && typeof value === 'object') {
       return 'object';
     }
@@ -49,8 +49,15 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
         }
         return <img src={value || ''} alt={value || origField.label || origField.name} />;
       case 'url':
-        const url: string = (origField.url || value || '').replace(`:${origField.name}`, value);
-        return <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>;
+        let url: string = origField.url || value || '';
+
+        // Replace all url vars
+        fields.forEach((field) => {
+          const fieldValue = dataHelpers.extractDataByDataPath(origItem, field.dataPath, field.name);
+          url = url.replace(`:${field.name}`, fieldValue);
+        });
+
+        return <a href={url} target="_blank" rel="noopener noreferrer">{origField.urlLabel || value}</a>;
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
       default:
@@ -97,7 +104,7 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
                   field.type !== 'image' &&
                   <label>{field.label || field.name}: </label>
                 }
-                {renderRow(field, value)}
+                {renderRow(field, item, value)}
               </div>
             );
           })
