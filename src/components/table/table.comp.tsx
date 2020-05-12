@@ -35,6 +35,10 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
   };
 
   function renderTableCell(origField: IConfigDisplayField, value: any) {
+    if (origField.type === 'boolean') {
+        value = value ? true : false;
+    }
+
     if (value && typeof value === 'object') {
       return 'object';
     }
