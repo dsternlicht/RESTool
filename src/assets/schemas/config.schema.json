@@ -56,45 +56,51 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "appText": {
-          "type": "string",
-          "description": "Root text color."
-        },
-        "appBackground": {
-          "type": "string",
-          "description": "App background color."
-        },
-        "navBackground": {
-          "type": "string",
-          "description": "Navigation menu background color."
-        },
-        "navText": {
-          "type": "string",
-          "description": "Navigation menu text color."
-        },
-        "navItemText": {
-          "type": "string",
-          "description": "Navigation item text color."
-        },
-        "navItemHoverBackground": {
-          "type": "string",
-          "description": "Navigation item background color on hover event."
-        },
-        "navItemActiveBackground": {
-          "type": "string",
-          "description": "Active navigation item background color."
-        },
-        "actionButtonBackground": {
-          "type": "string",
-          "description": "Action button background color."
-        },
-        "actionButtonHoverBackground": {
-          "type": "string",
-          "description": "Action button background color on hover event."
-        },
-        "actionButtonText": {
-          "type": "string",
-          "description": "Action button text  color."
+        "vars": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "appText": {
+              "type": "string",
+              "description": "Root text color."
+            },
+            "appBackground": {
+              "type": "string",
+              "description": "App background color."
+            },
+            "navBackground": {
+              "type": "string",
+              "description": "Navigation menu background color."
+            },
+            "navText": {
+              "type": "string",
+              "description": "Navigation menu text color."
+            },
+            "navItemText": {
+              "type": "string",
+              "description": "Navigation item text color."
+            },
+            "navItemHoverBackground": {
+              "type": "string",
+              "description": "Navigation item background color on hover event."
+            },
+            "navItemActiveBackground": {
+              "type": "string",
+              "description": "Active navigation item background color."
+            },
+            "actionButtonBackground": {
+              "type": "string",
+              "description": "Action button background color."
+            },
+            "actionButtonHoverBackground": {
+              "type": "string",
+              "description": "Action button background color on hover event."
+            },
+            "actionButtonText": {
+              "type": "string",
+              "description": "Action button text  color."
+            }
+          }
         }
       }
     },
