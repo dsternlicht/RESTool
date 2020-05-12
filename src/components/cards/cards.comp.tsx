@@ -34,6 +34,10 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
   };
 
   function renderRow(origField: IConfigDisplayField, value: any) {
+    if (origField.type === 'boolean') {
+        value = value ? true : false;
+    }
+
     if (value && typeof value === 'object') {
       return 'object';
     }
