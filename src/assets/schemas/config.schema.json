@@ -56,45 +56,51 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "appText": {
-          "type": "string",
-          "description": "Root text color."
-        },
-        "appBackground": {
-          "type": "string",
-          "description": "App background color."
-        },
-        "navBackground": {
-          "type": "string",
-          "description": "Navigation menu background color."
-        },
-        "navText": {
-          "type": "string",
-          "description": "Navigation menu text color."
-        },
-        "navItemText": {
-          "type": "string",
-          "description": "Navigation item text color."
-        },
-        "navItemHoverBackground": {
-          "type": "string",
-          "description": "Navigation item background color on hover event."
-        },
-        "navItemActiveBackground": {
-          "type": "string",
-          "description": "Active navigation item background color."
-        },
-        "actionButtonBackground": {
-          "type": "string",
-          "description": "Action button background color."
-        },
-        "actionButtonHoverBackground": {
-          "type": "string",
-          "description": "Action button background color on hover event."
-        },
-        "actionButtonText": {
-          "type": "string",
-          "description": "Action button text  color."
+        "vars": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "appText": {
+              "type": "string",
+              "description": "Root text color."
+            },
+            "appBackground": {
+              "type": "string",
+              "description": "App background color."
+            },
+            "navBackground": {
+              "type": "string",
+              "description": "Navigation menu background color."
+            },
+            "navText": {
+              "type": "string",
+              "description": "Navigation menu text color."
+            },
+            "navItemText": {
+              "type": "string",
+              "description": "Navigation item text color."
+            },
+            "navItemHoverBackground": {
+              "type": "string",
+              "description": "Navigation item background color on hover event."
+            },
+            "navItemActiveBackground": {
+              "type": "string",
+              "description": "Active navigation item background color."
+            },
+            "actionButtonBackground": {
+              "type": "string",
+              "description": "Action button background color."
+            },
+            "actionButtonHoverBackground": {
+              "type": "string",
+              "description": "Action button background color on hover event."
+            },
+            "actionButtonText": {
+              "type": "string",
+              "description": "Action button text  color."
+            }
+          }
         }
       }
     },
@@ -257,12 +263,14 @@
               },
               "description": "One or more paths to properties in the result object to sort the list by."
             },
+            "pagination": {
+              "$ref": "#/definitions/pagination"
+            },
             "dataTransform": {
               "description": "Relevant only when using dynamic (js) config. A function to allow manipulation on the response data. Useful for changing/adding data for display purposes."
             }
           },
           "required": [
-            "dataPath",
             "display",
             "fields"
           ]
@@ -352,6 +360,9 @@
           ],
           "description": "Use the type field to define the type of the field."
         },
+        "readonly": {
+          "type": "boolean"
+        },
         "label": {
           "type": "string",
           "description": "A label that describes the field. This will act as a label in RESTool's forms."
@@ -407,6 +418,10 @@
           "type": "boolean",
           "description": "If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body."
         },
+        "urlReplaceOnly": {
+          "type": "boolean",
+          "description": "If true, a field will only be replaced in the URL and is not appended to the final query string."
+        },
         "optionSource": {
           "$ref": "#/definitions/optionSource",
           "description": "Use the optionSource field to load options for a select box from a REST service. If this is used with options, the items from options will be added to the select box before those fetched from the api."
@@ -442,6 +457,14 @@
         "dataPath": {
           "type": "string",
           "description": ""
+        },
+        "url": {
+          "type": "string",
+          "description": "URL for url typed fields"
+        },
+        "urlLabel": {
+          "type": "string",
+          "description": "Display the url label rather than the entire value."
         },
         "filterable": {
           "type": "boolean",
@@ -491,6 +514,104 @@
         }
       }
     },
+    "pagination": {
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "type",
+        "params"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "query"
+          ],
+          "description": "Where the pagination parameters are written to. Only supports query parameters for now."
+        },
+        "type": {
+          "enum": [
+            "buttons",
+            "infinite-scroll"
+          ],
+          "description": "Type of pagination. Buttons is the standard one. You can also have a inifite scroll with lazy loading."
+        },
+        "params": {
+          "$ref": "#/definitions/paginationParams"
+        },
+        "fields": {
+          "$ref": "#/definitions/paginationFields"
+        }
+      }
+    },
+    "paginationParams": {
+      "additionalProperties": false,
+      "required": [
+        "page"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the page number."
+        },
+        "limit": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the maximum number of items to be returned by the API."
+        },
+        "sortBy": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the sorting value."
+        },
+        "descending": {
+          "$ref": "#/definitions/queryParamConfig",
+          "description": "The parameter definition of the order in which the API should return items. false by default."
+        }
+      }
+    },
+    "paginationFields": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/paginationField"
+        },
+        "total": {
+          "$ref": "#/definitions/paginationField"
+        }
+      }
+    },
+    "paginationField": {
+      "additionalProperties": false,
+      "required": [
+        "dataPath"
+      ],
+      "properties": {
+        "dataPath": {
+          "type": "string"
+        },
+        "display": {
+          "type": "boolean"
+        }
+      }
+    },
+    "queryParamConfig": {
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "urlReplaceOnly": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
     "customAction": {
       "allOf": [
         {
@@ -522,6 +643,9 @@
         },
         "tableColumnHeaders": {
           "$ref": "#/definitions/tableColumnHeaders"
+        },
+        "pagination": {
+          "$ref": "#/definitions/paginationLabels"
         }
       }
     },
@@ -632,6 +756,26 @@
           "type": "string",
           "description": "Header of the action column in tables.",
           "default": "Actions"
+        }
+      }
+    },
+    "paginationLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "itemsCount": {
+          "type": "string",
+          "description": "",
+          "default": "Showing :currentCountFrom-:currentCountTo out of :totalCount items"
+        },
+        "previousPageTitle": {
+          "type": "string",
+          "description": "",
+          "default": "Previous page"
+        },
+        "nextPageTitle": {
+          "type": "string",
+          "description": "",
+          "default": "Next page"
         }
       }
     }

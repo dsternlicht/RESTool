@@ -1,0 +1,99 @@
+$firstColor: #E5957C;
+$secondColor: #57578F;
+
+$boxSize: 48px;
+$smallBoxSize: 30px;
+
+/*Speed*/
+$speed2x: 2s;
+$speed3x: 1s;
+$speed4x: .5s;
+
+@mixin infinite-bounding-box($width, $height){
+  width: $width;
+  height: $height;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.app-infinite-loader.cp-spinner {
+  @include infinite-bounding-box($boxSize, $boxSize);
+  position: relative;
+  margin: 30px 30px 30px 30px;
+  position: relative;
+  left: 50%;
+  top: 20px;
+  //margin-left: - $boxSize / 2;
+  //margin-top: - $boxSize / 2;
+
+  &.small {
+    @include infinite-bounding-box($smallBoxSize, $smallBoxSize);
+    //margin-left: - $smallBoxSize / 2;
+    //margin-top: - $smallBoxSize / 2;
+
+    &.cp-balls {
+      &:before, &:after {
+        @include infinite-bounding-box($smallBoxSize/2, $smallBoxSize/2);
+      }
+    }
+  }
+}
+
+.app-infinite-loader.cp-balls {
+  animation: infinite-cp-balls-animate $speed3x linear infinite;
+
+  &:before {
+    border-radius: 50%;
+    content: " ";
+    @include infinite-bounding-box($boxSize/2, $boxSize/2);
+    background-color: $firstColor;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: infinite-cp-balls-animate-before $speed3x ease-in-out infinite;
+  }
+
+  &:after {
+    border-radius: 50%;
+    content: " ";
+    @include infinite-bounding-box($boxSize/2, $boxSize/2);
+    background-color: $secondColor;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    animation: infinite-cp-balls-animate-after $speed3x ease-in-out infinite;
+  }
+}
+
+@keyframes infinite-cp-balls-animate {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes infinite-cp-balls-animate-before {
+  0%{
+    transform: translate(-5px, -5px);
+  }
+  50%{
+    transform: translate(0px, 0px);
+  }
+  100%{
+    transform: translate(-5px, -5px);
+  }
+}
+
+@keyframes infinite-cp-balls-animate-after {
+  0%{
+    transform: translate(5px, 5px);
+  }
+  50%{
+    transform: translate(0px, 0px);
+  }
+  100%{
+    transform: translate(5px, 5px);
+  }
+}

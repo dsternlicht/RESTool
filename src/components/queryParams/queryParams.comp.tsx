@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { IConfigInputField } from '../../common/models/config.model';
+import { IConfigInputField, IConfigPagination } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
 
@@ -8,10 +8,11 @@ import './queryParams.scss';
 
 interface IProps {
   initialParams: IConfigInputField[]
-  submitCallback: (queryParams: IConfigInputField[]) => void
+  paginationConfig?: IConfigPagination
+  submitCallback: (queryParams: IConfigInputField[], reset?: boolean) => void
 }
 
-export const QueryParams = ({ initialParams, submitCallback }: IProps) => {
+export const QueryParams = ({ initialParams, paginationConfig, submitCallback }: IProps) => {
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(initialParams);
 
   function submit(e?: any) {
@@ -19,7 +20,11 @@ export const QueryParams = ({ initialParams, submitCallback }: IProps) => {
       e.preventDefault();
     }
 
-    submitCallback(queryParams);
+    if (paginationConfig && paginationConfig.type === 'infinite-scroll') {
+      submitCallback(queryParams, true);
+    } else {
+      submitCallback(queryParams);
+    }
   }
 
   function formChanged(fieldName: string, value: any, submitAfterChange?: boolean) {
@@ -39,8 +44,13 @@ export const QueryParams = ({ initialParams, submitCallback }: IProps) => {
   }
 
   useEffect(() => {
-    setQueryParams(initialParams);
-  }, [initialParams]);
+    if (paginationConfig && paginationConfig.type === 'infinite-scroll') {
+      const filteredParams = initialParams.filter(param => !['page', 'limit'].includes(param.name));
+      setQueryParams(filteredParams);
+    } else {
+      setQueryParams(initialParams);
+    }
+  }, [paginationConfig, initialParams]);
 
   if (!queryParams.length) {
     return <React.Fragment></React.Fragment>;
@@ -53,9 +63,9 @@ export const QueryParams = ({ initialParams, submitCallback }: IProps) => {
         {
           queryParams.map((queryParam, idx) => {
             return (
-              <FormRow 
+              <FormRow
                 key={`query_param_${idx}`}
-                field={queryParam} 
+                field={queryParam}
                 onChange={formChanged}
                 showReset={!queryParam.type || queryParam.type === 'text'}
               />

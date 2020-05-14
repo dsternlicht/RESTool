@@ -25,6 +25,10 @@
     background-color: #ebebeb;
   }
 
+  &:disabled {
+    color: #cccccccc;
+  }
+
   &.green {
     background: #1cb841;
     color: #fff;

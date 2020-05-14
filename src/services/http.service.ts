@@ -1,4 +1,4 @@
-import { TConfigMethod, IConfigInputField } from '../common/models/config.model';
+import { TConfigMethod, IQueryParam } from '../common/models/config.model';
 import { dataHelpers } from '../helpers/data.helpers';
 
 export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
@@ -7,7 +7,7 @@ export interface IFetchParams {
   origUrl: string
   method?: TConfigMethod
   headers?: any
-  queryParams?: IConfigInputField[]
+  queryParams?: IQueryParam[]
   rawData?: any
   body?: any
   responseType?: ResponseType
@@ -39,7 +39,7 @@ class HttpService {
     }
 
     let outputUrl = url;
-    
+
     Object.keys(rawData).forEach((key) => {
       const urlParamName = `:${key}`;
       outputUrl = outputUrl.replace(urlParamName, rawData[key] as string);
@@ -48,7 +48,7 @@ class HttpService {
     return outputUrl;
   }
 
-  private buildUrl(url: string, queryParams: IConfigInputField[] = [], rawData?: any): string {
+  private buildUrl(url: string, queryParams: IQueryParam[] = [], rawData?: any): string {
     if (!queryParams || !queryParams.length) {
       return this.replaceParamsInUrl(url, rawData);
     }
@@ -106,11 +106,11 @@ class HttpService {
           errorMessage = dataAtPath;
         }
       }
-    } catch {} // TODO: proper handling of errors (^.^)
+    } catch { } // TODO: proper handling of errors (^.^)
 
     return errorMessage && errorMessage.length ?
-        errorMessage :
-        `${res.status} - ${res.statusText || ''}`;
+      errorMessage :
+      `${res.status} - ${res.statusText || ''}`;
   }
 
   private async handleError(res: Response) {
@@ -126,11 +126,11 @@ class HttpService {
 
   private async makeRequest(url: string, params: any = {}, responseType: ResponseType = 'json') {
     const res: Response = await fetch(url, Object.assign({}, params, {}));
-    
+
     if (res.ok) {
       switch (responseType) {
         case 'json':
-          return await res.json();  
+          return await res.json();
         case 'text':
           return await res.text();
         case 'boolean':

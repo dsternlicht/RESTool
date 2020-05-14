@@ -1,0 +1,20 @@
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  > * {
+    margin: 0 5px;
+    border-radius: 50em;
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    background: v(actionButtonBackground, #e6e6e6);
+    color: v(actionButtonText, #000000cc);
+
+    &:hover {
+      background: v(actionButtonHoverBackground, #ebebeb);
+    }
+  }
+}

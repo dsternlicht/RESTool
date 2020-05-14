@@ -1,6 +1,8 @@
 @import '../../common/styles/functions';
 
 .cards-wrapper {
+  $image-height: 200px;
+
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -44,12 +46,13 @@
 
     &.image {
       margin: 0 0 10px;
+      min-height: $image-height;
     }
   }
 
   img {
     width: 100%;
-    height: 200px;
+    height: $image-height;
     object-fit: cover;
     background: no-repeat center center;
     background-size: cover;

@@ -36,6 +36,8 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [activeItem, setActiveItem] = useState<any | null>(null);
 
+  const appName: string = config?.name || defaultAppName;
+  
   async function loadConfig(url?: string): Promise<void> {
     try {
       const windowConfig = (window as any).RESTool?.config;
@@ -76,19 +78,19 @@ function App() {
     oldTimestamp = performance.now();
 
     function step (newTimestamp: number) {
-        scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
+      scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
 
-        if (scrollCount >= Math.PI) {
-          window.scrollTo(0, 0);
-        }
+      if (scrollCount >= Math.PI) {
+        window.scrollTo(0, 0);
+      }
 
-        if (window.scrollY === 0) {
-          return;
-        }
+      if (window.scrollY === 0) {
+        return;
+      }
 
-        window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
-        oldTimestamp = newTimestamp;
-        window.requestAnimationFrame(step);
+      window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+      oldTimestamp = newTimestamp;
+      window.requestAnimationFrame(step);
     }
 
     window.requestAnimationFrame(step);
@@ -101,15 +103,14 @@ function App() {
 
   useEffect(() => {
     const { isValid, errorMessage } = ConfigService.validateConfig(config);
+
     if (!isValid) {
       setError(errorMessage);
       toast.error(errorMessage);
       return;
     }
-    return;
   }, [config]);
 
-  const appName: string = config?.name || defaultAppName;
   const mainRoutes: string[] = config?.pages?.map(p => `/${p.id}`) || [];
   const detailRoutes: string[] = config?.pages?.reduce((acc: string[], p) => {
     const detailPageId = p.methods?.getSingle?.detailPage?.id;

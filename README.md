@@ -93,8 +93,7 @@ Each **page** is an object and represents a resource in your API. It should have
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
-| customFormTitles | `object` | false | See `formTitles` in [custom labels](#custom-labels) |
-| customAddButtonTitle | `string` | false | The text within the button to add an item on the page. |
+| customLabels | `object` | false | [Custom labels](#custom-labels) |
 
 <br />
 
@@ -177,6 +176,12 @@ RESTool allows you to control how to output the data. The display object has a `
 ###### `sortBy` (string | string[])
 
 One or more paths to properties in the result object to sort the list by.
+
+<br />
+
+###### `pagination` ([Pagination](#pagination))
+
+Optional. This allows to handle pagination. See [Pagination](#pagination).
 
 <br />
 
@@ -294,6 +299,40 @@ Example:
 
 <br />
 
+#### Pagination
+
+The `pagination` property allows you to handle pagination on .
+
+Here's a list of variable names you may change:
+
+| Name   | Value                        | Description                                                  |
+| ------ | ---------------------------- | ------------------------------------------------------------ |
+| type   | `'buttons' | 'infinite-scroll'` | Type of pagination. Buttons is the standard one. You can also have a "inifite scroll" with lazy loading. |
+| source | `'query'`                    | Where the pagination parameters are written to. Only supports query parameters for now. |
+| params | `object`                     | Parameters definition for pagniation purposes. See below.    |
+| fields | `object`                     | Definition of informations that will be returned by the API. See below. |
+
+<br />
+
+The `params` field has the following properties that all can be defined with a  [input field](#input-fields)
+
+| Name       | Value    | Required? | Description                                                  |
+| ---------- | -------- | --------- | ------------------------------------------------------------ |
+| page       | `object` | true      | The parameter definition of the page number.                 |
+| limit      | `object` | false     | The parameter definition of the maximum number of items to be returned by the API. |
+| sortBy     | `object` | false     | The parameter definition of the sorting value.               |
+| descending | `object` | false     | The parameter definition of the order in which the API should return items. `false` by default. |
+
+<br />
+
+The `fields` field has the following properties that all can be defined with a `{ dataPath: string }` object
+
+| Name  | Value    | Required? | Description                                                  |
+| ----- | -------- | --------- | ------------------------------------------------------------ |
+| total | `object` | False     | The total of items available on the API endpoint. This will allow RESTool to know when there is no more pages to navigate to. |
+
+<br />
+
 ####  Custom Actions
 
 A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. For example this could enable an endpoint like: ``PUT /users/:id/disable``
@@ -408,14 +447,14 @@ List of variable names you may change within the `buttons`property:
 | closeForm    | `string` | Title of the close button in forms.                | Close         |
 | addArrayItem | `string` | Title of the add button on arrays inputs in forms. | Add Item      |
 
-List of variable names you may change within the `formTitles`property:
+List of variable names you may change within the `formTitles` property:
 
 | Name     | Value    | Description                                  | Default value |
 | -------- | -------- | -------------------------------------------- | ------------- |
 | addItem  | `string` | Content of the add button on a page.         | Add Item      |
 | editItem | `string` | Title of the edit button on a row or a card. | Edit Item     |
 
-List of variable names you may change within the `placeholders`property:
+List of variable names you may change within the `placeholders` property:
 
 | Name     | Value    | Description                   | Default value       |
 | -------- | -------- | ----------------------------- | ------------------- |
@@ -428,6 +467,13 @@ List of variable names you may change within the `placeholders`property:
 | password | `string` | Password input placeholder.   | Enter password...   |
 | date     | `string` | Date input placeholder.       | Enter date...       |
 | file     | `string` | File input placeholder.       | Select file...      |
+
+List of variable names you may change within the `pagination` property:
+
+| Name       | Value    | Description                                                  | Default value                                  |
+| ---------- | -------- | ------------------------------------------------------------ | ---------------------------------------------- |
+| itemsCount | `string` | Label displaying the items count when `pagination` option is on with type `infinite-scroll`. Use `:currentCountFrom`, `:currentCountTo` and `:totalCount` to display relevant data anywhere in your custom label. | Showing :currentCountFrom-:currentCountTo out of :totalCount items |
+| editItem   | `string` | Title of the edit button on a row or a card.                 | Edit Item                                      |
 
 Usage example in `config.json` file:
 
@@ -463,6 +509,19 @@ The list of fields you want to present in the main view of the app. Each one is 
 | dataPath | `string` | false | Read more about dataPath [here](#data-path).
 | filterable | `boolean` | false | Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields. |
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
+| url | `string` | false | If the type of the field is set to `url`, this property can be used to provide a custom URL that receives the `value` of this field as a parameter. If `url` is not provided, the value of the field will be the target of the anchor. Example below. |
+
+Example for URL field:
+```json
+fields: [
+  {
+    "name": "someValue",
+    "type": "url",
+    "label": "External",
+    "url": "https://example.com/products/:someValue"
+  }
+]
+```
 
 <br />
 

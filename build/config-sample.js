@@ -1,6 +1,7 @@
 // A dynamic config sample
 export default {
-  "name": "RESTool sample app",
+  "name": "RESTool App",
+  "favicon": "https://www.commoninja.com/public/favicon.ico",
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
   "pages": [
     {
@@ -10,17 +11,18 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/character",
-          "dataPath": null,
           "queryParams": [
             {
               "name": "search",
               "value": "",
-              "label": "Search"
+              "label": "Search",
+              "type": "text"
             }
           ],
           "display": {
-            "type": "table"
+            "type": "cards"
           },
           "fields": [
             {
@@ -57,15 +59,17 @@ export default {
         },
         "getSingle": {
           "url": "/character/:id",
-          "dataPath": null,
           "queryParams": [],
           "requestHeaders": {}
         },
         "put": {
           "url": "/character/:id",
-          "actualMethod": null,
-          "includeOriginalFields": false,
           "fields": [
+            {
+              "name": "numberTest",
+              "label": "Number Test",
+              "type": "number"
+            },
             {
               "name": "location",
               "label": "Location",
@@ -118,6 +122,7 @@ export default {
           "name":"Send Email",
           "url": "/character/:id/sendEmail",
           "actualMethod": "post",
+          "icon": "envelope",
           "fields": [
             {
               "name": "id",
@@ -143,6 +148,7 @@ export default {
           "name":"Disable Character",
           "url": "/character/:id/disable",
           "actualMethod": "post",
+          "icon": "ban",
           "fields": [
             {
               "name": "id",
@@ -161,50 +167,49 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/employee",
-          "dataPath": null,
           "queryParams": [
             {
               "name": "search",
               "value": "",
-              "label": "Search"
+              "label": "Search",
+              "type": "text"
             }
           ],
           "display": {
-            "type": "table",
-            "fields": [
-              {
-                "name": "id",
-                "type": "text",
-                "label": "ID"
-              },
-              {
-                "name": "name",
-                "type": "text",
-                "label": "Name"
-              },
-              {
-                "name": "jobTitle",
-                "type": "text",
-                "label": "Job Title"
-              },
-              {
-                "name": "isFired",
-                "type": "boolean",
-                "label": "Fired?"
-              }
-            ]
-          }
+            "type": "table"
+          },
+          "fields": [
+            {
+              "name": "id",
+              "type": "text",
+              "label": "ID"
+            },
+            {
+              "name": "name",
+              "type": "text",
+              "label": "Name"
+            },
+            {
+              "name": "jobTitle",
+              "type": "text",
+              "label": "Job Title"
+            },
+            {
+              "name": "isFired",
+              "type": "boolean",
+              "label": "Fired?"
+            }
+          ]
         },
         "getSingle": {
           "url": "/employee/:id",
-          "dataPath": null,
           "queryParams": [],
           "requestHeaders": {}
         },
         "put": {
           "url": "/employee/:id",
-          "actualMethod": null,
           "fields": [
             {
               "name": "name",
@@ -257,51 +262,45 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/dead",
-          "dataPath": null,
           "queryParams": [
             {
               "name": "search",
               "value": "",
-              "label": "Search"
+              "label": "Search",
+              "type": "text"
             }
           ],
           "display": {
-            "type": "table",
-            "fields": [
-              {
-                "name": "id",
-                "type": "text",
-                "label": "ID"
-              },
-              {
-                "name": "name",
-                "type": "text",
-                "label": "Name"
-              },
-              {
-                "name": "reason",
-                "type": "text",
-                "label": "Death Reason"
-              },
-              {
-                "name": "wiki",
-                "type": "url",
-                "label": "Wiki"
-              }
-            ]
+            "type": "table"
           },
+          "fields": [
+            {
+              "name": "id",
+              "type": "text",
+              "label": "ID"
+            },
+            {
+              "name": "name",
+              "type": "text",
+              "label": "Name"
+            },
+            {
+              "name": "reason",
+              "type": "text",
+              "label": "Death Reason"
+            }
+          ],
           "dataTransform": item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` })
         },
         "getSingle": {
           "url": "/dead/:id",
-          "dataPath": null,
           "queryParams": [],
           "requestHeaders": {}
         },
         "put": {
           "url": "/dead/:id",
-          "actualMethod": null,
           "fields": [
             {
               "name": "name",
@@ -342,40 +341,39 @@ export default {
       "methods": {
         "getAll": {
           "label": "Get All",
+          "dataPath": "items",
           "url": "/extra",
-          "dataPath": null,
           "queryParams": [
             {
               "name": "search",
               "value": "",
-              "label": "Search"
+              "label": "Search",
+              "type": "text"
             }
           ],
           "display": {
-            "type": "table",
-            "fields": [
-              {
-                "name": "id",
-                "type": "text",
-                "label": "ID"
-              },
-              {
-                "name": "name",
-                "type": "text",
-                "label": "Name"
-              }
-            ]
-          }
+            "type": "table"
+          },
+          "fields": [
+            {
+              "name": "id",
+              "type": "text",
+              "label": "ID"
+            },
+            {
+              "name": "name",
+              "type": "text",
+              "label": "Name"
+            }
+          ]
         },
         "getSingle": {
           "url": "/extra/:id",
-          "dataPath": null,
           "queryParams": [],
           "requestHeaders": {}
         },
         "put": {
           "url": "/extra/:id",
-          "actualMethod": null,
           "fields": [
             {
               "name": "name",
@@ -401,3 +399,4 @@ export default {
     }
   ]
 }
+
