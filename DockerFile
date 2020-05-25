@@ -11,8 +11,8 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 COPY . .
-RUN npm run build
-RUN npm prune --production
+RUN npm run build:all
+# RUN npm prune --production
 # run node prune
 RUN /usr/local/bin/node-prune
 
@@ -20,7 +20,6 @@ RUN /usr/local/bin/node-prune
 FROM node:12.16.1-alpine3.9
 
 WORKDIR /app
-
 COPY --from=builder /app .
 EXPOSE 1729
 COPY ./entrypoint.sh .

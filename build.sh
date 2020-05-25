@@ -12,15 +12,15 @@ function die() {
 # common variables
 service_name="restool-ui"
 group="restool"
-docker_regsitery_url="https://hub.docker.com"
+docker_regsitery_url="registry.hub.docker.com"
 
 
 current_branch=$(git symbolic-ref --short HEAD)
 check_uncommit=$(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)
 
-if [[ "${check_uncommit}" -ne 0 ]]; then
-    die "un comitted files existing"
-fi
+# if [[ "${check_uncommit}" -ne 0 ]]; then
+#     die "un comitted files existing"
+# fi
 
 while getopts ":u:p:" opt; do
   case $opt in
