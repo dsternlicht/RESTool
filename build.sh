@@ -102,6 +102,11 @@ bump_files "$current_version" "$new_version"
 new_tag="v$new_version"
 
 docker build -t $service_name:$new_version .
+
+if [[ -z $username ]] || [[ -z $password ]]; then  
+  die "local docke genrated"
+fi
+
 docker tag $service_name:$new_version $docker_regsitery_url/$group/$service_name:$new_version
 
 docker login $docker_regsitery_url -u=$username -p=$password

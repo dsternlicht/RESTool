@@ -7,3 +7,4 @@ build/config.json
 build/config.js
 devTools/config.json
 .env
+.envdocker
