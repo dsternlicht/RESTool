@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import SMCloudStore from 'smcloudstore';
-import env from '../../../devTools/env'
+import env from '../../env';
 
 const storageProvider = env("storageProvider") || 'local'
 const storagePath= env("storagePath");
@@ -21,7 +21,7 @@ let localConfigData = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "pu
 
 const configServer = Router();
 
-
+// TODO: config.js support
 configServer
     .get('/', async(req: Request, res: Response) => {
         let configString = {}

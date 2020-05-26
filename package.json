@@ -1,6 +1,6 @@
 {
   "name": "restool",
-  "version": "2.2.3-docker-11",
+  "version": "2.2.3-docker-13",
   "dependencies": {
     "@smcloudstore/aws-s3": "^0.2.1",
     "ajv": "^6.12.1",
@@ -26,7 +26,7 @@
     "dev": "NODE_ENV=development && npm run app:env:loader &&run-p server:dev start",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:all": "run-p build:server build",
+    "build:all": "npm run app:env:loader && run-p build:server build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "npm run build",

@@ -1,1 +1,1 @@
-window._env = {"NODE_ENV":"development","REACT_APP_storageProvider":"test"};
+window._env = {"NODE_ENV":"production","REACT_APP_remote_url":"true"};

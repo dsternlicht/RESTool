@@ -5,4 +5,5 @@ public/config.json
 public/config.js
 build/config.json
 build/config.js
+devTools/config.json
 .env
