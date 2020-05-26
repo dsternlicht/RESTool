@@ -31,9 +31,9 @@ const path = require('path');
   const env = getAppEnvironment();
 
   writeEnvFile(env)
-  console.log("sdsd",path.resolve(process.cwd(),'env/index.js'))
-  fs.copyFileSync(path.resolve(process.cwd(),'env/index.js'), path.resolve(process.cwd(),'src/env.js'));
-fs.copyFileSync(path.resolve(process.cwd(),'env/index.js'), path.resolve(process.cwd(),'server/env.js'));
+  console.log("sdsd",path.resolve(process.cwd(),'devTools/env/index.js'))
+  fs.copyFileSync(path.resolve(process.cwd(),'devTools/env/index.js'), path.resolve(process.cwd(),'src/env.js'));
+  fs.copyFileSync(path.resolve(process.cwd(),'devTools/env/index.js'), path.resolve(process.cwd(),'server/env.js'));
 
 
 }());

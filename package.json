@@ -2,6 +2,7 @@
   "name": "restool",
   "version": "2.2.3-docker-11",
   "dependencies": {
+    "@smcloudstore/aws-s3": "^0.2.1",
     "ajv": "^6.12.1",
     "cors": "^2.8.5",
     "flat": "^5.0.0",
@@ -32,8 +33,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start:prod": "NODE_ENV=production node build/server",
-    "app:env:loader": "NODE_ENV=production node env/loader"
-
+    "app:env:loader": "NODE_ENV=production node devTools/env/loader",
+    "config:uploader": "TS_NODE_PROJECT='./tsconfig.server.json' ts-node devTools/configUploader.js"
   },
   "proxy": "http://localhost:1729",
   "eslintConfig": {

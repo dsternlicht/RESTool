@@ -14,6 +14,7 @@ export default function env(key = "") {
   if (key === 'NODE_ENV') {
     return process.env.NODE_ENV;
   }
+  require('dotenv').config()
   const safeKey = `SERVER_APP_${key}`;
   return process.env[safeKey];
 }
