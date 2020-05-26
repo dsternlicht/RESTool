@@ -15,13 +15,14 @@
     "react-loading-skeleton": "^2.0.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
-    "react-toastify": "^5.4.1"
+    "react-toastify": "^5.4.1",
+    "smcloudstore": "^0.2.1"
   },
   "scripts": {
     "tsc": "tsc",
     "build:server": "tsc -p ./tsconfig.server.json",
-    "start:server:dev": "TS_NODE_PROJECT='./tsconfig.server.json' ts-node-dev --respawn --transpileOnly server/index.ts && wait-on tcp:1729",
-    "dev": "NODE_ENV=development run-p start:server:dev start",
+    "server:dev": "TS_NODE_PROJECT='./tsconfig.server.json' ts-node-dev --respawn --transpileOnly server/index.ts && wait-on tcp:1729",
+    "dev": "NODE_ENV=development && npm run app:env:loader &&run-p server:dev start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build:all": "run-p build:server build",
@@ -30,7 +31,9 @@
     "prepare": "npm run build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start:prod": "NODE_ENV=production node build/server"
+    "start:prod": "NODE_ENV=production node build/server",
+    "app:env:loader": "NODE_ENV=production node env/loader"
+
   },
   "proxy": "http://localhost:1729",
   "eslintConfig": {
@@ -63,18 +66,19 @@
   "jsnext:main": "build/restool.es.js",
   "homepage": ".",
   "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.4.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.6",
     "@types/lodash": "^4.14.150",
-    "@types/cors": "^2.8.6",
+    "@types/node": "^14.0.5",
     "@types/react-router-dom": "^5.1.3",
     "gh-pages": "^2.2.0",
     "npm-run-all": "^4.1.5",
     "ts-node": "^8.10.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.4",
-    "wait-on": "^5.0.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
-    "@testing-library/user-event": "^7.2.1"
+    "wait-on": "^5.0.0"
   }
 }

@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
-    "lib": [
+    "target": "esnext",
+    "allowJs": true,
+
+   "lib": [
       "dom",
-      "dom.iterable",
-      "esnext"
-    ],                  
-    "moduleResolution": "node",
+      "es2015",
+      "es2016",
+      "es2017.object"
+    ],
+    "moduleResolution": "node",             
     "noUnusedLocals": false,
     "outDir": "./build/server",                          
-    "rootDir": "server",
+    "rootDir": "server"
   },
   "include": ["server"],
   "exclude": ["node_modules"]
