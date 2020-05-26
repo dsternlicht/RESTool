@@ -11,9 +11,9 @@ const path = require('path');
 
   function writeEnvFile(env) {
     const basePath = fs.realpathSync(process.cwd());
-    const destPath = "public/";
     const populate = `window._env = ${JSON.stringify(env)};`;
-    fs.writeFileSync(`${basePath}/${destPath}env.js`, populate);
+    fs.writeFileSync(`${basePath}/public/env.js`, populate);
+    fs.writeFileSync(`${basePath}/build/env.js`, populate);
   }
 
   function getAppEnvironment() {
