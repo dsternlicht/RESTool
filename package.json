@@ -1,10 +1,11 @@
 {
   "name": "restool",
-  "version": "2.2.3-docker-16",
+  "version": "2.2.3-docker-22",
   "dependencies": {
     "@smcloudstore/aws-s3": "^0.2.1",
     "ajv": "^6.12.1",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "flat": "^5.0.0",
     "lodash": "^4.17.15",
@@ -16,7 +17,6 @@
     "react-infinite-scroll-component": "^5.0.4",
     "react-loading-skeleton": "^2.0.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
     "react-toastify": "^5.4.1",
     "smcloudstore": "^0.2.1"
   },
@@ -81,6 +81,7 @@
     "ts-node": "^8.10.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.4",
-    "wait-on": "^5.0.0"
+    "wait-on": "^5.0.0",
+    "react-scripts": "3.3.0"
   }
 }
