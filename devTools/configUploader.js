@@ -32,7 +32,7 @@ const SMCloudStore = require('smcloudstore');
     await storage.putObject(storageContainer, storagePath, data, options)
     const configString = await storage.getObjectAsString(storageContainer, storagePath)
 
-    console.log("success fully uploaded config", configString)
+    console.log("successfully uploaded config", configString)
 
 })().catch(err => {
     console.error(err);
