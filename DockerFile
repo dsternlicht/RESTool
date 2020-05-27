@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 RUN npm run build:all
 # TODO: fix me why failing with typescript?
-# RUN npm prune --production
+RUN npm prune --production
 
 # run node prune
 RUN /usr/local/bin/node-prune
