@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const httpService = new HttpService();
 const defaultAppName: string = 'RESTool App';
 
-const isRemoteUrl: Boolean = (/true/i).test(env('REMOTE_URL')) || false
+const remoteConfigType: string = env('REMOTE_CONFIG_TYPE') || 'local'
 
 
 function changeFavicon(src: string) {
@@ -42,9 +42,8 @@ function App() {
     try {
   
       let remoteConfig: IConfig; 
-      if(isRemoteUrl){
-          console.log("remote url");
-          remoteConfig = await ConfigService.getRemoteConfig("/remote/config.json");
+      if(remoteConfigType!=='local'){
+          remoteConfig = await ConfigService.getRemoteConfig(`/remote/config.${remoteConfigType}`);
       }
       else{
           // Try to load config from window object first
