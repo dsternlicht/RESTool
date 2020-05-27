@@ -16,9 +16,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const httpService = new HttpService();
 const defaultAppName: string = 'RESTool App';
 
-const remote_url: Boolean = (/true/i).test(env('remote_url')) || false
+const remote_url: Boolean = (/true/i).test(env('REMOTE_URL')) || false
 
-console.log("remote_url",remote_url)
 
 function changeFavicon(src: string) {
   const link = document.createElement('link');
@@ -43,13 +42,11 @@ function App() {
     try {
   
       let remoteConfig: IConfig; 
-      // Try to load config from window object first
       if(remote_url){
-          console.log("loading from remote")
           remoteConfig = await ConfigService.getRemoteConfig("/config");
       }
       else{
-          console.log("loading from build in")
+          // Try to load config from window object first
           const windowConfig = (window as any).RESTool?.config;
           if (!url && windowConfig) {
             remoteConfig = Object.assign({}, windowConfig, {});

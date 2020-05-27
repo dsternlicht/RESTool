@@ -5,7 +5,7 @@ export default {
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
   "pages": [
     {
-      "name": "Cast & Characters2",
+      "name": "Cast & Characters",
       "id": "characters",
       "description": "Manage GOT characters location and budget.",
       "methods": {

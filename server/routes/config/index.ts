@@ -4,10 +4,10 @@ import path from 'path';
 import SMCloudStore from 'smcloudstore';
 import env from '../../env';
 
-const storageProvider = env("storageProvider") || 'local'
-const storagePath= env("storagePath");
-const storageContainer= env("storageContainer");
-const storageConnection = (env("storageConnection") && JSON.parse(env("storageConnection")))
+const storageProvider = env('storageProvider') || 'local'
+const storagePath= env('storagePath');
+const storageContainer= env('storageContainer');
+const storageConnection = (env('storageConnection') && JSON.parse(env('storageConnection')))
 
 let  storage = null;
 if(storageProvider !== 'local' && !(storageProvider!==undefined && storagePath!==undefined && storageContainer!==undefined && storageConnection!==undefined)){
@@ -17,7 +17,7 @@ if(storageProvider !== 'local' && !(storageProvider!==undefined && storagePath!=
 }
 
 
-let localConfigData = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "public/config.json")).toString())
+let localConfigData = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'public/config.json')).toString())
 
 const configServer = Router();
 
