@@ -8,8 +8,8 @@ const config_1 = __importDefault(require("./config"));
 const routes = module.exports;
 routes.mapRoutes = (app) => {
     /* APIs and Routes */
-    app.use("/ping", ping_1.default);
-    app.use("/config", config_1.default);
+    app.use('/ping', ping_1.default);
+    app.use('/config', config_1.default);
     return app;
 };
 exports.default = routes;

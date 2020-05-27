@@ -17,10 +17,10 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const smcloudstore_1 = __importDefault(require("smcloudstore"));
 const env_1 = __importDefault(require("../../env"));
-const storageProvider = env_1.default("storageProvider") || 'local';
-const storagePath = env_1.default("storagePath");
-const storageContainer = env_1.default("storageContainer");
-const storageConnection = (env_1.default("storageConnection") && JSON.parse(env_1.default("storageConnection")));
+const storageProvider = env_1.default('storageProvider') || 'local';
+const storagePath = env_1.default('storagePath');
+const storageContainer = env_1.default('storageContainer');
+const storageConnection = (env_1.default('storageConnection') && JSON.parse(env_1.default('storageConnection')));
 let storage = null;
 if (storageProvider !== 'local' && !(storageProvider !== undefined && storagePath !== undefined && storageContainer !== undefined && storageConnection !== undefined)) {
     throw Error("valid args not found");
@@ -28,7 +28,7 @@ if (storageProvider !== 'local' && !(storageProvider !== undefined && storagePat
 else {
     storage = smcloudstore_1.default.Create(storageProvider, storageConnection);
 }
-let localConfigData = JSON.parse(fs_1.default.readFileSync(path_1.default.resolve(process.cwd(), "public/config.json")).toString());
+let localConfigData = JSON.parse(fs_1.default.readFileSync(path_1.default.resolve(process.cwd(), 'public/config.json')).toString());
 const configServer = express_1.Router();
 // TODO: config.js support
 configServer
