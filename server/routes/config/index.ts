@@ -4,14 +4,14 @@ import path from 'path';
 import SMCloudStore from 'smcloudstore';
 import env from '../../env';
 
-const storageProvider = env('storageProvider') || 'local'
-const storagePath= env('storagePath');
-const storageContainer= env('storageContainer');
-const storageConnection = (env('storageConnection') && JSON.parse(env('storageConnection')))
+const storageProvider = env('STORAGE_PROVIDER') || 'local'
+const storagePath= env('STORAGE_PATH');
+const storageContainer= env('STORAGE_CONTAINER');
+const storageConnection = (env('STORAGE_CONNECTION') && JSON.parse(env('STORAGE_CONNECTION')))
 
 let  storage = null;
 if(storageProvider !== 'local' && !(storageProvider!==undefined && storagePath!==undefined && storageContainer!==undefined && storageConnection!==undefined)){
-    throw Error("valid args not found")
+    throw Error("Valid args not found for storage provider")
 }else{
     storage = SMCloudStore.Create(storageProvider, storageConnection)
 }

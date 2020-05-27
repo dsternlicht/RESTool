@@ -8,12 +8,12 @@ const SMCloudStore = require('smcloudstore');
 
 (async () => {
 
-    const storageProvider = env("storageProvider");
-    const storagePath= env("storagePath");
-    const storageContainer= env("storageContainer");
-    const storageConnection = (env("storageConnection") && JSON.parse(env("storageConnection")))
+    const storageProvider = env('STORAGE_PROVIDER') || 'local'
+    const storagePath= env('STORAGE_PATH');
+    const storageContainer= env('STORAGE_CONTAINER');
+    const storageConnection = (env('STORAGE_CONNECTION') && JSON.parse(env('STORAGE_CONNECTION')))
     if(!storageProvider && !storagePath && !storageContainer && !storageConnection){
-        throw Error("valid args not found")
+        throw Error("Valid args not found for storage provider")
     }
 
     const storage = SMCloudStore.Create(storageProvider, storageConnection)
