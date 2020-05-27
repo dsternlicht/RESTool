@@ -9,9 +9,7 @@ const routes = module.exports;
 routes.mapRoutes = (app) => {
     /* APIs and Routes */
     app.use('/ping', pingRouter);
-    app.use('/config', configRouter);
-
-
+    app.use('/remote', configRouter);
 
     return app;
 };

@@ -12,13 +12,14 @@ const SMCloudStore = require('smcloudstore');
     const storagePath= env('STORAGE_PATH');
     const storageContainer= env('STORAGE_CONTAINER');
     const storageConnection = (env('STORAGE_CONNECTION') && JSON.parse(env('STORAGE_CONNECTION')))
+    const configType = env('CONFIG_TYPE') || 'json';
     if(!storageProvider && !storagePath && !storageContainer && !storageConnection){
         throw Error("Valid args not found for storage provider")
     }
 
     const storage = SMCloudStore.Create(storageProvider, storageConnection)
 
-    const data = fs.createReadStream(path.resolve(process.cwd(), "devTools/config.json"))
+    const data = fs.createReadStream(path.resolve(process.cwd(), "devTools/config."+configType))
     const options = {
         metadata: {
             'Content-Type': 'application/json'

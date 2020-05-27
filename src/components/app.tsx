@@ -43,7 +43,8 @@ function App() {
   
       let remoteConfig: IConfig; 
       if(isRemoteUrl){
-          remoteConfig = await ConfigService.getRemoteConfig("/config");
+          console.log("remote url");
+          remoteConfig = await ConfigService.getRemoteConfig("/remote/config.json");
       }
       else{
           // Try to load config from window object first

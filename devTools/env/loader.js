@@ -31,8 +31,5 @@ const path = require('path');
   const env = getAppEnvironment();
 
   writeEnvFile(env)
-  fs.copyFileSync(path.resolve(process.cwd(),'devTools/env/index.js'), path.resolve(process.cwd(),'src/env.js'));
-  fs.copyFileSync(path.resolve(process.cwd(),'devTools/env/index.js'), path.resolve(process.cwd(),'server/env.ts'));
-
 
 }());

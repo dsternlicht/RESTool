@@ -23,15 +23,25 @@ const configServer = Router();
 
 // TODO: config.js support
 configServer
-    .get('/', async(req: Request, res: Response) => {
-        let configString = {}
+    .get('/config.json', async(req: Request, res: Response) => {
+        let configString = ''
         if(storageProvider!== 'local'){
-            configString = JSON.parse(await storage.getObjectAsString(storageContainer, storagePath));
-        }else{
-            configString = localConfigData
+            configString = await storage.getObjectAsString(storageContainer, storagePath);
+            return res.status(200).json(JSON.parse(configString));
+        }
+        return res.status(200).json(localConfigData)
+    });
+
+configServer
+    .get('/config.js', async(req: Request, res: Response) => {
+        let configString = ''
+        if(storageProvider!== 'local'){
+            configString = await storage.getObjectAsBuffer(storageContainer, storagePath);
+            res.writeHead(200, { 'Content-Type': 'text/javascript' });
+            return res.end(configString, 'utf-8');
         }
         
-        res.status(200).json(configString)
+        return res.status(500)
     });
 
 
