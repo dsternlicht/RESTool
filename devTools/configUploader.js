@@ -12,13 +12,14 @@ const SMCloudStore = require('smcloudstore');
     const storagePath= env('STORAGE_PATH');
     const storageContainer= env('STORAGE_CONTAINER');
     const storageConnection = (env('STORAGE_CONNECTION') && JSON.parse(env('STORAGE_CONNECTION')))
-    const configType = env('CONFIG_TYPE') || 'json';
+    const configType = env('REMOTE_CONFIG_TYPE') || 'json';
+    console.log("configType", configType)
     if(!storageProvider && !storagePath && !storageContainer && !storageConnection){
         throw Error("Valid args not found for storage provider")
     }
 
     const storage = SMCloudStore.Create(storageProvider, storageConnection)
-
+    console.log("uploading from", path.resolve(process.cwd(), "devTools/config."+configType));
     const data = fs.createReadStream(path.resolve(process.cwd(), "devTools/config."+configType))
     const options = {
         metadata: {
@@ -33,7 +34,7 @@ const SMCloudStore = require('smcloudstore');
     await storage.putObject(storageContainer, storagePath, data, options)
     const configString = await storage.getObjectAsString(storageContainer, storagePath)
 
-    console.log("successfully uploaded config", configString)
+    console.log("successfully uploaded config")
 
 })().catch(err => {
     console.error(err);

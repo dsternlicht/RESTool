@@ -1,4 +1,3 @@
-// common env reading for server & client
 require('dotenv').config()
 
 export default (key = "")=> {
