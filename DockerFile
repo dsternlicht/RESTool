@@ -12,7 +12,6 @@ COPY package.json ./
 RUN npm install
 COPY . .
 RUN npm run build:all
-# TODO: fix me why failing with typescript?
 RUN npm prune --production
 
 # run node prune
