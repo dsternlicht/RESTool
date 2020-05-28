@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "es6",
+    "allowJs": true,
+    "module": "commonjs",
+   "lib": [
+      "dom",
+      "es2015",
+      "es2016",
+      "es2017.object"
+    ],
+    "moduleResolution": "node",             
+    "noUnusedLocals": false,
+    "outDir": "./build/server",                          
+    "rootDir": "server"
+  },
+  "include": ["server"],
+  "exclude": ["node_modules","devTools"]
+}

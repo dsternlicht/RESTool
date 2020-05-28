@@ -8,12 +8,16 @@ import { Navigation } from '../components/navigation/navigation.comp';
 import { AppContext } from './app.context';
 import HttpService from '../services/http.service';
 import { CustomStyles } from './customStyles/customStyles.comp';
+import env from '../env';
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 const httpService = new HttpService();
 const defaultAppName: string = 'RESTool App';
+
+const remoteConfigType: string = env('REMOTE_CONFIG_TYPE') || 'local'
+
 
 function changeFavicon(src: string) {
   const link = document.createElement('link');
@@ -36,13 +40,19 @@ function App() {
   
   async function loadConfig(url?: string): Promise<void> {
     try {
-      const windowConfig = (window as any).RESTool?.config;
+  
       let remoteConfig: IConfig; 
-      // Try to load config from window object first
-      if (!url && windowConfig) {
-        remoteConfig = Object.assign({}, windowConfig, {});
-      } else {
-        remoteConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
+      if(remoteConfigType!=='local'){
+          remoteConfig = await ConfigService.getRemoteConfig(`/remote/config.${remoteConfigType}`);
+      }
+      else{
+          // Try to load config from window object first
+          const windowConfig = (window as any).RESTool?.config;
+          if (!url && windowConfig) {
+            remoteConfig = Object.assign({}, windowConfig, {});
+          } else {
+            remoteConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
+          }
       }
 
       // Setting global config for httpService
@@ -59,6 +69,7 @@ function App() {
       if (remoteConfig?.remoteUrl) {
         return await loadConfig(remoteConfig.remoteUrl);
       }
+
 
       setConfig(remoteConfig);
     } catch (e) {

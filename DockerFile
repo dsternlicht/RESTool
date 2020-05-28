@@ -1,0 +1,28 @@
+# build ===============================
+FROM node:12.16.1-alpine3.9 AS builder
+
+RUN apk update && apk add curl bash && rm -rf /var/cache/apk/*
+
+
+# install node-prune (https://github.com/tj/node-prune)
+RUN curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash -s -- -b /usr/local/bin
+
+WORKDIR /app
+COPY package.json ./
+RUN npm install
+COPY . .
+RUN npm run build:all
+RUN npm prune --production
+
+# run node prune
+RUN /usr/local/bin/node-prune
+
+# run ===============================
+FROM node:12.16.1-alpine3.9
+
+WORKDIR /app
+COPY --from=builder /app .
+EXPOSE 1729
+COPY ./entrypoint.sh .
+
+ENTRYPOINT [ "./entrypoint.sh" ]
