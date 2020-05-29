@@ -17,7 +17,7 @@ if(storageProvider !== 'local' && !(storageProvider!==undefined && storagePath!=
 }
 
 
-let localConfigData = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'public/config.json')).toString())
+
 
 const configServer = Router();
 
@@ -26,10 +26,11 @@ configServer
     .get('/config.json', async(req: Request, res: Response) => {
         let configString = ''
         if(storageProvider!== 'local'){
-            configString = await storage.getObjectAsString(storageContainer, storagePath);
-            return res.status(200).json(JSON.parse(configString));
+            configString = await storage.getObjectAsBuffer(storageContainer, storagePath);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            return res.end(configString, 'utf-8');
         }
-        return res.status(200).json(localConfigData)
+        return res.status(500).send("Wrong storage provider")
     });
 
 configServer
@@ -41,7 +42,7 @@ configServer
             return res.end(configString, 'utf-8');
         }
         
-        return res.status(500)
+        return res.status(500).send("Wrong storage provider")
     });
 
 

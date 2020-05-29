@@ -9,6 +9,7 @@ interface IPopupProps {
   style?: any
   show: boolean
   closeCallback: any
+  closable?: boolean,
   children: ReactChild
   refCallback?: string | ((instance: HTMLDivElement | null) => void) | RefObject<HTMLDivElement> | null | undefined
   customLabels?: ICustomLabels
@@ -56,9 +57,9 @@ export class Popup extends Component<IPopupProps> {
               <div className="overlay" onClick={(e: any) => this.props.closeCallback(e)}></div>
               <div className="popup-content" ref={this.props.refCallback}>
                 {this.props.children}
-                <button title={closeLabel} className="close-popup" onClick={(e: any) => this.props.closeCallback(e)}>
+                {this.props.closable &&<button title={closeLabel} className="close-popup" onClick={(e: any) => this.props.closeCallback(e)}>
                   <i className="fa fa-times" aria-hidden="true"></i>
-                </button>
+                </button>}
               </div>
             </div> :
             null

@@ -12,6 +12,7 @@ import env from '../env';
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import { LoginForm } from './login/login';
 
 const httpService = new HttpService();
 const defaultAppName: string = 'RESTool App';
@@ -142,6 +143,7 @@ function App() {
             {
               config &&
               <Switch>
+                <Route exact path="/login" component={LoginForm} />
                 <Route exact path="/:page" component={Page} />
                 <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
               </Switch>
