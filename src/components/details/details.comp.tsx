@@ -7,7 +7,7 @@ import { Button } from '../button/button.comp';
 import './details.scss';
 
 interface IProps {
-  item: any
+  item?: any
   fields: IConfigDisplayField[]
   customLabels?: ICustomLabels
 }
@@ -35,12 +35,10 @@ export const Details = ({ item, fields, customLabels }: IProps) => {
     }
   }
 
-  const editLabel: string = customLabels?.buttons?.editItem || 'Edit';
-  const deleteLabel: string = customLabels?.buttons?.deleteItem || 'Delete';
-
   return (
     <div className="details" key={`details`}>
       {
+        item &&
         fields.map((field, fieldIdx) => {
           const value = dataHelpers.extractDataByDataPath(item, field.dataPath, field.name);
           return (

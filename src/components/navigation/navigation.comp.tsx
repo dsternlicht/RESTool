@@ -27,7 +27,7 @@ const NavigationComp = ({ context: { config } }: IProps) => {
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
         <div className="app-nav-links">
           {
-            (config?.pages || []).map((page, idx) => (
+            (config?.resources || []).map((page, idx) => (
               <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
             ))
           }

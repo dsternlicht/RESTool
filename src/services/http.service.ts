@@ -53,7 +53,7 @@ class HttpService {
       return this.replaceParamsInUrl(url, rawData);
     }
 
-    let outputUrl = url;
+    let outputUrl = this.replaceParamsInUrl(url, rawData);
     const params = [];
 
     for (let param of queryParams) {

@@ -61,7 +61,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of your app.|
-| pages | `array` | true | A list of pages in your app, each page will be presented as a separated tab, and will have his own methods and properties. |
+| resources | `array` | true | A list of resources in your app, each resource will be presented as a separated tab, and will have his own methods and properties. |
 | baseUrl | `string` | false | Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: `"https://restool-sample-app.herokuapp.com/api"` <br /><br /> Note: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | errorMessageDataPath | `string[]` | false | The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found. |
@@ -81,17 +81,18 @@ export default {
 ```
 <br />
 
-### Pages
+### Resources
 
-Each **page** is an object and represents a resource in your API. It should have the following properties:
+Each **resource** is an object and represents a resource in your API. It should have the following properties:
 
 | Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of the page. This will be presented in the menu.|
-| id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
+| id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between resources. |
 | description | `string` | false | A short description about the page and its usage. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
+| subResources | `array` | false | A list of all sub-resources available in your RESTful API. See [sub-resources](#sub-resources) |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |
 
@@ -301,7 +302,7 @@ Example:
 
 #### Pagination
 
-The `pagination` property allows you to handle pagination on .
+The `pagination` property allows you to handle pagination on resources `getAll` method.
 
 Here's a list of variable names you may change:
 
@@ -330,6 +331,14 @@ The `fields` field has the following properties that all can be defined with a `
 | Name  | Value    | Required? | Description                                                  |
 | ----- | -------- | --------- | ------------------------------------------------------------ |
 | total | `object` | False     | The total of items available on the API endpoint. This will allow RESTool to know when there is no more pages to navigate to. |
+
+<br />
+
+#### Sub-resources
+
+The `subResources` property allows you to expose sub-resources that are "under" its parent resource. For example, `classrooms/:id/students` would be a sub-resource path of your API.
+
+Its configuration is the same than a [resource](#resources) one.  
 
 <br />
 

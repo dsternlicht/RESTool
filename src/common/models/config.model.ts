@@ -8,8 +8,8 @@ export interface IConfig {
   errorMessageDataPath: string | string[]
   unauthorizedRedirectUrl: string
   requestHeaders: any
-  pages: IConfigPage[]
-  resources: IConfigResourcePage[]
+  resources?: IConfigResource[]
+  pages?: IConfigResource[]
   customStyles?: ICustomStyles
   customLabels?: ICustomLabels
 }
@@ -73,24 +73,16 @@ export interface ICustomPaginationLabels {
   nextPageTitle?: string
 }
 
-export interface IConfigPage {
+export interface IConfigResource {
   name: string
   id: string
   description: string
   requestHeaders: any
   methods: IConfigMethods
+  subResources?: IConfigResource[]
   customActions: IConfigCustomAction[]
   customLabels: ICustomLabels
 }
-
-export interface IConfigDetailPage {
-  id: string
-  name: string
-  description: string
-  resources: IConfigResourcePage[]
-}
-
-export interface IConfigResourcePage extends IConfigPage { }
 
 export interface IConfigMethods {
   getAll: IConfigGetAllMethod
@@ -168,7 +160,8 @@ export interface IConfigGetAllMethod extends IConfigMethod {
 
 export interface IConfigGetSingleMethod extends IConfigMethod {
   dataPath: string
-  detailPage: IConfigDetailPage
+  name?: string
+  id?: string
 }
 
 export interface IConfigPostMethod extends IConfigMethod {

@@ -84,6 +84,12 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
         <td>
           <div className="actions-wrapper">
             {
+              callbacks.details &&
+              <Button onClick={() => callbacks.details?.(item)} title='Details'>
+                <i className="fa fa-search" aria-hidden="true"></i>
+              </Button>
+            }
+            {
               callbacks.put &&
               <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
                 <i className="fa fa-pencil-square-o" aria-hidden="true"></i>

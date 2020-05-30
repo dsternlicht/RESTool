@@ -1,15 +1,16 @@
 import React from 'react';
-import { IConfig, IConfigPage } from '../common/models/config.model';
+import { IConfig, IConfigResource } from '../common/models/config.model';
 import HttpService from '../services/http.service';
 
 export interface IAppContext {
   config: IConfig | null
-  activePage: IConfigPage | null
+  detailPagesConfig: { resource: IConfigResource, route: string }[] | null
+  activePage: IConfigResource | null
   activeItem: any | null
   activePathVars: {[key: string]: string}
   error: string | null
   setError: (error: string | null) => void
-  setActivePage: (activePage: IConfigPage | null) => void
+  setActivePage: (activePage: IConfigResource | null) => void
   setActiveItem: (activeItem: any | null) => void
   setActivePathVars: (activePathVars: {[key: string]: string}) => void
   httpService: HttpService
@@ -17,6 +18,7 @@ export interface IAppContext {
 
 export const AppContext = React.createContext<IAppContext>({
   config: null,
+  detailPagesConfig: null,
   activePage: null,
   activeItem: null,
   activePathVars: {},

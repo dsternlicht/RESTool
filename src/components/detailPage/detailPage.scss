@@ -90,7 +90,7 @@
 
   &__tab-list {
     // border-bottom: 1px solid #aaa;
-    margin: 0 0 10px;
+    margin: 0 0 30px;
     padding: 0;
   }
 
@@ -107,7 +107,7 @@
 
     &--selected {
       // background: #fff;
-      border-bottom:2px solid #42b3f4;
+      border-bottom:2px solid var(--navBackground, #3C3E6F);
       color: black;
       // border-radius: 5px 5px 0 0;
     }

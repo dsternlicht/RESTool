@@ -1,32 +1,23 @@
-import React, { useEffect, useState, Suspense } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import * as QueryString from 'query-string';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { orderBy } from 'natural-orderby';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigDetailPage, IConfigResourcePage, IConfigDisplayField } from '../../common/models/config.model';
+import { dataHelpers } from '../../helpers/data.helpers';
+import { routesHelpers } from '../../helpers/routes.helpers';
+import { IConfigResource, IConfigMethods, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
-import { dataHelpers } from '../../helpers/data.helpers';
-import { Table } from '../table/table.comp';
-import { Cards } from '../cards/cards.comp';
-import { QueryParams } from '../queryParams/queryParams.comp';
+import { ResourceItems } from '../resourceItems/resourceItems.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
-import { FilterField } from '../filterField/filterField.comp';
-import { matchPath, useLocation, match } from 'react-router';
+import { matchPath, useLocation } from 'react-router';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Details } from '../details/details.comp';
-import { TabContent } from '../tab/tabContent.comp';
 
-
-// import 'react-tabs/style/react-tabs.css';
 import './detailPage.scss';
 
 interface IProps {
   context: IAppContext
-  // item: any
 }
 
 interface IPopupProps {
@@ -39,40 +30,30 @@ interface IPopupProps {
 }
 
 const DetailPageComp = ({ context }: IProps) => {
-  const { page } = useParams();
   let { pathname } = useLocation();
   if (pathname[0] === '/') {
     pathname = pathname.slice(1);
   }
-  const { push, location } = useHistory();
-  const { activePage, error, setError, httpService, config, activeItem, activePathVars, setActivePathVars } = context;
-  const detailPage = activePage?.methods?.getSingle.detailPage;
-  const [activeResourceIndex, setActiveResourceIndex] = useState<number>(0);
-  const resources = detailPage?.resources;
+  const { activePage, setActivePage, error, setError, httpService, config, activeItem, setActiveItem, detailPagesConfig } = context;
+  const subResources = activePage?.subResources;
   const pageHeaders: any = activePage?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
-  const customActions: IConfigCustomAction[] = resources?.[activeResourceIndex]?.customActions || [];
+  const customActions: IConfigCustomAction[] = activePage?.customActions || [];
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
-  const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
-  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels, ...resources?.[activeResourceIndex]?.customLabels };
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
   const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
-  const [loading, setLoading] = useState<boolean>(false);
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
-  const [queryParams, setQueryParams] = useState<IConfigInputField[]>(resources?.[activeResourceIndex]?.methods.getAll.queryParams || []);
-  const [items, setItems] = useState<any[]>([]);
-  const [filter, setFilter] = useState<string>('');
-  const staticPathVars = detailPage ? matchPath(pathname, detailPage.id)?.params : {};
-  let pageName = detailPage?.name;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [activePathVars, setActivePathVars] = useState<any>(getPageMatch(context?.config?.resources?.flatMap(page => page.methods?.getSingle)) || {});
+  const pathVars = getPageMatch(context?.config?.resources?.flatMap(page => page.methods?.getSingle)) || {}
+  let pageName = getSingleConfig?.name;
 
   const dynamicMatches = pageName?.match(/\${([\w.]*)}/gm);
   const dynamicVars = dynamicMatches?.map(m => m.replace(/[\${}]/gm, ''));
   const replacements = dynamicVars?.map(key => activeItem[key]);
   dynamicMatches?.forEach((match, index) => { pageName = pageName?.replace(match, replacements?.[index] || 'undefined') })
-
-  const [resourceLoading, setResourceLoading] = useState<boolean[]>(Array(resources?.length).fill(false));
-  const [resourceItems, setResourceItems] = useState<any[][]>(Array(resources?.length).fill([]));
 
   const callbacks = {
     delete: deleteConfig ? deleteItem : null,
@@ -138,40 +119,6 @@ const DetailPageComp = ({ context }: IProps) => {
     });
   }
 
-  function extractQueryParams(): IConfigInputField[] {
-    const parsedParams = QueryString.parse(location.search);
-    const finalQueryParams: IConfigInputField[] = (getAllConfig?.queryParams || []).map((queryParam) => {
-      if (typeof parsedParams[queryParam.name] !== 'undefined') {
-        queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
-      } else {
-        queryParam.value = queryParam.value || '';
-      }
-      return queryParam;
-    });
-
-    return finalQueryParams
-  }
-
-  async function addItem(body: any, containFiles?: boolean) {
-    if (!postConfig) {
-      throw new Error('Post method is not defined.');
-    }
-
-    const { url, requestHeaders, actualMethod } = postConfig;
-
-    return await httpService.fetch({
-      method: actualMethod || 'post',
-      origUrl: url,
-      body: containFiles ? body : JSON.stringify(body),
-      headers: {
-        ...pageHeaders,
-        ...(requestHeaders || {}),
-        ...(containFiles ? {} : { 'content-type': 'application/json' })
-      },
-      responseType: 'boolean'
-    });
-  }
-
   async function updateItem(body: any, rawData: any, containFiles?: boolean) {
     if (!putConfig) {
       throw new Error('Put method is not defined.');
@@ -222,165 +169,142 @@ const DetailPageComp = ({ context }: IProps) => {
     }
   }
 
-  function submitQueryParams(updatedParams: IConfigInputField[]) {
-    setQueryParams(updatedParams);
-
-    if (loading) {
-      return;
-    }
-
-    // Building query string
-    const queryState: string = queryParams.map((queryParam, idx) => {
-      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
-    }).join('&');
-
-    // Pushing query state to url
-    push(queryState);
+  const renderTabContent = (key: string, resource: IConfigResource) => {
+    const sub = { ...resource };
+    return (
+      <TabPanel
+        key={key}
+      >
+        <ResourceItems
+          context={context}
+          activeResource={sub}
+          openedPopupState={openedPopup}
+          activePathVars={pathVars}
+          isSubResource={true}
+        />
+      </TabPanel>
+    )
   }
 
   function ControlledTabs() {
 
-    if (resources === null) {
+    if (subResources === null) {
       return null;
     }
     return (
-      <Tabs selectedIndex={activeResourceIndex} onSelect={tabIndex => setActiveResourceIndex(tabIndex)}>
+      <Tabs>
         <TabList>
           {
-            resources &&
-            resources.map((resource, index) => <Tab key={`resource_tablist_${index}`}>{resource.name}</Tab>)
+            subResources &&
+            subResources.map((resource, index) => <Tab key={`resource_tablist_${index}`}>{resource.name}</Tab>)
           }
         </TabList>
         {
-          resources &&
-          resources.map((resource, index) =>
-            <TabContent
-              key={`resource_tabcontent_${index}`}
-              context={context}
-              resource={resource}
-              loading={resourceLoading[index]}
-              items={resourceItems[index]}
-            />
-          )
+          subResources &&
+          subResources.map((resource, index) => renderTabContent(
+            `resource_tabcontent_${index}`,
+            resource,
+          ))
         }
       </Tabs>
     );
   }
 
-  function renderPageContent() {
 
+  function renderPageContent() {
+    if (loading) {
+      return <Loader />;
+    }
     return (
       <React.Fragment>
-        <QueryParams
-          initialParams={queryParams}
-          submitCallback={submitQueryParams}
-        />
         {
           error ?
             <div className="app-error">{error}</div> :
+            subResources &&
             <ControlledTabs />
         }
       </React.Fragment>
     )
   }
 
-  function getPageMatch(pages: IConfigDetailPage[] | undefined): { matchPage: IConfigDetailPage, pathVars: { [key: string]: string } } | null {
-    if (pages === undefined || pages.length === 0) {
+  function getPageMatch(getSingleMethods: IConfigGetSingleMethod[] | undefined): { [key: string]: string } | null {
+    if (getSingleMethods === undefined || getSingleMethods.length === 0) {
       return null;
     }
     let pathVars = {};
-    const nextActivePage: IConfigDetailPage | undefined = pages?.find(detailPage => {
-      let match = matchPath(pathname, detailPage.id);
+    const nextDetail: IConfigGetSingleMethod | undefined = getSingleMethods?.find(method => {
+      if (!method?.id) {
+        return false;
+      }
+      let match = matchPath(pathname, method.id);
       pathVars = match ? match.params : {};
       return match?.isExact;
     });
 
-    if (nextActivePage === undefined) {
+    if (nextDetail === undefined) {
       return null;
     }
 
-    return { matchPage: nextActivePage, pathVars };
+    return pathVars;
   }
 
   useEffect(() => {
-    const { matchPage, pathVars } = getPageMatch(context?.config?.pages.flatMap(page => page.methods?.getSingle?.detailPage)) || { matchPage: undefined, pathVars: {} };
+    if (activePage === null) {
+      let newPathVars = {};
+      const resourceConfig = detailPagesConfig?.find(conf => {
+        if (!conf.route) {
+          return false;
+        }
+        let match = matchPath(`/${pathname}`, conf.route);
+        newPathVars = match ? match.params : {};
+        return match?.isExact;
+      })?.resource;
+      if (resourceConfig) {
+        setActivePathVars(newPathVars);
+        setActivePage(resourceConfig);
+      }
+    }
+  }, [activePage, detailPagesConfig, activeItem, activePathVars]);
 
-    context.setActivePathVars(pathVars);
+  useEffect(() => {
+    async function getOneRequest() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        if (!getSingleConfig) {
+          throw new Error('Get single method is not defined.');
+        }
+
+        const { url, requestHeaders, actualMethod, dataPath, queryParams } = getSingleConfig;
+
+        const result = await httpService.fetch({
+          method: actualMethod || 'get',
+          origUrl: url,
+          rawData: activePathVars,
+          queryParams,
+          headers: Object.assign({}, pageHeaders, requestHeaders || {})
+        });
+        let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+
+        if (!extractedData) {
+          throw new Error('Could not extract data from response.');
+        }
+
+        setActiveItem(extractedData);
+
+      } catch (e) {
+        setError(e.message);
+      }
+
+      setLoading(false);
+    }
+    if (activePage && activeItem === null) {
+      getOneRequest();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pathname, activeResourceIndex]);
+  }, [activeItem, activePage])
 
-  useEffect(() => {
-    setQueryParams(extractQueryParams());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePage]);
-
-  function setActiveResourceLoading(state: boolean) {
-    const updated = [...resourceLoading];
-    updated[activeResourceIndex] = state;
-    setResourceLoading(updated);
-  }
-
-  function setActiveResourceItems(items: any[]) {
-    const updated = [...resourceItems];
-    updated[activeResourceIndex] = items;
-    setResourceItems(updated);
-  }
-
-  async function getAllResourceRequest() {
-    if (resourceItems[activeResourceIndex] && resourceItems[activeResourceIndex].length) {
-      return;
-    }
-    const resource = resources?.[activeResourceIndex];
-    const newResourceLoading = resourceLoading;
-    resourceLoading[activeResourceIndex] = true;
-    setActiveResourceLoading(true);
-    setError(null);
-
-    const getAllConfig = resource?.methods.getAll;
-
-    try {
-      if (!getAllConfig) {
-        throw new Error('Get all method is not defined.');
-      }
-
-      const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
-      const result = await httpService.fetch({
-        method: actualMethod || 'get',
-        origUrl: url,
-        // rawData: activePathVars,
-        rawData: staticPathVars,
-        // queryParams: extractQueryParams(),
-        queryParams: queryParams,
-        headers: Object.assign({}, pageHeaders, requestHeaders || {})
-      });
-      let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
-
-      if (!extractedData) {
-        throw new Error('Could not extract data from response.');
-      }
-
-      if (!Array.isArray(extractedData)) {
-        throw new Error('Extracted data is invalid.');
-      }
-
-      if (typeof dataTransform === 'function') {
-        extractedData = await dataTransform(extractedData);
-      }
-
-      const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
-      setActiveResourceItems(orderedItems);
-    } catch (e) {
-      setError(e.message);
-    }
-
-    setActiveResourceLoading(false);
-  }
-
-  useEffect(() => {
-    if (resources?.[activeResourceIndex]) {
-      getAllResourceRequest();
-    }
-  }, [activeResourceIndex, page, pathname]);
 
   return (
     <div className="app-details-page">
