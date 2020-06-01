@@ -29,12 +29,12 @@ const PageComp = ({ context }: IProps) => {
   if (pathname[0] === '/') {
     pathname = pathname.slice(1);
   }
-  const { activePage, httpService, config } = context;
+  const { activeResource, httpService, config } = context;
   const resources = config?.resources;
-  const pageHeaders: any = activePage?.requestHeaders || {};
-  const pageMethods: IConfigMethods | undefined = activePage?.methods;
+  const pageHeaders: any = activeResource?.requestHeaders || {};
+  const pageMethods: IConfigMethods | undefined = activeResource?.methods;
   const postConfig: IConfigPostMethod | undefined = pageMethods?.post;
-  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activeResource?.customLabels };
   const addItemLabel = customLabels?.buttons?.addItem || '+ Add Item';
   const addItemFormTitle = customLabels?.formTitles?.addItem || 'Add Item';
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
@@ -44,7 +44,7 @@ const PageComp = ({ context }: IProps) => {
     return (
       <ResourceItems
         context={context}
-        activeResource={activePage}
+        activeResource={activeResource}
         openedPopupState={openedPopup}
         isSubResource={false}
       />
@@ -75,13 +75,13 @@ const PageComp = ({ context }: IProps) => {
       return null;
     }
     let pathVars = {};
-    const nextActivePage: IConfigResource | undefined = _resources?.find((page, pIdx) => {
+    const nextactiveResource: IConfigResource | undefined = _resources?.find((page, pIdx) => {
       let match = matchPath(pathname, page.id);
       pathVars = match ? match.params : {};
       return match?.isExact || (pIdx + 1) === parseInt(pathname || '')
     });
-    if (nextActivePage !== undefined) {
-      return { matchPage: nextActivePage, pathVars };
+    if (nextactiveResource !== undefined) {
+      return { matchPage: nextactiveResource, pathVars };
     }
 
     if (!_resources || _resources.length === 0) {
@@ -95,7 +95,7 @@ const PageComp = ({ context }: IProps) => {
     const { matchPage, pathVars } = getPageMatch(resources) || { matchPage: null, pathVars: {} };
 
     context.setActivePathVars(pathVars);
-    context.setActivePage(matchPage);
+    context.setActiveResource(matchPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, pathname]);
 
@@ -104,10 +104,10 @@ const PageComp = ({ context }: IProps) => {
     <div className="app-page">
       <header className="app-page-header">
         <hgroup>
-          <h2>{activePage?.name}</h2>
+          <h2>{activeResource?.name}</h2>
           {
-            activePage?.description &&
-            <h4>{activePage?.description}</h4>
+            activeResource?.description &&
+            <h4>{activeResource?.description}</h4>
           }
         </hgroup>
         {

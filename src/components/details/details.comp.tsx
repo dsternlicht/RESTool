@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { IConfigDisplayField, IConfigCustomAction, ICustomLabels } from '../../common/models/config.model';
+import { IConfigDisplayField, ICustomLabels } from '../../common/models/config.model';
 import { dataHelpers } from '../../helpers/data.helpers';
-import { Button } from '../button/button.comp';
 
 import './details.scss';
 

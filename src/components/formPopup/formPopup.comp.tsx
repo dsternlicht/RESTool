@@ -35,12 +35,12 @@ interface IProps {
 
 export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
   const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
-  const { httpService, activePage, config } = context;
+  const { httpService, activeResource, config } = context;
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
-  const pageHeaders: any = activePage?.requestHeaders || {};
-  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const pageHeaders: any = activeResource?.requestHeaders || {};
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activeResource?.customLabels };
 
   async function initFormFields() {
     let finalRawData: any = rawData || {};
@@ -52,7 +52,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
           method: actualMethod || 'get',
           origUrl: url,
           queryParams,
-          headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
+          headers: Object.assign({}, pageHeaders, requestHeaders || {}),
           rawData,
         });
 
@@ -207,24 +207,24 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         <section>
           {
             loading ?
-            <Loader /> :
-            <form onSubmit={submitForm}>
-              {
-                formFields.map((field, idx) => {
-                  return (
-                    <FormRow
-                      key={`field_${idx}`}
-                      field={field}
-                      onChange={formChanged}
-                      showReset={!field.type || field.type === 'text'}
-                    />
-                  );
-                })
-              }
-              <div className="buttons-wrapper center">
-                <Button type="submit" onClick={submitForm} color="green">Submit</Button>
-              </div>
-            </form>
+              <Loader /> :
+              <form onSubmit={submitForm}>
+                {
+                  formFields.map((field, idx) => {
+                    return (
+                      <FormRow
+                        key={`field_${idx}`}
+                        field={field}
+                        onChange={formChanged}
+                        showReset={!field.type || field.type === 'text'}
+                      />
+                    );
+                  })
+                }
+                <div className="buttons-wrapper center">
+                  <Button type="submit" onClick={submitForm} color="green">Submit</Button>
+                </div>
+              </form>
           }
         </section>
       </React.Fragment>

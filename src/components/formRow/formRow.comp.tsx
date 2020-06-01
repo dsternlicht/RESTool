@@ -20,9 +20,9 @@ interface IProps {
 
 export const FormRow = withAppContext(({ context, field, direction, showReset, onChange }: IProps) => {
   const [optionSources, setOptionSources] = useState<any>({});
-  const { httpService, activePage, config } = context;
-  const pageHeaders: any = activePage?.requestHeaders || {};
-  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const { httpService, activeResource, config } = context;
+  const pageHeaders: any = activeResource?.requestHeaders || {};
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activeResource?.customLabels };
   const addArrayItemLabel = customLabels?.buttons?.addArrayItem || 'Add Item';
   const clearLabel = customLabels?.buttons?.clearInput || 'Clear';
 

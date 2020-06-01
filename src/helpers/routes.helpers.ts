@@ -5,7 +5,7 @@ class RoutesHelpers {
     const detailRoutesConfig: { resource: IConfigResource, route: string }[] = resources?.reduce((acc: { resource: IConfigResource, route: string }[], resource) => {
       const detailPageId = resource.methods?.getSingle?.id;
       if (detailPageId) {
-        const route = parentRoute ? `/${parentRoute}/${detailPageId}` : `/${detailPageId}`;
+        const route = `/${detailPageId}`;
         acc.push({
           route,
           resource,

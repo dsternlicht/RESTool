@@ -32,7 +32,7 @@ function changeFavicon(src: string) {
 function App() {
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [config, setConfig] = useState<IConfig | null>(null);
-  const [activePage, setActivePage] = useState<IConfigResource | null>(config?.resources?.[0] || config?.pages?.[0] || null);
+  const [activeResource, setActiveResource] = useState<IConfigResource | null>(config?.resources?.[0] || config?.pages?.[0] || null);
   const [activePathVars, setActivePathVars] = useState<{ [key: string]: string }>({});
   const [error, setError] = useState<string | null>(null);
   const [activeItem, setActiveItem] = useState<any | null>(null);
@@ -131,7 +131,7 @@ function App() {
           <div className="app-error">
             {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
           </div> :
-          <AppContext.Provider value={{ config, detailPagesConfig, activePage, setActivePage, activePathVars, setActivePathVars, activeItem, setActiveItem, error, setError, httpService }}>
+          <AppContext.Provider value={{ config, detailPagesConfig, activeResource, setActiveResource, activePathVars, setActivePathVars, activeItem, setActiveItem, error, setError, httpService }}>
             {
               config.customStyles &&
               <CustomStyles

@@ -34,24 +34,26 @@ const DetailPageComp = ({ context }: IProps) => {
   if (pathname[0] === '/') {
     pathname = pathname.slice(1);
   }
-  const { activePage, setActivePage, error, setError, httpService, config, activeItem, setActiveItem, detailPagesConfig } = context;
-  const subResources = activePage?.subResources;
-  const pageHeaders: any = activePage?.requestHeaders || {};
-  const pageMethods: IConfigMethods | undefined = activePage?.methods;
-  const customActions: IConfigCustomAction[] = activePage?.customActions || [];
+  const { activeResource, setActiveResource, error, setError, httpService, config, activeItem, setActiveItem, detailPagesConfig } = context;
+  const subResources = activeResource?.subResources;
+  const pageHeaders: any = activeResource?.requestHeaders || {};
+  const pageMethods: IConfigMethods | undefined = activeResource?.methods;
+  const customActions: IConfigCustomAction[] = activeResource?.customActions || [];
   const getSingleConfig: IConfigGetSingleMethod | undefined = pageMethods?.getSingle;
   const putConfig: IConfigPutMethod | undefined = pageMethods?.put;
   const deleteConfig: IConfigDeleteMethod | undefined = pageMethods?.delete;
-  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
+  const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activeResource?.customLabels };
   const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [activePathVars, setActivePathVars] = useState<any>(getPageMatch(context?.config?.resources?.flatMap(page => page.methods?.getSingle)) || {});
-  const pathVars = getPageMatch(context?.config?.resources?.flatMap(page => page.methods?.getSingle)) || {}
+  const detailRouteConfigs = routesHelpers.detailRoutesConfig(config?.resources);
+  const activePathVars = getPageMatch(detailRouteConfigs) || undefined;
+  const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   let pageName = getSingleConfig?.name;
 
+  // TODO: change ${var} pattern to :var
   const dynamicMatches = pageName?.match(/\${([\w.]*)}/gm);
-  const dynamicVars = dynamicMatches?.map(m => m.replace(/[\${}]/gm, ''));
+  const dynamicVars = dynamicMatches?.map(m => m.replace(/[${}]/gm, ''));
   const replacements = dynamicVars?.map(key => activeItem[key]);
   dynamicMatches?.forEach((match, index) => { pageName = pageName?.replace(match, replacements?.[index] || 'undefined') })
 
@@ -62,7 +64,7 @@ const DetailPageComp = ({ context }: IProps) => {
   };
 
 
-  const getAllConfig = activePage?.methods?.getAll;
+  const getAllConfig = activeResource?.methods?.getAll;
   const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
 
   function closeFormPopup(refreshData: boolean = false) {
@@ -179,7 +181,7 @@ const DetailPageComp = ({ context }: IProps) => {
           context={context}
           activeResource={sub}
           openedPopupState={openedPopup}
-          activePathVars={pathVars}
+          activePathVars={activePathVars}
           isSubResource={true}
         />
       </TabPanel>
@@ -192,7 +194,7 @@ const DetailPageComp = ({ context }: IProps) => {
       return null;
     }
     return (
-      <Tabs>
+      <Tabs selectedIndex={activeTabIndex} onSelect={tabIndex => setActiveTabIndex(tabIndex)}>
         <TabList>
           {
             subResources &&
@@ -220,6 +222,9 @@ const DetailPageComp = ({ context }: IProps) => {
         {
           error ?
             <div className="app-error">{error}</div> :
+            detailPagesConfig &&
+            activeResource &&
+            activeItem &&
             subResources &&
             <ControlledTabs />
         }
@@ -227,13 +232,14 @@ const DetailPageComp = ({ context }: IProps) => {
     )
   }
 
-  function getPageMatch(getSingleMethods: IConfigGetSingleMethod[] | undefined): { [key: string]: string } | null {
+  function getPageMatch(getSingleMethods: { resource: IConfigResource, route: string }[] | undefined): { [key: string]: string } | null {
     if (getSingleMethods === undefined || getSingleMethods.length === 0) {
       return null;
     }
     let pathVars = {};
-    const nextDetail: IConfigGetSingleMethod | undefined = getSingleMethods?.find(method => {
-      if (!method?.id) {
+    const nextDetail = getSingleMethods?.find(detailRoute => {
+      const method = detailRoute.resource.methods.getSingle;
+      if (!method.id) {
         return false;
       }
       let match = matchPath(pathname, method.id);
@@ -249,22 +255,19 @@ const DetailPageComp = ({ context }: IProps) => {
   }
 
   useEffect(() => {
-    if (activePage === null) {
-      let newPathVars = {};
+    if (activeResource === null) {
       const resourceConfig = detailPagesConfig?.find(conf => {
         if (!conf.route) {
           return false;
         }
-        let match = matchPath(`/${pathname}`, conf.route);
-        newPathVars = match ? match.params : {};
-        return match?.isExact;
+        return matchPath(`/${pathname}`, conf.route)?.isExact;
       })?.resource;
       if (resourceConfig) {
-        setActivePathVars(newPathVars);
-        setActivePage(resourceConfig);
+        setActiveResource(resourceConfig);
       }
     }
-  }, [activePage, detailPagesConfig, activeItem, activePathVars]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailPagesConfig]);
 
   useEffect(() => {
     async function getOneRequest() {
@@ -281,7 +284,7 @@ const DetailPageComp = ({ context }: IProps) => {
         const result = await httpService.fetch({
           method: actualMethod || 'get',
           origUrl: url,
-          rawData: activePathVars,
+          rawData: getPageMatch(detailRouteConfigs) || {},
           queryParams,
           headers: Object.assign({}, pageHeaders, requestHeaders || {})
         });
@@ -299,11 +302,11 @@ const DetailPageComp = ({ context }: IProps) => {
 
       setLoading(false);
     }
-    if (activePage && activeItem === null) {
+    if (activeResource && activeItem === null) {
       getOneRequest();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeItem, activePage])
+  }, [activeItem, activeResource])
 
 
   return (

@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
-import { find, remove } from 'lodash';
+import { find, remove, isEqual } from 'lodash';
 
 import { IAppContext } from '../app.context';
 import { IConfigResource, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination } from '../../common/models/config.model';
@@ -94,7 +94,6 @@ const buildInitQueryParamsAndPaginationState = (
   };
 };
 
-// export const ResourceItems = forwardRef<void, IProps>(({ context, callbacks }: IProps, refreshData: Ref<void>) => {
 export const ResourceItems = ({ context, activeResource, openedPopupState, activePathVars, isSubResource }: IProps) => {
   const { page } = useParams();
   let { pathname } = useLocation();
@@ -102,7 +101,7 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     pathname = pathname.slice(1);
   }
   const { push, location } = useHistory();
-  const { error, setError, httpService, config, activeItem, setActiveItem, setActivePage, setActivePathVars } = context;
+  const { error, setError, httpService, config, activeItem, setActiveItem, setActiveResource } = context;
   const pageHeaders: any = activeResource?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activeResource?.methods;
   const customActions: IConfigCustomAction[] = activeResource?.customActions || [];
@@ -191,20 +190,39 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     if (!getSingleConfig || !getSingleConfig.id) {
       throw new Error('Get single method is not defined.');
     }
-    if (isSubResource) {
-      setError('Details of sub-resources is not supported yet.');
+    let detailPath = getSingleConfig.id;
+    detailPath = detailPath[0] === '/' ? detailPath : `/${detailPath}`;
+    const urlParamNames = detailPath
+      .split(/\/[-\w]+\//gm)
+      .filter(text => !!text)
+      .map(p => p.replace(':', ''));
+
+    if (urlParamNames.length > 2) {
+      setError('Depth of more than 2 resources is not supported');
       return;
     }
-    // TODO: parse the path to get the dataPath where the pathVar value is 
-    let detailPath = getSingleConfig.id;
+
+    if (urlParamNames.length === 0) {
+      setError(`No url parameters found in ${getSingleConfig.id}`);
+      return;
+    }
+
+    // We replace the first url param with active item value if it exists
+    if (isSubResource) {
+      const parentUrlParamName = urlParamNames[0];
+      if (activeItem[parentUrlParamName]) {
+        const param = `:${parentUrlParamName}`;
+        detailPath = detailPath.replace(new RegExp(param, 'g'), activeItem[parentUrlParamName] as string);
+      }
+    }
 
     Object.keys(item).forEach((key) => {
       const urlParamName = `:${key}`;
-      detailPath = detailPath.replace(urlParamName, item[key] as string);
+      detailPath = detailPath.replace(new RegExp(urlParamName, 'g'), item[key] as string);
     });
 
     if (isSubResource) {
-      setActivePage(activeResource);
+      setActiveResource(activeResource);
     }
     setActiveItem(null);
     push(detailPath);
@@ -531,17 +549,28 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     const { initQueryParams, initialPagination } = buildInitQueryParamsAndPaginationState(getAllConfig?.queryParams || [], paginationConfig);
 
     setItems([]);
-    setQueryParams(extractQueryParams(initQueryParams));
+    const newParams = extractQueryParams(initQueryParams);
+    if (isSubResource && !isEqual(newParams, queryParams)) {
+      setQueryParams(newParams);
+    }
+    if (!isSubResource) {
+      setQueryParams(newParams);
+    }
     setPagination(initialPagination);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeResource]);
 
   useEffect(() => {
     // Load data when query params 
-    getAllRequest();
+    if (isSubResource === false) {
+      getAllRequest();
+    } else if (activeItem) {
+      //  && index === activeTabIndex) {
+      getAllRequest();
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [queryParams, activeItem]);
 
   useEffect(() => {
     setOpenedPopup(openedPopupState);
