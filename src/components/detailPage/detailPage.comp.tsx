@@ -49,13 +49,7 @@ const DetailPageComp = ({ context }: IProps) => {
   const detailRouteConfigs = routesHelpers.detailRoutesConfig(config?.resources);
   const activePathVars = getPageMatch(detailRouteConfigs) || undefined;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
-  let pageName = getSingleConfig?.name;
-
-  // TODO: change ${var} pattern to :var
-  const dynamicMatches = pageName?.match(/\${([\w.]*)}/gm);
-  const dynamicVars = dynamicMatches?.map(m => m.replace(/[${}]/gm, ''));
-  const replacements = dynamicVars?.map(key => activeItem[key]);
-  dynamicMatches?.forEach((match, index) => { pageName = pageName?.replace(match, replacements?.[index] || 'undefined') })
+  const [pageName, setPageName] = useState(getSingleConfig?.name);
 
   const callbacks = {
     delete: deleteConfig ? deleteItem : null,
@@ -306,7 +300,20 @@ const DetailPageComp = ({ context }: IProps) => {
       getOneRequest();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeItem, activeResource])
+  }, [activeItem, activeResource]);
+
+
+  useEffect(() => {
+    // Handling item variables within page title
+    if (activeItem) {
+      let parsedPageName = getSingleConfig?.name;
+      const dynamicMatches = parsedPageName?.match(/:([\w.]*)/gm);
+      const dynamicVars = dynamicMatches?.map(m => m.replace(/[:]/gm, ''));
+      const replacements = dynamicVars?.map(key => activeItem[key]);
+      dynamicMatches?.forEach((match, index) => { parsedPageName = parsedPageName?.replace(match, replacements?.[index] || 'undefined') });
+      setPageName(parsedPageName);
+    }
+  }, [getSingleConfig, activeItem])
 
 
   return (
