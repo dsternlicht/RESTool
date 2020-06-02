@@ -242,7 +242,7 @@
             },
             "dataPath": {
               "type": "string",
-              "description": "TODO"
+              "description": "Let us know where we should take the data from"
             },
             "display": {
               "type": "object",

@@ -10,7 +10,7 @@ import { Loader } from '../loader/loader.comp';
 import { ResourceItems } from '../resourceItems/resourceItems.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
-import { matchPath, useLocation } from 'react-router';
+import { matchPath, useLocation, useHistory } from 'react-router';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Details } from '../details/details.comp';
 
@@ -31,11 +31,12 @@ interface IPopupProps {
 
 const DetailPageComp = ({ context }: IProps) => {
   let { pathname } = useLocation();
+  const { goBack } = useHistory()
   if (pathname[0] === '/') {
     pathname = pathname.slice(1);
   }
   const { activeResource, setActiveResource, error, setError, httpService, config, activeItem, setActiveItem, detailPagesConfig } = context;
-  const subResources = activeResource?.subResources;
+  let subResources = activeResource?.subResources;
   const pageHeaders: any = activeResource?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activeResource?.methods;
   const customActions: IConfigCustomAction[] = activeResource?.customActions || [];
@@ -49,7 +50,7 @@ const DetailPageComp = ({ context }: IProps) => {
   const detailRouteConfigs = routesHelpers.detailRoutesConfig(config?.resources);
   const activePathVars = getPageMatch(detailRouteConfigs) || undefined;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
-  const [pageName, setPageName] = useState(getSingleConfig?.name);
+  const [pageName, setPageName] = useState<string | null>(null);
 
   const callbacks = {
     delete: deleteConfig ? deleteItem : null,
@@ -65,7 +66,7 @@ const DetailPageComp = ({ context }: IProps) => {
     setOpenedPopup(null);
 
     if (refreshData === true) {
-      //TODO refresh data
+      setActiveItem(null);
     }
   }
 
@@ -158,7 +159,7 @@ const DetailPageComp = ({ context }: IProps) => {
       });
 
       if (success) {
-        // TODO, redirect to parent page
+        goBack();
       }
     } catch (e) {
       toast.error(e.message);
@@ -311,7 +312,7 @@ const DetailPageComp = ({ context }: IProps) => {
       const dynamicVars = dynamicMatches?.map(m => m.replace(/[:]/gm, ''));
       const replacements = dynamicVars?.map(key => activeItem[key]);
       dynamicMatches?.forEach((match, index) => { parsedPageName = parsedPageName?.replace(match, replacements?.[index] || 'undefined') });
-      setPageName(parsedPageName);
+      setPageName(parsedPageName || null);
     }
   }, [getSingleConfig, activeItem])
 
