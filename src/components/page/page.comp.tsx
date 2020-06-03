@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router';
 
 import { IAppContext } from '../app.context';
 import { IConfigResource, IConfigMethods, IConfigPostMethod, IConfigPutMethod, IConfigGetSingleMethod, ICustomLabels } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { ResourceItems } from '../resourceItems/resourceItems.comp';
 import { Button } from '../button/button.comp';
-import { matchPath, useLocation } from 'react-router';
 
 import './page.scss';
 
@@ -29,7 +29,7 @@ const PageComp = ({ context }: IProps) => {
   if (pathname[0] === '/') {
     pathname = pathname.slice(1);
   }
-  const { activeResource, httpService, config } = context;
+  const { activeResource, httpService, config, activePathVars, setActivePathVars, setActiveResource } = context;
   const resources = config?.resources;
   const pageHeaders: any = activeResource?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activeResource?.methods;
@@ -47,6 +47,7 @@ const PageComp = ({ context }: IProps) => {
         activeResource={activeResource}
         openedPopupState={openedPopup}
         isSubResource={false}
+        activePathVars={activePathVars}
       />
     )
   }
@@ -70,7 +71,7 @@ const PageComp = ({ context }: IProps) => {
     });
   }
 
-  function getPageMatch(_resources: IConfigResource[] | undefined): { matchPage: IConfigResource, pathVars: { [key: string]: string } } | null {
+  function getPageMatch(_resources?: IConfigResource[]): { matchingResource: IConfigResource, pathVars: { [key: string]: string } } | null {
     if (_resources === undefined || _resources.length === 0) {
       return null;
     }
@@ -81,21 +82,22 @@ const PageComp = ({ context }: IProps) => {
       return match?.isExact || (pIdx + 1) === parseInt(pathname || '')
     });
     if (nextactiveResource !== undefined) {
-      return { matchPage: nextactiveResource, pathVars };
+      return { matchingResource: nextactiveResource, pathVars };
     }
 
     if (!_resources || _resources.length === 0) {
       return null;
     }
 
-    return getPageMatch(_resources);
+    // If no match on resources, we call the matching function on all their sub-resources 
+    return getPageMatch(_resources.map(r => r.subResources).flat(1).filter(r => !!r));
   }
 
   useEffect(() => {
-    const { matchPage, pathVars } = getPageMatch(resources) || { matchPage: null, pathVars: {} };
+    const { matchingResource, pathVars } = getPageMatch(resources) || { matchingResource: null, pathVars: {} };
 
-    context.setActivePathVars(pathVars);
-    context.setActiveResource(matchPage);
+    setActivePathVars(pathVars);
+    setActiveResource(matchingResource);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, pathname]);
 

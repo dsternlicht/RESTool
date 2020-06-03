@@ -558,14 +558,13 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     }
     setPagination(initialPagination);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeResource]);
+  }, [activeResource, activePathVars]);
 
   useEffect(() => {
     // Load data when query params 
     if (isSubResource === false) {
       getAllRequest();
     } else if (activeItem) {
-      //  && index === activeTabIndex) {
       getAllRequest();
     }
 

@@ -1,7 +1,7 @@
 import { IConfigResource } from '../common/models/config.model';
 
 class RoutesHelpers {
-  public detailRoutesConfig(resources?: IConfigResource[], parentRoute?: string): { resource: IConfigResource, route: string }[] {
+  public detailRoutesConfig(resources?: IConfigResource[]): { resource: IConfigResource, route: string }[] {
     const detailRoutesConfig: { resource: IConfigResource, route: string }[] = resources?.reduce((acc: { resource: IConfigResource, route: string }[], resource) => {
       const detailPageId = resource.methods?.getSingle?.id;
       if (detailPageId) {
@@ -25,12 +25,29 @@ class RoutesHelpers {
     }, []) || [];
 
     if (subResourcesDef.length > 0) {
-      const subRoutes = subResourcesDef.map(subDef => this.detailRoutesConfig(subDef.sub, subDef.parentId)).flat();
+      const subRoutes = subResourcesDef.map(subDef => this.detailRoutesConfig(subDef.sub)).flat();
 
       return [...subRoutes, ...detailRoutesConfig];
     }
 
     return detailRoutesConfig;
+  }
+
+  public subResourceRoutes(resources?: IConfigResource[]): string[] {
+    if (!resources) {
+      return [];
+    }
+
+    const subResources: IConfigResource[] = resources.map(resource => resource.subResources).flat<IConfigResource | undefined>().filter(sub => !!sub);
+
+    if (subResources.length === 0) {
+      return [];
+    }
+
+    const subRoutes = subResources.map(sub => `/${sub.id}`);
+    const deeperRoutes = this.subResourceRoutes(subResources);
+
+    return [...subRoutes, ...deeperRoutes];
   }
 }
 

@@ -121,8 +121,9 @@ function App() {
 
   const detailPagesConfig = routesHelpers.detailRoutesConfig(config?.resources);
 
-  const mainRoutes: string[] = config?.resources?.map(p => `/${p.id}`) || [];
+  const resourceRoutes: string[] = config?.resources?.map(p => `/${p.id}`) || [];
   const detailRoutes: string[] = detailPagesConfig.map(conf => conf.route);
+  const subResourceRoutes: string[] = routesHelpers.subResourceRoutes(config?.resources);
 
   return (
     <div className="restool-app">
@@ -149,7 +150,8 @@ function App() {
                 config &&
                 <Switch>
                   <Route exact path={detailRoutes} component={DetailPage} />
-                  <Route exact path={mainRoutes} component={Page} />
+                  <Route exact path={resourceRoutes} component={Page} />
+                  <Route exact path={subResourceRoutes} component={Page} />
                   <Redirect path="/" to={`/${config?.resources?.[0]?.id || '1'}`} />
                 </Switch>
               }
