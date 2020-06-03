@@ -93,8 +93,17 @@ const buildInitQueryParamsAndPaginationState = (
 
 const PageComp = ({ context }: IProps) => {
   const { page } = useParams();
-  const { push, location } = useHistory();
+  const { push, location, } = useHistory();
+
   const { activePage, error, setError, httpService, config } = context;
+
+  const authConfig = config?.auth;
+
+  if(authConfig && authConfig.type && !localStorage.getItem('Authorization')) {
+        const redirectUrl: string = config?.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(document.location.href)) || 'login';
+        document.location.href = redirectUrl;
+  }
+
   const pageHeaders: any = activePage?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activePage?.methods;
   const customActions: IConfigCustomAction[] = activePage?.customActions || [];

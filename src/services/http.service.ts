@@ -81,9 +81,13 @@ class HttpService {
   private buildRequest(params: IFetchParams): { url: string, params: any } {
     const reqUrl: string = this.urlIsAbsolute(params.origUrl) ? params.origUrl : this.baseUrl + params.origUrl;
     const finalUrl: string = this.buildUrl(reqUrl, params.queryParams, params.rawData);
+
+    const baseParams = localStorage.getItem('Authorization') ? {
+        Authorization: localStorage.getItem('Authorization'),
+      } : {};
     const requestParams = {
       method: params.method ? params.method.toUpperCase() : 'GET',
-      headers: Object.assign({}, this.requestHeaders, params.headers || {}),
+      headers: Object.assign(baseParams, this.requestHeaders, params.headers || {}),
       body: params.method === 'post' || params.method === 'put' || params.method === 'patch' ? params.body : undefined
     };
 

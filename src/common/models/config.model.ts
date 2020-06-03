@@ -11,6 +11,7 @@ export interface IConfig {
   pages: IConfigPage[]
   customStyles?: ICustomStyles
   customLabels?: ICustomLabels
+  auth?: IAuthHandlerConfig
 }
 
 export interface ICustomStyles {
@@ -212,4 +213,15 @@ export interface IQueryParamConfig {
 
 export interface IQueryParam extends IQueryParamConfig {
   value: string
+}
+
+export type TAuthType = 'token' | 'simple';
+
+
+export interface IAuthHandlerConfig {
+  type: TAuthType
+  method: {
+      login:IConfigMethod,
+      logout:IConfigMethod
+      }
 }

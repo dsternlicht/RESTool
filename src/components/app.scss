@@ -20,10 +20,16 @@
     position: sticky;
     top: 0;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 
     @media screen and (max-width: 800px) {
       height: auto;
       width: 100%;
+    }
+
+    .nav-section{
+      flex-grow: 1;
     }
 
     h1 {
@@ -40,6 +46,15 @@
 
       @media screen and (max-width: 800px) {
         text-align: center;
+      }
+    }
+    .logout {
+      align-items: center;
+      display: flex;
+      padding: 20px;
+      cursor: pointer;
+      p {
+      padding-left: 10px;
       }
     }
   }

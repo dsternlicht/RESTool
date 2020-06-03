@@ -1,236 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { Popup } from '../popup/popup.comp';
-import {
-  IConfigInputField,
-  IConfigGetSingleMethod,
-  IConfigPostMethod,
-  IConfigPutMethod,
-  ICustomLabels
-} from '../../common/models/config.model';
-import { FormRow } from '../formRow/formRow.comp';
-import { Button } from '../button/button.comp';
-import { Loader } from '../loader/loader.comp';
-import { dataHelpers } from '../../helpers/data.helpers';
-import { fileHelpers } from '../../helpers/file.helpers';
 import { IAppContext } from '../app.context';
+import { IConfigMethod, ICustomLabels } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
+import { FormPopup } from '../formPopup/formPopup.comp';
 
 import './login.scss';
 
-const flatten = require('flat');
-const unflatten = require('flat').unflatten;
-
 interface IProps {
   context: IAppContext
-  rawData?: any
-  getSingleConfig?: IConfigGetSingleMethod
 }
 
-export const LoginForm = withAppContext(({ context,getSingleConfig }: IProps) => {
-//   const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
-  const { httpService, activePage, config } = context;
-  const [loading, setLoading] = useState<boolean>(false);
-  const [formFields, setFormFields] = useState<IConfigInputField[]>([
-            {
-              "name": "username",
-              "type": "text",
-              "value": "",
-              "placeholder": "Enter username",
-              "label": "username"
-            },
-            {
-              "name": "password",
-              "type": "password",
-              "value": "",
-              "placeholder": "Enter password",
-              "label": "password"
-            },
+const PageComp = ({ context }: IProps) => {
+  const { location, replace } = useHistory();
 
-            ]);
-  const [finalRawData, setFinalRawData] = useState<any>(null);
-//   const pageHeaders: any = activePage?.requestHeaders || {};
+  const { activePage,httpService, config } = context;
+  const authConfig = config?.auth;
+  const loginConfig: IConfigMethod | undefined = authConfig?.method?.login;
+  const pageHeaders: any = loginConfig?.requestHeaders || {};
   const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
 
-//   async function initFormFields() {
-//     let finalRawData: any = rawData || {};
+  function closeFormPopup(refreshData: boolean = false) {
+        console.log("closeeee")
 
-//     if (getSingleConfig && getSingleConfig.url) {
-//       try {
-//         const { url, requestHeaders, actualMethod, dataPath, queryParams } = getSingleConfig;
-//         const result = await httpService.fetch({
-//           method: actualMethod || 'get',
-//           origUrl: url,
-//           queryParams,
-//           headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
-//           rawData,
-//         });
+    const { from } = location.state || { from: { pathname: '/' } };
+    replace(from)
 
-//         const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+    // const encoded = new Buffer(`${user}:${pwd}`).toString('base64');
+//  sessionStorage.setItem('basic', `Basic ${encoded}`);
 
-//         if (extractedData && typeof extractedData === 'object') {
-//           finalRawData = extractedData;
-//         }
-//       } catch (e) {
-//         console.error('Could not load single item\'s data.', e);
-//         toast.error('Could not load single item\'s data.');
-//       }
-//     }
 
-//     setFinalRawData(finalRawData); // Store the raw data for later.
-
-//     const flattenData = flatten(finalRawData || {});
-
-//     setFormFields(fieldsCopy.map((field) => {
-//       let key = field.name;
-
-//       field.originalName = field.name;
-
-//       if (field.dataPath) {
-//         key = `${field.dataPath}.${field.name}`;
-//       }
-
-//       // Changing field name to include datapath
-//       // This will use us later for unflatten the final object
-//       field.name = key;
-
-//       if (dataHelpers.checkIfFieldIsObject(field)) {
-//         if (finalRawData[key] || field.value) {
-//           field.value = JSON.stringify(finalRawData[key] || field.value, null, '  ') || '';
-//         }
-//         return field;
-//       }
-
-//       if (field.type === 'array') {
-//         field.value = finalRawData[key] || field.value || [];
-//         return field;
-//       }
-
-//       if (typeof flattenData[key] !== 'undefined') {
-//         field.value = flattenData[key];
-//       } else {
-//         // important in order to prevent controlled / uncontrolled components error
-//         field.value = typeof field.value === 'undefined' ? '' : field.value;
-//       }
-
-//       return field;
-//     }));
-
-//     setLoading(false);
-//   }
-
-  async function submitForm(e: any) {
-    e.preventDefault();
-
-    const finalObject: any = {};
-    const formData = new FormData();
-    const containFiles: boolean = fileHelpers.isMultipartForm(formFields);
-    let validationError = null;
-
-    formFields.forEach((field) => {
-
-      finalObject[field.name] = field.value;
-
-      if (containFiles) {
-        formData.append(field.name, field.value);
-      }
-
-      if (field.required && field.type !== 'boolean' && !field.value) {
-        validationError = 'Please fill up all required fields.';
-      }
-
-      if (dataHelpers.checkIfFieldIsObject(field) && field.value) {
-        try {
-          finalObject[field.name] = JSON.parse(field.value);
-        } catch (e) {
-          validationError = `Invalid JSON for field "${field.name}".`;
-        }
-      }
-
-      if (field.type === 'boolean') {
-        finalObject[field.name] = field.value || false;
-      }
-
-      if (field.type === 'encode') {
-        finalObject[field.name] = encodeURIComponent(field.value);
-      }
-    });
-
-    if (validationError) {
-      toast.error(validationError);
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const body = containFiles ? formData : unflatten(finalObject);
-      console.log(body)
-    //   await submitCallback(body, containFiles);
-
-      toast.success('Great Success!');
-
-    //   closeCallback(true);
-    } catch (e) {
-      toast.error(e.message);
-    }
-
-    setLoading(false);
   }
 
-  function formChanged(fieldName: string, value: any) {
-    let updatedFormFields: IConfigInputField[] = JSON.parse(JSON.stringify(formFields));
+  async function performAction(body: any,containFiles: boolean) {
 
-    updatedFormFields = updatedFormFields.map((field: IConfigInputField) => {
-      if (field.name === fieldName) {
-        field.value = value;
-      }
-
-      return field;
+    let loginResponse = await httpService.fetch({
+      method: loginConfig?.actualMethod || 'post',
+      origUrl: loginConfig?.url || '',
+      body: containFiles ? body : JSON.stringify(body),
+      headers: {
+        ...pageHeaders,
+        ...(loginConfig?.requestHeaders || {}),
+        ...(containFiles ? {} : { 'content-type': 'application/json' })
+      },
+      responseType: 'json'
     });
-
-    setFormFields(updatedFormFields);
+    localStorage.setItem('Authorization', `Bearer ${loginResponse['access_token']}`);
   }
 
-  useEffect(() => {
-    // initFormFields();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   return (
-    <Popup
-      show={true}
-      className="form-popup"
-      closeCallback={() => false}    
-      customLabels={customLabels}
-    >
-      <React.Fragment>
-        <h2>Login</h2>
-        <section>
-          {
-            loading ?
-            <Loader /> :
-            <form onSubmit={submitForm}>
-              {
-                formFields.map((field, idx) => {
-                  return (
-                    <FormRow
-                      key={`field_${idx}`}
-                      field={field}
-                      onChange={formChanged}
-                      showReset={!field.type || field.type === 'text'}
-                    />
-                  );
-                })
-              }
-              <div className="buttons-wrapper center">
-                <Button type="submit" onClick={submitForm} color="green">Login</Button>
-              </div>
-            </form>
-          }
-        </section>
-      </React.Fragment>
-    </Popup>
+    <div className="app-page">
+      <FormPopup
+          title={'LOGIN'}
+          closeCallback={closeFormPopup}
+          submitCallback={performAction}
+          fields={loginConfig?.fields}
+          methodConfig={loginConfig}
+        />
+    </div>
   );
-});
+}
+
+export const LoginForm =  withAppContext(PageComp);
