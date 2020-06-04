@@ -13,8 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
 const smcloudstore_1 = __importDefault(require("smcloudstore"));
 const env_1 = __importDefault(require("../../env"));
 const storageProvider = env_1.default('STORAGE_PROVIDER') || 'local';
@@ -28,18 +26,26 @@ if (storageProvider !== 'local' && !(storageProvider !== undefined && storagePat
 else {
     storage = smcloudstore_1.default.Create(storageProvider, storageConnection);
 }
-let localConfigData = JSON.parse(fs_1.default.readFileSync(path_1.default.resolve(process.cwd(), 'public/config.json')).toString());
 const configServer = express_1.Router();
 // TODO: config.js support
 configServer
-    .get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let configString = {};
+    .get('/config.json', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let configString = '';
     if (storageProvider !== 'local') {
-        configString = JSON.parse(yield storage.getObjectAsString(storageContainer, storagePath));
+        configString = yield storage.getObjectAsBuffer(storageContainer, storagePath);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(configString, 'utf-8');
     }
-    else {
-        configString = localConfigData;
+    return res.status(500).send("Wrong storage provider");
+}));
+configServer
+    .get('/config.js', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let configString = '';
+    if (storageProvider !== 'local') {
+        configString = yield storage.getObjectAsBuffer(storageContainer, storagePath);
+        res.writeHead(200, { 'Content-Type': 'text/javascript' });
+        return res.end(configString, 'utf-8');
     }
-    res.status(200).json(configString);
+    return res.status(500).send("Wrong storage provider");
 }));
 exports.default = configServer;

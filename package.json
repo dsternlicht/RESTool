@@ -1,6 +1,6 @@
 {
   "name": "restool",
-  "version": "2.2.3-docker-26",
+  "version": "2.2.3-login-30",
   "dependencies": {
     "@smcloudstore/aws-s3": "^0.2.1",
     "ajv": "^6.12.1",
@@ -75,13 +75,15 @@
     "@types/express": "^4.17.6",
     "@types/lodash": "^4.14.150",
     "@types/node": "^14.0.5",
-    "@types/react-router-dom": "^5.1.3",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-router-dom": "^5.1.5",
     "gh-pages": "^2.2.0",
     "npm-run-all": "^4.1.5",
+    "react-scripts": "3.3.0",
     "ts-node": "^8.10.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.4",
-    "wait-on": "^5.0.0",
-    "react-scripts": "3.3.0"
+    "wait-on": "^5.0.0"
   }
 }

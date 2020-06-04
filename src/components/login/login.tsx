@@ -24,7 +24,7 @@ const PageComp = ({ context }: IProps) => {
   function closeFormPopup(refreshData: boolean = false) {
         console.log("closeeee")
 
-    const { from } = location.state || { from: { pathname: '/' } };
+    const from = (location?.state as any)?.from || { pathname: '/' };
     replace(from)
 
     // const encoded = new Buffer(`${user}:${pwd}`).toString('base64');

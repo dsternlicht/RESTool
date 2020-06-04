@@ -1,15 +1,15 @@
-{
+// A dynamic config sample
+export default {
   "name": "RESTool App",
   "favicon": "https://www.commoninja.com/public/favicon.ico",
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
+  "unauthorizedRedirectUrl": '/#/login',
   "auth":{
     "type":"token",
-    "authHandler":{
-          "name":"Send Email",
-          "url": "/character/:id/sendEmail",
-          "actualMethod": "post",
-          "requestHeaders": {},
-          "fields": [{
+    "method":{
+            "url": "https://tesseract.medlife.com/oauth/v2/oauth/token",
+            "actualMethod": "post",
+            "fields": [{
               "name": "username",
               "type": "text",
               "value": "",
@@ -22,12 +22,34 @@
               "value": "",
               "placeholder": "Enter password",
               "label": "password"
-            }]
-
+            },
+            {
+              "name": "client_secret",
+              "type": "hidden",
+              "value": "a7d3a29027bd6efeb3d5fe356a5797e7421194398892edbf",
+              "placeholder": "Enter password",
+              "label": "client_secret"
+            },
+            {
+              "name": "client_id",
+              "type": "hidden",
+              "value": "0543313909370496",
+              "placeholder": "Enter password",
+              "label": "client_id"
+            },
+            {
+              "name": "grant_type",
+              "type": "hidden",
+              "value": "password",
+              "placeholder": "Enter password",
+              "label": "grant_type"
+            }
+          ]
+    },
   },
   "pages": [
     {
-      "name": "Cast & Characters",
+      "name": "Cast & Characters js local",
       "id": "characters",
       "description": "Manage GOT characters location and budget.",
       "methods": {
@@ -43,7 +65,6 @@
               "type": "text"
             }
           ],
-
           "display": {
             "type": "cards"
           },
@@ -314,7 +335,8 @@
               "type": "text",
               "label": "Death Reason"
             }
-          ]
+          ],
+          "dataTransform": item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` })
         },
         "getSingle": {
           "url": "/dead/:id",
@@ -421,3 +443,4 @@
     }
   ]
 }
+
