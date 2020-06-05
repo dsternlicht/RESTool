@@ -2,7 +2,7 @@
 
 set -e
 
-usage() { echo "Usage: $0 [-u nexus username] [-p nexus password]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-u nexus username] [-p nexus password] [-n docker_regsitery_url]" 1>&2; exit 1; }
 
 function die() {
   echo "$*" 1>&2
@@ -12,7 +12,6 @@ function die() {
 # common variables
 service_name="restool-ui"
 group="restool"
-docker_regsitery_url="registry.hub.docker.com"
 
 
 current_branch=$(git symbolic-ref --short HEAD)
@@ -22,16 +21,23 @@ check_uncommit=$(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)
 #     die "un comitted files existing"
 # fi
 
-while getopts ":u:p:" opt; do
+while getopts ":u:p:n:" opt; do
   case $opt in
     u) username="$OPTARG"
     ;;
     p) password="$OPTARG"
     ;;
+    n) docker_regsitery_url="$OPTARG" 
+    ;;
     \?) echo "Invalid option -$OPTARG" >&2
     ;;
   esac
 done
+
+if [[ -z "$docker_regsitery_url" ]]; then
+   docker_regsitery_url="registry.hub.docker.com"
+fi
+echo $username $docker_regsitery_url
 
 function bump_files() {
 	bump package.json "\"version\": \"$1\"" "\"version\": \"$2\""
