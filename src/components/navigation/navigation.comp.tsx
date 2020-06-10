@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { IAppContext } from '../app.context';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Button } from '../button/button.comp';
-
+import { groupBy } from 'lodash';
 import './navigation.scss';
 import Accordion from '../accordion/accordion.comp';
 
@@ -15,6 +15,9 @@ interface IProps {
 const NavigationComp = ({ context: { config } }: IProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
+  let pages = config?.pages || [];
+  let groupedPages = groupBy(pages, 'group') || {};
+  console.log(groupedPages)
 
 
   return (
@@ -29,24 +32,17 @@ const NavigationComp = ({ context: { config } }: IProps) => {
 
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
         <div className="app-nav-links">
-
-              <Accordion
-                allowMultipleOpen={false}
-              >
-              <div data-label="Alligator Mississippiensis">
-                <NavLink to={`/as`} activeClassName="active" key={`page_2`} onClick={() => setIsOpened(false)}>Photoshop</NavLink>
-                <NavLink to={`/as2`} activeClassName="active" key={`page_3`} onClick={() => setIsOpened(false)}>Photoshop2</NavLink>
-              </div>
-              <div data-label="Alligator Sinensis">
-                <NavLink to={`/as3`} activeClassName="active" key={`page_2`} onClick={() => setIsOpened(false)}>Photoshop3</NavLink>
-                <NavLink to={`/as4`} activeClassName="active" key={`page_3`} onClick={() => setIsOpened(false)}>Photoshop4</NavLink>
-              </div>
-      </Accordion>
-          {
-            (config?.pages || []).map((page, idx) => (
-              <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
+  
+        <Accordion allowMultipleOpen={false}>
+          { Object.keys(groupedPages).map((key, index) => ( 
+                      <div data-label={key}>
+                        {(groupedPages[key] || []).map((page, idx) => (
+                            <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
+                        ))}
+                      </div>
             ))
           }
+        </Accordion>
         </div>
       </div>
     </nav>
