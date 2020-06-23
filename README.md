@@ -87,8 +87,8 @@ Each **resource** is an object and represents a resource in your API. It should 
 
 | Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
-| name | `string` | true | The name of the page. This will be presented in the menu.|
-| id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between resources. |
+| name | `string` | true | The name of the resource. This will be presented in the menu. |
+| id | `string` | true | A unique identifier for the resource. RESTool will use it to navigate between resources. |
 | description | `string` | false | A short description about the page and its usage. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
@@ -216,6 +216,8 @@ An example of a `getSingle` request:
   "requestHeaders": {}
 }
 ```
+
+This method will also be used for a "Details" action if the `"id"` is provided to give the resource detail page an id. It will redirect you to an item detail page where its [sub-resources](#sub-resources) will be shown in tabs if any are defined within the resource. It will use the `"fields"` field to display the item or use the one defined in the `getAll` method if not provided.
 
 <br />
 
