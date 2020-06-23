@@ -96,12 +96,6 @@ const personCredits = {
       },
       fields: creditsDisplayFields,
     },
-    getSingle: {
-      id: 'shows/:id',
-      name: ':name',
-      url: '/shows/:id',
-      fields: showDetailFields,
-    },
   }
 }
 
