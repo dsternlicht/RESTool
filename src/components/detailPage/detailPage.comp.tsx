@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { IAppContext } from '../app.context';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { routesHelpers } from '../../helpers/routes.helpers';
-import { IConfigResource, IConfigMethods, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels } from '../../common/models/config.model';
+import { IConfigResource, IConfigMethods, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigDisplayField } from '../../common/models/config.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { ResourceItems } from '../resourceItems/resourceItems.comp';
@@ -35,7 +35,7 @@ const DetailPageComp = ({ context }: IProps) => {
   if (pathname[0] === '/') {
     pathname = pathname.slice(1);
   }
-  const { activeResource, setActiveResource, error, setError, httpService, config, activeItem, setActiveItem, detailPagesConfig } = context;
+  const { activeResource, setActiveResource, error, setError, httpService, config, activeItem, setActiveItem, detailPagesConfig, activePathVars, setActivePathVars } = context;
   let subResources = activeResource?.subResources;
   const pageHeaders: any = activeResource?.requestHeaders || {};
   const pageMethods: IConfigMethods | undefined = activeResource?.methods;
@@ -47,8 +47,7 @@ const DetailPageComp = ({ context }: IProps) => {
   const editItemFormTitle = customLabels?.formTitles?.editItem || 'Update Item';
   const [openedPopup, setOpenedPopup] = useState<null | IPopupProps>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const detailRouteConfigs = routesHelpers.detailRoutesConfig(config?.resources);
-  const activePathVars = getPageMatch(detailRouteConfigs) || undefined;
+  let detailRouteConfigs = routesHelpers.detailRoutesConfig(config?.resources);
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const [pageName, setPageName] = useState<string | null>(null);
 
@@ -58,9 +57,8 @@ const DetailPageComp = ({ context }: IProps) => {
     action: customActions.length ? openCustomActionPopup : () => { },
   };
 
-
   const getAllConfig = activeResource?.methods?.getAll;
-  const fields = getAllConfig?.fields || getAllConfig?.display?.fields || [];
+  const fields: IConfigDisplayField[] = getSingleConfig?.fields || getAllConfig?.fields || getAllConfig?.display?.fields || [];
 
   function closeFormPopup(refreshData: boolean = false) {
     setOpenedPopup(null);
@@ -248,6 +246,13 @@ const DetailPageComp = ({ context }: IProps) => {
 
     return pathVars;
   }
+
+  useEffect(() => {
+    setActivePathVars(getPageMatch(detailRouteConfigs) || {});
+    setActiveResource(null);
+    setActiveItem(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
 
   useEffect(() => {
     if (activeResource === null) {

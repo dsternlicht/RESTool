@@ -23,7 +23,7 @@ export const Details = ({ item, fields, customLabels }: IProps) => {
       case 'boolean':
         return <div className={`bool ${value ? 'true' : 'false'}`}></div>;
       case 'image':
-        return <img src={value || ''} alt={value || origField.label || origField.name} />;
+        return value ? <img src={value || ''} alt={value || origField.label || origField.name} /> : null;
       case 'url':
         const url: string = (origField.url || value || '').replace(`:${origField.name}`, value);
         return <a href={url} target="_blank" rel="noopener noreferrer">{value}</a>;

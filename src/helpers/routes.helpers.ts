@@ -38,7 +38,12 @@ class RoutesHelpers {
       return [];
     }
 
-    const subResources: IConfigResource[] = resources.map(resource => resource.subResources).flat<IConfigResource | undefined>().filter(sub => !!sub);
+    const subResources: IConfigResource[] = resources.reduce((allSubR: IConfigResource[], r) => {
+      if (r.subResources) {
+        return [...allSubR, ...r.subResources];
+      }
+      return allSubR;
+    }, []);
 
     if (subResources.length === 0) {
       return [];

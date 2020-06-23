@@ -15,7 +15,7 @@
     font-weight: 300;
     margin: 20px 0 0 0;
     // min-width: 340px;
-    flex-basis: 340px;
+    flex-basis: max-content;
 
     @media screen and (max-width: 800px) {
       width: 100%;
@@ -48,8 +48,8 @@
 
   img {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 400px;
+    object-fit: scale-down;
     background: no-repeat center center;
     background-size: cover;
   }

@@ -90,7 +90,14 @@ const PageComp = ({ context }: IProps) => {
     }
 
     // If no match on resources, we call the matching function on all their sub-resources 
-    return getPageMatch(_resources.map(r => r.subResources).flat(1).filter(r => !!r));
+    const allSubResources = _resources.reduce((allSubR: IConfigResource[], r) => {
+      if (r.subResources) {
+        return [...allSubR, ...r.subResources];
+      }
+      return allSubR;
+    }, []);
+
+    return getPageMatch(allSubResources);
   }
 
   useEffect(() => {

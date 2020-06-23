@@ -66,7 +66,8 @@ class HttpService {
         const urlParamName = `:${param.name}`;
         outputUrl = outputUrl.replace(urlParamName, param.value as string);
       } else {
-        params.push(`${param.name}=${param.value || ''}`);
+        const paramValue = param.value !== undefined ? param.value : '';
+        params.push(`${param.name}=${paramValue}`);
       }
     }
 

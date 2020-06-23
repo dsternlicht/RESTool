@@ -17,7 +17,7 @@
     "react-infinite-scroll-component": "^5.0.4",
     "react-loading-skeleton": "^2.0.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "3.4.0",
     "react-tabs": "^3.1.0",
     "react-toastify": "^5.4.1",
     "typescript": "^3.7.4"
@@ -61,8 +61,11 @@
   "jsnext:main": "build/restool.es.js",
   "homepage": ".",
   "devDependencies": {
+    "@types/jest": "^26.0.0",
     "@types/lodash": "^4.14.150",
     "@types/react-tabs": "^2.3.1",
-    "gh-pages": "^2.2.0"
+    "@types/react-test-renderer": "^16.9.2",
+    "gh-pages": "^2.2.0",
+    "react-test-renderer": "^16.13.1"
   }
 }

@@ -208,7 +208,7 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     }
 
     // We replace the first url param with active item value if it exists
-    if (isSubResource) {
+    if (isSubResource && urlParamNames.length > 1) {
       const parentUrlParamName = urlParamNames[0];
       if (activeItem[parentUrlParamName]) {
         const param = `:${parentUrlParamName}`;
@@ -284,7 +284,7 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
       if (typeof parsedParams[queryParam.name] !== 'undefined') {
         queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
       } else {
-        queryParam.value = queryParam.value || '';
+        queryParam.value = queryParam.value !== undefined ? queryParam.value : '';
       }
       return queryParam;
     });
@@ -295,7 +295,7 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
   }
 
   async function getAllRequest() {
-    if (infiniteScroll && pagination?.page !== 1) {
+    if (infiniteScroll && pagination?.page !== parseInt(paginationConfig?.params?.page?.value || '1')) {
       setLoading(false);
     } else {
       setLoading(true);
@@ -415,9 +415,9 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
       sortBy: paginationConfig.params?.sortBy?.value,
     };
 
-    newState.total = total || pagination?.total;
-    newState.page = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.page?.name)?.value) || newState.page;
-    newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value) || newState.limit;
+    newState.total = total !== undefined ? total : pagination?.total;
+    newState.page = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.page?.name)?.value || newState.page);
+    newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value || newState.limit);
     newState.descending = updatedParams.find(param => param.name === paginationConfig?.params?.descending?.name)?.value === 'true' || newState.descending;
     newState.sortBy = updatedParams.find(param => param.name === paginationConfig?.params?.sortBy?.name)?.value || newState.sortBy;
     newState.hasPreviousPage = paginationHelpers.hasPreviousPage(newState.page);
@@ -453,8 +453,8 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     }
 
     const getNextPage = paginationConfig ? () => {
-      if (pagination?.page && queryParams.length > 0) {
-        const newPage = pagination?.page + 1;
+      if (pagination?.page !== undefined && queryParams.length > 0) {
+        const newPage = pagination.page + 1;
         const updatedParams = queryParams.map((param) => {
           if (param.name === paginationConfig.params?.page?.name) {
             return {
@@ -469,8 +469,8 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     } : null;
 
     const getPreviousPage = paginationConfig ? () => {
-      if (pagination?.page && pagination.page > 1 && queryParams.length > 0) {
-        const newPage = pagination?.page - 1;
+      if (pagination?.page !== undefined && pagination.page > 1 && queryParams.length > 0) {
+        const newPage = pagination.page - 1;
         const updatedParams = queryParams.map((param) => {
           if (param.name === paginationConfig.params?.page?.name) {
             return {
@@ -487,7 +487,7 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     const itemsCallbacks = {
       delete: deleteConfig ? deleteItem : null,
       put: putConfig ? openEditPopup : null,
-      details: getSingleConfig?.fields ? toItemDetails : null,
+      details: getSingleConfig?.id ? toItemDetails : null,
       action: customActions.length ? openCustomActionPopup : () => { },
       getNextPage,
       getPreviousPage,
@@ -522,8 +522,9 @@ export const ResourceItems = ({ context, activeResource, openedPopupState, activ
     if (loading || !items.length) {
       return;
     }
-
-    const currentCountFrom = (((pagination?.page || 1) - 1) * (pagination?.limit || 10)) + 1;
+    const currentPage = pagination?.page !== undefined ? pagination.page : 1;
+    const currentLimit = pagination?.limit !== undefined ? pagination.limit : 10;
+    const currentCountFrom = ((currentPage - 1) * currentLimit) + 1;
     const currentCountTo = currentCountFrom + items.length - 1;
     let label: string = `Showing results ${currentCountFrom}-${currentCountTo} out of ${pagination?.total} items`;
 

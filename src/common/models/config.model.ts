@@ -162,6 +162,7 @@ export interface IConfigGetSingleMethod extends IConfigMethod {
   dataPath: string
   name?: string
   id?: string
+  fields: IConfigDisplayField[]
 }
 
 export interface IConfigPostMethod extends IConfigMethod {

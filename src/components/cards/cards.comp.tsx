@@ -16,6 +16,7 @@ interface IProps {
   callbacks: {
     delete: ((item: any) => void) | null
     put: ((item: any) => void) | null
+    details: ((item: any) => void) | null
     action: (item: any, action: IConfigCustomAction) => void
     getNextPage: (() => void) | null
     getPreviousPage: (() => void) | null
@@ -72,6 +73,12 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
   function renderActions(item: any, cardIdx: number) {
     return (
       <div className="actions-wrapper">
+        {
+          callbacks.details &&
+          <Button onClick={() => callbacks.details?.(item)} title='Details'>
+            <i className="fa fa-search" aria-hidden="true"></i>
+          </Button>
+        }
         {
           callbacks.put &&
           <Button onClick={() => callbacks.put?.(item)} title={editLabel}>

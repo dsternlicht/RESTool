@@ -1,32 +1,33 @@
+import { get } from 'lodash';
+
 import { IConfigInputField } from "../common/models/config.model";
 
 class DataHelpers {
 
-  public extractDataByDataPath(data: any, dataPath: string, attr: string | null = null) {
-    if (!data || !dataPath) {
+  public extractDataByDataPath(data: unknown, dataPath: string, attr: string | null = null) {
+    if (typeof data !== 'object') {
+      return data;
+    }
+
+    if (data === null) {
+      return data;
+    }
+
+    if (!dataPath) {
       if (attr) {
-        return data[attr];
+        return get(data, attr);
       }
       return data;
     }
-	
-    let extractedData: any = data;
-    const digProps: string[] = dataPath.split('.');
 
-    for (let prop of digProps) {
-      if (typeof extractedData[prop] !== 'undefined') {
-        extractedData = extractedData[prop];
-      } else {
-        return null;
-      }
-    }
+    const extractedData = get(data, dataPath);
 
     if (typeof extractedData === 'undefined') {
       return null;
     }
 
     if (attr) {
-      return extractedData[attr];
+      return get(extractedData, attr);
     }
 
     return extractedData;
