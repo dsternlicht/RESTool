@@ -428,7 +428,8 @@
             "url",
             "image",
             "colorbox",
-            "boolean"
+            "boolean",
+            "json"
           ],
           "description": "This will help RESTool to render the main view.\ntext -  will parse the value as a text\nurl -  will render an anchor element with a clickable link\nimage -  will render an image from the url\ncolorbox -  will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string"
         },

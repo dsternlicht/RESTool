@@ -9,7 +9,7 @@ class DataHelpers {
       }
       return data;
     }
-	
+    
     let extractedData: any = data;
     const digProps: string[] = dataPath.split('.');
 
