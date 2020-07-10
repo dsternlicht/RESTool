@@ -27,4 +27,5 @@ type _IPaginationState<src extends string, AdditionalProperties> = {
   type: 'infinite-scroll' | 'buttons'
   hasPreviousPage?: boolean
   hasNextPage?: boolean
+  total?: number
 } & AdditionalProperties

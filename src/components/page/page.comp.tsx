@@ -475,12 +475,14 @@ const PageComp = ({ context }: IProps) => {
         hasNextPage: !!result[paginationConfig.params.nextPath || 'next'],
         hasPreviousPage: !!result[paginationConfig.params.prevPath || 'previous'],
         limit: parseInt(paginationConfig.params?.limit?.value || '10'),
+        total: result[paginationConfig.params.countPath || 'count']
       };
       if(result) {
         newState.next = result[paginationConfig.params.nextPath || 'next'];
         newState.previous = result[paginationConfig.params.prevPath || 'previous'];
         newState.hasNextPage = !!result[paginationConfig.params.nextPath || 'next'];
         newState.hasPreviousPage = !!result[paginationConfig.params.prevPath || 'previous'];
+        newState.total = result[paginationConfig.params.countPath || 'count'];
       }
       newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value) || newState.limit;
       return newState;
