@@ -659,6 +659,25 @@ const PageComp = ({ context }: IProps) => {
         </p>
       );
     }
+    if(isJSONBodyPaginationState(pagination)) {
+      // TODO: extract start end end in a meaningful manner from the API
+      // this is not something that id based pagination APIs support generally
+      let label: string = `Total Results: ${pagination?.total}`;
+      if (pagination?.type === 'infinite-scroll') {
+        label = `Showing ${pagination?.total} items`;
+      }
+
+      if (customLabels?.pagination?.itemsCount) {
+        label = customLabels?.pagination?.itemsCount
+                .replace(':totalCount', pagination?.total as any);
+      }
+
+      return (
+        <p className="center pagination-state">
+          {label}
+        </p>
+      );
+    }
   }
 
   function renderPageContent() {
@@ -677,7 +696,7 @@ const PageComp = ({ context }: IProps) => {
           <FilterField onChange={setFilter} />
         }
         {
-          pagination && isQueryPaginationState(pagination) && pagination?.total &&
+          pagination?.total &&
           renderPaginationStateLabel()
         }
         {
