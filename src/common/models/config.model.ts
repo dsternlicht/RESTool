@@ -177,18 +177,40 @@ export interface IConfigCustomAction extends IConfigMethod {
   fields: IConfigInputField[]
 }
 
-export interface IConfigPagination {
-  source: 'query'
+export type IConfigPagination = 
+  IConfigQueryPagination | 
+  IConfigJSONBodyPagination;
+
+export type IConfigQueryPagination = _IConfigPagination<'query', IConfigQueryPaginationParams>;
+export type IConfigJSONBodyPagination = _IConfigPagination<'json-body', IConfigJSONBodyPaginationParams>;
+
+export const isQueryPagination = (obj: IConfigPagination): obj is IConfigQueryPagination => {
+  return obj.source === 'query';
+}
+
+export const isJSONBodyPagination = (obj: IConfigPagination): obj is IConfigJSONBodyPagination => {
+  return obj.source === 'json-body';
+}
+
+interface _IConfigPagination<src extends string, paginationParams> {
+  source: src
   type: 'infinite-scroll' | 'buttons'
-  params: IConfigPaginationParams
+  params: paginationParams
   fields?: IConfigPaginationFields
 }
 
-export interface IConfigPaginationParams {
+export interface IConfigQueryPaginationParams {
   page: IQueryParamConfig
   limit?: IQueryParamConfig
   sortBy?: IQueryParamConfig
   descending?: IQueryParamConfig
+}
+
+export interface IConfigJSONBodyPaginationParams {
+  nextPath?: string
+  prevPath?: string
+  countPath?: string
+  limit?: IQueryParamConfig
 }
 
 export interface IConfigPaginationFields {
