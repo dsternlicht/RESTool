@@ -39,7 +39,7 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
       value = value ? true : false;
     }
 
-    if (value && typeof value === 'object' && origField.type != 'json') {
+    if (value && typeof value === 'object' && origField.type !== 'object') {
       return 'object';
     }
 
@@ -62,7 +62,7 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
         return <a href={url} target="_blank" rel="noopener noreferrer">{origField.urlLabel || value}</a>;
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
-      case 'json':
+      case 'object':
         return <div><pre>{ JSON.stringify(value, null, 2) }</pre></div>;
       default:
         return value;

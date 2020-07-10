@@ -130,7 +130,7 @@ export interface IConfigOptionSource {
   requestHeaders: any
 }
 
-export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean' | 'json';
+export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean' | 'object';
 
 export interface IConfigDisplayField {
   name: string
