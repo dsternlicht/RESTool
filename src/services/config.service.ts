@@ -17,9 +17,9 @@ class ConfigService extends HTTPService {
 
   public async loadDefaultConfig() {
     try {
-      return await this.getRemoteConfig('/config.json');
+      return await this.getRemoteConfig('./config.json');
     } catch (e) {
-      return (await this.getRemoteConfig('/config.js'));
+      return (await this.getRemoteConfig('./config.js'));
     }
   }
 
