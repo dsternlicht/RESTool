@@ -6,8 +6,8 @@ import { orderBy } from 'natural-orderby';
 import { find, remove } from 'lodash';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination, isQueryPagination, isBodyPagination } from '../../common/models/config.model';
-import { IPaginationState, isQueryPaginationState, isBodyPaginationState, IQueryPaginationState, IBodyPaginationState } from '../../common/models/states.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination } from '../../common/models/config.model';
+import { IPaginationState, IQueryPaginationState, IBodyPaginationState } from '../../common/models/states.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -18,6 +18,8 @@ import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
 import { FilterField } from '../filterField/filterField.comp';
+import { isQueryPaginationState, isBodyPaginationState } from '../../common/models/states.types.helper';
+import { isQueryPagination, isBodyPagination } from '../../common/models/config.types.helper';
 
 import './page.scss';
 

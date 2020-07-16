@@ -1,13 +1,5 @@
 export type IPaginationState = IQueryPaginationState | IBodyPaginationState;
 
-export const isQueryPaginationState = (obj: IPaginationState): obj is IQueryPaginationState => {
-  return obj.source === 'query';
-}
-
-export const isBodyPaginationState = (obj: IPaginationState): obj is IBodyPaginationState => {
-  return obj.source === 'body';
-}
-
 export type IQueryPaginationState = _IPaginationState<'query', {
   page: number
   limit: number

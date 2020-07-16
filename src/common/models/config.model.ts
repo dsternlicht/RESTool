@@ -184,14 +184,6 @@ export type IConfigPagination =
 export type IConfigQueryPagination = _IConfigPagination<'query', IConfigQueryPaginationParams>;
 export type IConfigBodyPagination = _IConfigPagination<'body', IConfigBodyPaginationParams>;
 
-export const isQueryPagination = (obj: IConfigPagination): obj is IConfigQueryPagination => {
-  return obj.source === 'query';
-}
-
-export const isBodyPagination = (obj: IConfigPagination): obj is IConfigBodyPagination => {
-  return obj.source === 'body';
-}
-
 interface _IConfigPagination<src extends string, paginationParams> {
   source: src
   type: 'infinite-scroll' | 'buttons'
