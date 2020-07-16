@@ -507,7 +507,7 @@
         "source": {
           "enum": [
             "query",
-            "json-body"
+            "body"
           ],
           "description": "Where the pagination parameters are written to. Only supports query parameters for now."
         },

@@ -6,8 +6,8 @@ import { orderBy } from 'natural-orderby';
 import { find, remove } from 'lodash';
 
 import { IAppContext } from '../app.context';
-import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination, isQueryPagination, isJSONBodyPagination } from '../../common/models/config.model';
-import { IPaginationState, isQueryPaginationState, isJSONBodyPaginationState, IQueryPaginationState, IJSONBodyPaginationState } from '../../common/models/states.model';
+import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination, isQueryPagination, isBodyPagination } from '../../common/models/config.model';
+import { IPaginationState, isQueryPaginationState, isBodyPaginationState, IQueryPaginationState, IBodyPaginationState } from '../../common/models/states.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -87,9 +87,9 @@ const buildInitQueryParamsAndPaginationState = (
             value: initialPagination?.sortBy
           });
         }
-      } else if(isJSONBodyPagination(paginationConfig)) {
+      } else if(isBodyPagination(paginationConfig)) {
         initialPagination = {
-          source: 'json-body',
+          source: 'body',
           type: paginationConfig.type,
           hasNextPage: false,
           hasPreviousPage: false,
@@ -276,7 +276,7 @@ const PageComp = ({ context }: IProps) => {
           if(pagination?.page !== 1) {
             setLoading(false);
           }
-        } else if( isJSONBodyPaginationState(pagination)) {
+        } else if( isBodyPaginationState(pagination)) {
           if(pagination.previous) {
             setLoading(false);
           }
@@ -463,12 +463,12 @@ const PageComp = ({ context }: IProps) => {
       newState.hasPreviousPage = paginationHelpers.hasPreviousPage(newState.page);
       newState.hasNextPage = paginationHelpers.hasNextPage(newState.page, newState.limit, newState.total);
       return newState;
-    } else if(isJSONBodyPagination(paginationConfig)) {
-      if(pagination && !isJSONBodyPaginationState(pagination)) {
+    } else if(isBodyPagination(paginationConfig)) {
+      if(pagination && !isBodyPaginationState(pagination)) {
         throw new Error('unexpected pagination source ' + pagination.source)
       }
-      const newState: IJSONBodyPaginationState = pagination ? pagination : {
-        source: 'json-body',
+      const newState: IBodyPaginationState = pagination ? pagination : {
+        source: 'body',
         type: paginationConfig.type,
         next: result[paginationConfig.params.nextPath || 'next'],
         previous: result[paginationConfig.params.prevPath || 'previous'],
@@ -535,8 +535,8 @@ const PageComp = ({ context }: IProps) => {
           });
           submitQueryParams(updatedParams);
         }
-      } else if(isJSONBodyPagination(paginationConfig)) {
-        if(pagination && !isJSONBodyPaginationState(pagination)) {
+      } else if(isBodyPagination(paginationConfig)) {
+        if(pagination && !isBodyPaginationState(pagination)) {
           throw new Error('unexpected pagination source ' + pagination.source)
         }
         if(!getAllConfig || !pagination?.next) {
@@ -576,8 +576,8 @@ const PageComp = ({ context }: IProps) => {
           });
           submitQueryParams(updatedParams);
         }
-      } else if(isJSONBodyPagination(paginationConfig)) {
-        if(pagination && !isJSONBodyPaginationState(pagination)) {
+      } else if(isBodyPagination(paginationConfig)) {
+        if(pagination && !isBodyPaginationState(pagination)) {
           throw new Error('unexpected pagination source ' + pagination.source)
         }
         if(!getAllConfig || !pagination?.previous) {
@@ -659,7 +659,7 @@ const PageComp = ({ context }: IProps) => {
         </p>
       );
     }
-    if(isJSONBodyPaginationState(pagination)) {
+    if(isBodyPaginationState(pagination)) {
       // TODO: extract start end end in a meaningful manner from the API
       // this is not something that id based pagination APIs support generally
       let label: string = `Total Results: ${pagination?.total}`;
