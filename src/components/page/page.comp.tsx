@@ -7,7 +7,7 @@ import { find, remove } from 'lodash';
 
 import { IAppContext } from '../app.context';
 import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination } from '../../common/models/config.model';
-import { IPaginationState } from '../../common/models/states.model';
+import { IPaginationState, IQueryPaginationState, IBodyPaginationState } from '../../common/models/states.model';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
@@ -18,6 +18,8 @@ import { QueryParams } from '../queryParams/queryParams.comp';
 import { Button } from '../button/button.comp';
 import { FormPopup } from '../formPopup/formPopup.comp';
 import { FilterField } from '../filterField/filterField.comp';
+import { isQueryPaginationState, isBodyPaginationState } from '../../common/models/states.types.helper';
+import { isQueryPagination, isBodyPagination } from '../../common/models/config.types.helper';
 
 import './page.scss';
 
@@ -41,54 +43,80 @@ const buildInitQueryParamsAndPaginationState = (
   initQueryParams: IConfigInputField[],
   initialPagination?: IPaginationState,
 } => {
-  const initialPagination: IPaginationState | undefined = paginationConfig ? {
-    type: paginationConfig.type,
-    page: parseInt(paginationConfig.params?.page?.value || '1'),
-    limit: parseInt(paginationConfig.params?.limit?.value || '10'),
-    descending: paginationConfig.params?.descending?.value === 'true' || false,
-    hasPreviousPage: false,
-    hasNextPage: false,
-    sortBy: paginationConfig.params?.sortBy?.value,
-  } : undefined;
+    let initialPagination: IPaginationState | undefined = undefined;
 
-  if (paginationConfig) {
-    if (!find(initQueryParams, { name: 'page' })) {
-      initQueryParams.push({
-        name: paginationConfig?.params?.page?.name,
-        label: paginationConfig?.params?.page?.label || 'Page',
-        value: initialPagination?.page
-      });
+    if (paginationConfig) {
+      if(isQueryPagination(paginationConfig)) {
+        initialPagination = {
+          source: paginationConfig.source,
+          type: paginationConfig.type,
+          page: parseInt(paginationConfig.params?.page?.value || '1'),
+          limit: parseInt(paginationConfig.params?.limit?.value || '10'),
+          descending: paginationConfig.params?.descending?.value === 'true' || false,
+          hasPreviousPage: false,
+          hasNextPage: false,
+          sortBy: paginationConfig.params?.sortBy?.value,
+        };
+
+        if (!find(initQueryParams, { name: 'page' })) {
+          initQueryParams.push({
+            name: paginationConfig?.params?.page?.name,
+            label: paginationConfig?.params?.page?.label || 'Page',
+            value: initialPagination?.page
+          });
+        }
+
+        if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
+          initQueryParams.push({
+            name: paginationConfig.params.limit.name,
+            label: paginationConfig.params.limit.label || 'Limit',
+            value: initialPagination?.limit
+          });
+        }
+
+        if (paginationConfig?.params?.descending && !find(initQueryParams, { name: 'descending' })) {
+          initQueryParams.push({
+            name: paginationConfig.params.descending.name,
+            label: paginationConfig.params.descending.label || 'Descending',
+            value: initialPagination?.descending
+          });
+        }
+
+        if (paginationConfig?.params?.sortBy && !find(initQueryParams, { name: 'sortBy' })) {
+          initQueryParams.push({
+            name: paginationConfig.params.sortBy.name,
+            label: 'Sort by',
+            value: initialPagination?.sortBy
+          });
+        }
+      } else if(isBodyPagination(paginationConfig)) {
+        initialPagination = {
+          source: 'body',
+          type: paginationConfig.type,
+          hasNextPage: false,
+          hasPreviousPage: false,
+          next: null,
+          previous: null,
+          limit: parseInt(paginationConfig.params?.limit?.value || '10')
+        }
+
+        if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
+          initQueryParams.push({
+            name: paginationConfig.params.limit.name,
+            label: paginationConfig.params.limit.label || 'Limit',
+            value: initialPagination?.limit
+          });
+        }
+
+      } else {
+        throw new Error('unrecognized pagination');
+      }
     }
 
-    if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
-      initQueryParams.push({
-        name: paginationConfig.params.limit.name,
-        label: paginationConfig.params.limit.label || 'Limit',
-        value: initialPagination?.limit
-      });
-    }
-
-    if (paginationConfig?.params?.descending && !find(initQueryParams, { name: 'descending' })) {
-      initQueryParams.push({
-        name: paginationConfig.params.descending.name,
-        label: paginationConfig.params.descending.label || 'Descending',
-        value: initialPagination?.descending
-      });
-    }
-
-    if (paginationConfig?.params?.sortBy && !find(initQueryParams, { name: 'sortBy' })) {
-      initQueryParams.push({
-        name: paginationConfig.params.sortBy.name,
-        label: 'Sort by',
-        value: initialPagination?.sortBy
-      });
-    }
-  }
-
-  return {
-    initQueryParams,
-    initialPagination
-  };
+    return {
+      initQueryParams,
+      initialPagination
+    };
 };
 
 const PageComp = ({ context }: IProps) => {
@@ -179,24 +207,85 @@ const PageComp = ({ context }: IProps) => {
   }
 
   function extractQueryParams(params: IConfigInputField[]): IConfigInputField[] {
-    const parsedParams = QueryString.parse(location.search);
-    const finalQueryParams = params.map((queryParam) => {
-      if (typeof parsedParams[queryParam.name] !== 'undefined') {
-        queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
-      } else {
-        queryParam.value = queryParam.value || '';
-      }
-      return queryParam;
+    if(!paginationConfig || isQueryPagination(paginationConfig)) {
+      const parsedParams = QueryString.parse(location.search);
+      const finalQueryParams = params.map((queryParam) => {
+        if (typeof parsedParams[queryParam.name] !== 'undefined') {
+          queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
+        } else {
+          queryParam.value = queryParam.value || '';
+        }
+        return queryParam;
+      });
+
+      setPagination(getUpdatedPaginationState(finalQueryParams, null))
+
+      return finalQueryParams;
+    } else {
+      return params;
+    }
+  }
+
+  async function fetchPageData(params: {
+    actualMethod: 'get' | 'put' | 'post' | 'patch' | 'delete', 
+    url: string,
+    requestHeaders?: any,
+    dataPath: string,
+    dataTransform: any,
+    sortBy: any
+  }) {
+    const result = await httpService.fetch({
+      method: params.actualMethod || 'get',
+      origUrl: params.url,
+      queryParams,
+      headers: Object.assign({}, pageHeaders, params.requestHeaders || {})
     });
+    let extractedData = dataHelpers.extractDataByDataPath(result, params.dataPath);
 
-    setPagination(getUpdatedPaginationState(finalQueryParams))
+    if (!extractedData) {
+      throw new Error('Could not extract data from response.');
+    }
 
-    return finalQueryParams;
+    if (!Array.isArray(extractedData)) {
+      throw new Error('Extracted data is invalid.');
+    }
+
+    if (typeof params.dataTransform === 'function') {
+      extractedData = await params.dataTransform(extractedData);
+    }
+
+    const orderedItems = orderBy(extractedData, typeof params.sortBy === 'string' ? [params.sortBy] : (params.sortBy || []));
+
+    if (paginationConfig) {
+      const total = paginationConfig.fields?.total ? dataHelpers.extractDataByDataPath(result, paginationConfig.fields.total.dataPath) : undefined;
+      const newPaginationState = getUpdatedPaginationState(queryParams, result, total);
+      if (newPaginationState) {
+        setPagination(newPaginationState);
+      }
+    }
+
+    if (infiniteScroll) {
+      setItems([...items, ...orderedItems]);
+    } else {
+      setItems(orderedItems);
+    }
   }
 
   async function getAllRequest() {
-    if (infiniteScroll && pagination?.page !== 1) {
-      setLoading(false);
+    if (infiniteScroll) {
+      if(pagination) {
+        if(isQueryPaginationState(pagination)) {
+          if(pagination?.page !== 1) {
+            setLoading(false);
+          }
+        } else if( isBodyPaginationState(pagination)) {
+          if(pagination.previous) {
+            setLoading(false);
+          }
+        } else {
+          throw new Error('unrecognized pagination source');
+        }
+      }
     } else {
       setLoading(true);
     }
@@ -213,41 +302,16 @@ const PageComp = ({ context }: IProps) => {
       }
 
       const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
-      const result = await httpService.fetch({
-        method: actualMethod || 'get',
-        origUrl: url,
-        queryParams,
-        headers: Object.assign({}, pageHeaders, requestHeaders || {})
-      });
-      let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
-
-      if (!extractedData) {
-        throw new Error('Could not extract data from response.');
-      }
-
-      if (!Array.isArray(extractedData)) {
-        throw new Error('Extracted data is invalid.');
-      }
-
-      if (typeof dataTransform === 'function') {
-        extractedData = await dataTransform(extractedData);
-      }
-
-      const orderedItems = orderBy(extractedData, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
-
-      if (paginationConfig) {
-        const total = paginationConfig.fields?.total ? dataHelpers.extractDataByDataPath(result, paginationConfig.fields.total.dataPath) : undefined;
-        const newPaginationState = getUpdatedPaginationState(queryParams, total);
-        if (newPaginationState) {
-          setPagination(newPaginationState);
+      fetchPageData(
+        {
+          actualMethod: actualMethod,
+          url: url,
+          requestHeaders: requestHeaders,
+          dataPath: dataPath,
+          dataTransform: dataTransform,
+          sortBy: sortBy
         }
-      }
-
-      if (infiniteScroll) {
-        setItems([...items, ...orderedItems]);
-      } else {
-        setItems(orderedItems);
-      }
+      )
 
     } catch (e) {
       setError(e.message);
@@ -345,7 +409,7 @@ const PageComp = ({ context }: IProps) => {
     }
 
     setQueryParams(updatedParams);
-    setPagination(getUpdatedPaginationState(updatedParams));
+    setPagination(getUpdatedPaginationState(updatedParams, null));
 
     let paramsToUrl = [...updatedParams];
 
@@ -373,30 +437,60 @@ const PageComp = ({ context }: IProps) => {
     }
   }
 
-  function getUpdatedPaginationState(updatedParams: IConfigInputField[], total?: number): IPaginationState | undefined {
+  function getUpdatedPaginationState(updatedParams: IConfigInputField[], result: any, total?: number): IPaginationState | undefined {
     if (!paginationConfig) {
       return;
     }
 
-    const newState: IPaginationState = pagination ? pagination : {
-      type: paginationConfig.type,
-      page: parseInt(paginationConfig.params?.page?.value || '1'),
-      limit: parseInt(paginationConfig.params?.limit?.value || '10'),
-      descending: paginationConfig.params?.descending?.value === 'true' || false,
-      hasPreviousPage: false,
-      hasNextPage: false,
-      sortBy: paginationConfig.params?.sortBy?.value,
-    };
+    if(isQueryPagination(paginationConfig)) {
+      if(pagination && !isQueryPaginationState(pagination)) {
+        throw new Error('unexpected pagination source ' + pagination.source)
+      }
+      const newState: IQueryPaginationState = pagination ? pagination : {
+        source: 'query',
+        type: paginationConfig.type,
+        page: parseInt(paginationConfig.params?.page?.value || '1'),
+        limit: parseInt(paginationConfig.params?.limit?.value || '10'),
+        descending: paginationConfig.params?.descending?.value === 'true' || false,
+        hasPreviousPage: false,
+        hasNextPage: false,
+        sortBy: paginationConfig.params?.sortBy?.value,
+      };
 
-    newState.total = total || pagination?.total;
-    newState.page = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.page?.name)?.value) || newState.page;
-    newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value) || newState.limit;
-    newState.descending = updatedParams.find(param => param.name === paginationConfig?.params?.descending?.name)?.value === 'true' || newState.descending;
-    newState.sortBy = updatedParams.find(param => param.name === paginationConfig?.params?.sortBy?.name)?.value || newState.sortBy;
-    newState.hasPreviousPage = paginationHelpers.hasPreviousPage(newState.page);
-    newState.hasNextPage = paginationHelpers.hasNextPage(newState.page, newState.limit, newState.total);
-    
-    return newState;
+      newState.total = total || pagination?.total;
+      newState.page = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.page?.name)?.value) || newState.page;
+      newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value) || newState.limit;
+      newState.descending = updatedParams.find(param => param.name === paginationConfig?.params?.descending?.name)?.value === 'true' || newState.descending;
+      newState.sortBy = updatedParams.find(param => param.name === paginationConfig?.params?.sortBy?.name)?.value || newState.sortBy;
+      newState.hasPreviousPage = paginationHelpers.hasPreviousPage(newState.page);
+      newState.hasNextPage = paginationHelpers.hasNextPage(newState.page, newState.limit, newState.total);
+      return newState;
+    } else if(isBodyPagination(paginationConfig)) {
+      if(pagination && !isBodyPaginationState(pagination)) {
+        throw new Error('unexpected pagination source ' + pagination.source)
+      }
+      const newState: IBodyPaginationState = pagination ? pagination : {
+        source: 'body',
+        type: paginationConfig.type,
+        next: result[paginationConfig.params.nextPath || 'next'],
+        previous: result[paginationConfig.params.prevPath || 'previous'],
+        hasNextPage: !!result[paginationConfig.params.nextPath || 'next'],
+        hasPreviousPage: !!result[paginationConfig.params.prevPath || 'previous'],
+        limit: parseInt(paginationConfig.params?.limit?.value || '10'),
+        total: result[paginationConfig.params.countPath || 'count']
+      };
+      if(result) {
+        newState.next = result[paginationConfig.params.nextPath || 'next'];
+        newState.previous = result[paginationConfig.params.prevPath || 'previous'];
+        newState.hasNextPage = !!result[paginationConfig.params.nextPath || 'next'];
+        newState.hasPreviousPage = !!result[paginationConfig.params.prevPath || 'previous'];
+        newState.total = result[paginationConfig.params.countPath || 'count'];
+      }
+      newState.limit = parseInt(updatedParams.find(param => param.name === paginationConfig?.params?.limit?.name)?.value) || newState.limit;
+      return newState;
+    } else {
+      throw new Error('unrecognized pagination source');
+    }
   }
 
   function renderItemsUI() {
@@ -426,34 +520,84 @@ const PageComp = ({ context }: IProps) => {
     }
 
     const getNextPage = paginationConfig ? () => {
-      if (pagination?.page && queryParams.length > 0) {
-        const newPage = pagination?.page + 1;
-        const updatedParams = queryParams.map((param) => {
-          if (param.name === paginationConfig.params?.page?.name) {
-            return {
-              ...param,
-              value: newPage
+      if(isQueryPagination(paginationConfig)) {
+        if(pagination && !isQueryPaginationState(pagination)) {
+          throw new Error('unexpected pagination source ' + pagination.source)
+        }
+        if (pagination?.page && queryParams.length > 0) {
+          const newPage = pagination?.page + 1;
+          const updatedParams = queryParams.map((param) => {
+            if (param.name === paginationConfig.params?.page?.name) {
+              return {
+                ...param,
+                value: newPage
+              }
             }
+            return param;
+          });
+          submitQueryParams(updatedParams);
+        }
+      } else if(isBodyPagination(paginationConfig)) {
+        if(pagination && !isBodyPaginationState(pagination)) {
+          throw new Error('unexpected pagination source ' + pagination.source)
+        }
+        if(!getAllConfig || !pagination?.next) {
+          return;
+        }
+        const { requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
+        fetchPageData(
+          {
+            actualMethod: actualMethod,
+            url: pagination.next,
+            requestHeaders: requestHeaders,
+            dataPath: dataPath,
+            dataTransform: dataTransform,
+            sortBy: sortBy
           }
-          return param;
-        });
-        submitQueryParams(updatedParams);
+        )
+      } else {
+        throw new Error('unrecognized pagination source');
       }
     } : null;
 
     const getPreviousPage = paginationConfig ? () => {
-      if (pagination?.page && pagination.page > 1 && queryParams.length > 0) {
-        const newPage = pagination?.page - 1;
-        const updatedParams = queryParams.map((param) => {
-          if (param.name === paginationConfig.params?.page?.name) {
-            return {
-              ...param,
-              value: newPage
+      if(isQueryPagination(paginationConfig)) {
+        if(pagination && !isQueryPaginationState(pagination)) {
+          throw new Error('unexpected pagination source ' + pagination.source)
+        }
+        if (pagination?.page && pagination.page > 1 && queryParams.length > 0) {
+          const newPage = pagination?.page - 1;
+          const updatedParams = queryParams.map((param) => {
+            if (param.name === paginationConfig.params?.page?.name) {
+              return {
+                ...param,
+                value: newPage
+              }
             }
+            return param;
+          });
+          submitQueryParams(updatedParams);
+        }
+      } else if(isBodyPagination(paginationConfig)) {
+        if(pagination && !isBodyPaginationState(pagination)) {
+          throw new Error('unexpected pagination source ' + pagination.source)
+        }
+        if(!getAllConfig || !pagination?.previous) {
+          return;
+        }
+        const { requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
+        fetchPageData(
+          {
+            actualMethod: actualMethod,
+            url: pagination.previous,
+            requestHeaders: requestHeaders,
+            dataPath: dataPath,
+            dataTransform: dataTransform,
+            sortBy: sortBy
           }
-          return param;
-        });
-        submitQueryParams(updatedParams);
+        )
+      } else {
+        throw new Error('unrecognized pagination source');
       }
     } : null;
 
@@ -494,27 +638,48 @@ const PageComp = ({ context }: IProps) => {
     if (loading || !items.length) {
       return;
     }
+    
+    if(!pagination || isQueryPaginationState(pagination)) {
+      const currentCountFrom = (((pagination?.page || 1) - 1) * (pagination?.limit || 10)) + 1;
+      const currentCountTo = currentCountFrom + items.length - 1;
+      let label: string = `Showing results ${currentCountFrom}-${currentCountTo} out of ${pagination?.total} items`;
 
-    const currentCountFrom = (((pagination?.page || 1) - 1) * (pagination?.limit || 10)) + 1;
-    const currentCountTo = currentCountFrom + items.length - 1;
-    let label: string = `Showing results ${currentCountFrom}-${currentCountTo} out of ${pagination?.total} items`;
+      if (pagination?.type === 'infinite-scroll') {
+        label = `Showing ${pagination?.total} items`;
+      }
 
-    if (pagination?.type === 'infinite-scroll') {
-      label = `Showing ${pagination?.total} items`;
+      if (customLabels?.pagination?.itemsCount) {
+        label = customLabels?.pagination?.itemsCount
+                .replace(':currentCountFrom', currentCountFrom as any)
+                .replace(':currentCountTo', currentCountFrom as any)
+                .replace(':totalCount', pagination?.total as any);
+      }
+
+      return (
+        <p className="center pagination-state">
+          {label}
+        </p>
+      );
     }
+    if(isBodyPaginationState(pagination)) {
+      // TODO: extract start end end in a meaningful manner from the API
+      // this is not something that id based pagination APIs support generally
+      let label: string = `Total Results: ${pagination?.total}`;
+      if (pagination?.type === 'infinite-scroll') {
+        label = `Showing ${pagination?.total} items`;
+      }
 
-    if (customLabels?.pagination?.itemsCount) {
-      label = customLabels?.pagination?.itemsCount
-              .replace(':currentCountFrom', currentCountFrom as any)
-              .replace(':currentCountTo', currentCountFrom as any)
-              .replace(':totalCount', pagination?.total as any);
+      if (customLabels?.pagination?.itemsCount) {
+        label = customLabels?.pagination?.itemsCount
+                .replace(':totalCount', pagination?.total as any);
+      }
+
+      return (
+        <p className="center pagination-state">
+          {label}
+        </p>
+      );
     }
-
-    return (
-      <p className="center pagination-state">
-        {label}
-      </p>
-    );
   }
 
   function renderPageContent() {

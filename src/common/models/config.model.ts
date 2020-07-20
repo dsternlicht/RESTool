@@ -177,18 +177,32 @@ export interface IConfigCustomAction extends IConfigMethod {
   fields: IConfigInputField[]
 }
 
-export interface IConfigPagination {
-  source: 'query'
+export type IConfigPagination = 
+  IConfigQueryPagination | 
+  IConfigBodyPagination;
+
+export type IConfigQueryPagination = _IConfigPagination<'query', IConfigQueryPaginationParams>;
+export type IConfigBodyPagination = _IConfigPagination<'body', IConfigBodyPaginationParams>;
+
+interface _IConfigPagination<src extends string, paginationParams> {
+  source: src
   type: 'infinite-scroll' | 'buttons'
-  params: IConfigPaginationParams
+  params: paginationParams
   fields?: IConfigPaginationFields
 }
 
-export interface IConfigPaginationParams {
+export interface IConfigQueryPaginationParams {
   page: IQueryParamConfig
   limit?: IQueryParamConfig
   sortBy?: IQueryParamConfig
   descending?: IQueryParamConfig
+}
+
+export interface IConfigBodyPaginationParams {
+  nextPath?: string
+  prevPath?: string
+  countPath?: string
+  limit?: IQueryParamConfig
 }
 
 export interface IConfigPaginationFields {
