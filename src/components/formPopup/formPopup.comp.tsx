@@ -19,7 +19,6 @@ import { withAppContext } from '../withContext/withContext.comp';
 
 import './formPopup.scss';
 
-const flatten = require('flat');
 const unflatten = require('flat').unflatten;
 
 interface IProps {
@@ -69,35 +68,50 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
     setFinalRawData(finalRawData); // Store the raw data for later.
 
-    const flattenData = flatten(finalRawData || {});
-
     setFormFields(fieldsCopy.map((field) => {
       let key = field.name;
 
       field.originalName = field.name;
 
+      let dataPathSplit: string[] = [];
+
       if (field.dataPath) {
+        dataPathSplit = field.dataPath.split('.');
         key = `${field.dataPath}.${field.name}`;
       }
+
+      const lookup = () => {
+        let objToLookIn = finalRawData;
+        for(const pathElem of dataPathSplit) {
+          if(objToLookIn[pathElem] !== undefined && objToLookIn[pathElem] !== null) {
+            objToLookIn = objToLookIn[pathElem];
+          } else {
+            return undefined;
+          }
+        }
+        return objToLookIn[field.name];
+      }
+
+      const lookupValue = lookup();
 
       // Changing field name to include datapath
       // This will use us later for unflatten the final object
       field.name = key;
 
       if (dataHelpers.checkIfFieldIsObject(field)) {
-        if (finalRawData[key] || field.value) {
-          field.value = JSON.stringify(finalRawData[key] || field.value, null, '  ') || '';
+        if (lookupValue || field.value) {
+          field.value = JSON.stringify(lookupValue || field.value, null, '  ') || '';
         }
         return field;
       }
 
       if (field.type === 'array') {
-        field.value = finalRawData[key] || field.value || [];
+        field.value = lookupValue || field.value || [];
         return field;
       }
 
-      if (typeof flattenData[key] !== 'undefined') {
-        field.value = flattenData[key];
+      if (typeof lookupValue !== 'undefined') {
+        field.value = lookupValue;
       } else {
         // important in order to prevent controlled / uncontrolled components error
         field.value = typeof field.value === 'undefined' ? '' : field.value;
