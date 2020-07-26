@@ -148,7 +148,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         formData.append(field.name, field.value);
       }
 
-      if (field.required && field.type !== 'boolean' && !field.value) {
+      if (field.required && field.type !== 'boolean' && !field.value && field.value !== 0) {
         validationError = 'Please fill up all required fields.';
       }
 
