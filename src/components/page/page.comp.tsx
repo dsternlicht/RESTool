@@ -302,17 +302,14 @@ const PageComp = ({ context }: IProps) => {
       }
 
       const { url, requestHeaders, actualMethod, dataPath, sortBy, dataTransform } = getAllConfig;
-      fetchPageData(
-        {
-          actualMethod: actualMethod,
-          url: url,
-          requestHeaders: requestHeaders,
-          dataPath: dataPath,
-          dataTransform: dataTransform,
-          sortBy: sortBy
-        }
-      )
-
+      await fetchPageData({
+        actualMethod: actualMethod,
+        url: url,
+        requestHeaders: requestHeaders,
+        dataPath: dataPath,
+        dataTransform: dataTransform,
+        sortBy: sortBy
+      });
     } catch (e) {
       setError(e.message);
     }
