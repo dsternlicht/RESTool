@@ -64,6 +64,9 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
         return <a href={url} target="_blank" rel="noopener noreferrer">{origField.urlLabel || value}</a>;
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
+      case 'html':
+        const html = origField.htmlCode ? origField.htmlCode.replace('{value}', value) : 'Undefined';
+        return <div dangerouslySetInnerHTML={{__html: html}}></div>
       default:
         return value;
     }
