@@ -63,7 +63,8 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
       case 'colorbox':
         return <div className="colorbox" style={{ backgroundColor: value }}></div>;
       case 'html':
-        const html = origField.htmlCode ? origField.htmlCode.replace('{value}', value) : 'Undefined';
+        const htmlCode = origField.htmlCode || '<span>{value}</span>';
+        const html =  htmlCode.replace('{value}', value);
         return <div dangerouslySetInnerHTML={{__html: html}}></div>
       default:
         return value;
