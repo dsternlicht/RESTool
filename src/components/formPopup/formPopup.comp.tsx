@@ -52,7 +52,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
           method: actualMethod || 'get',
           origUrl: url,
           queryParams,
-          headers: Object.assign({}, pageHeaders, requestHeaders || {}),
+          headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
           rawData,
           responseType: responseType
         });
@@ -84,8 +84,8 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
       const lookup = () => {
         let objToLookIn = finalRawData;
-        for (const pathElem of dataPathSplit) {
-          if (objToLookIn[pathElem] !== undefined && objToLookIn[pathElem] !== null) {
+        for(const pathElem of dataPathSplit) {
+          if(objToLookIn[pathElem] !== undefined && objToLookIn[pathElem] !== null) {
             objToLookIn = objToLookIn[pathElem];
           } else {
             return undefined;
@@ -235,24 +235,24 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         <section>
           {
             loading ?
-              <Loader /> :
-              <form onSubmit={submitForm}>
-                {
-                  formFields.map((field, idx) => {
-                    return (
-                      <FormRow
-                        key={`field_${idx}`}
-                        field={field}
-                        onChange={formChanged}
-                        showReset={!field.type || field.type === 'text'}
-                      />
-                    );
-                  })
-                }
-                <div className="buttons-wrapper center">
-                  <Button type="submit" onClick={submitForm} color="green">Submit</Button>
-                </div>
-              </form>
+            <Loader /> :
+            <form onSubmit={submitForm}>
+              {
+                formFields.map((field, idx) => {
+                  return (
+                    <FormRow
+                      key={`field_${idx}`}
+                      field={field}
+                      onChange={formChanged}
+                      showReset={!field.type || field.type === 'text'}
+                    />
+                  );
+                })
+              }
+              <div className="buttons-wrapper center">
+                <Button type="submit" onClick={submitForm} color="green">Submit</Button>
+              </div>
+            </form>
           }
         </section>
       </React.Fragment>
