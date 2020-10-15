@@ -317,7 +317,7 @@ const PageComp = ({ context }: IProps) => {
     setLoading(false);
   }
 
-  async function addItem(body: any, containFiles?: boolean) {
+  async function addItem(body: any, containFiles?: boolean, queryParams?: []) {
     if (!postConfig) {
       throw new Error('Post method is not defined.');
     }
@@ -327,6 +327,7 @@ const PageComp = ({ context }: IProps) => {
     return await httpService.fetch({
       method: actualMethod || 'post',
       origUrl: url,
+      queryParams: queryParams,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
         ...pageHeaders,

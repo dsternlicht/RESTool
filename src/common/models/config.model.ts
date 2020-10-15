@@ -158,7 +158,8 @@ export interface IConfigGetAllMethod extends IConfigMethod {
 }
 
 export interface IConfigGetSingleMethod extends IConfigMethod {
-  dataPath: string
+  dataPath: string,
+  responseType: 'json' | 'text' | 'boolean' | 'status';
 }
 
 export interface IConfigPostMethod extends IConfigMethod {
