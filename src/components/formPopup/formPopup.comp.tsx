@@ -7,7 +7,8 @@ import {
   IConfigGetSingleMethod,
   IConfigPostMethod,
   IConfigPutMethod,
-  ICustomLabels
+  ICustomLabels,
+  IQueryParam
 } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
@@ -29,7 +30,7 @@ interface IProps {
   getSingleConfig?: IConfigGetSingleMethod
   methodConfig: IConfigPostMethod | IConfigPutMethod
   closeCallback: (reloadData: boolean) => void
-  submitCallback: (body: any, containFiles: boolean) => void
+  submitCallback: (body: any, containFiles: boolean, queryParams: IQueryParam[]) => void
 }
 
 export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
@@ -46,18 +47,19 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
     if (getSingleConfig && getSingleConfig.url) {
       try {
-        const { url, requestHeaders, actualMethod, dataPath, queryParams } = getSingleConfig;
+        const { url, requestHeaders, actualMethod, dataPath, queryParams, responseType } = getSingleConfig;
         const result = await httpService.fetch({
           method: actualMethod || 'get',
           origUrl: url,
           queryParams,
           headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
           rawData,
+          responseType
         });
 
         const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
-        if (extractedData && typeof extractedData === 'object') {
+        if (extractedData && (typeof extractedData === 'object' || typeof extractedData === 'string')) {
           finalRawData = extractedData;
         }
       } catch (e) {
@@ -117,6 +119,10 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         field.value = typeof field.value === 'undefined' ? '' : field.value;
       }
 
+      if ((field.type === 'long-text' || field.type === 'text') && typeof finalRawData === 'string') {
+        field.value = finalRawData;
+      }
+
       return field;
     }));
 
@@ -131,6 +137,8 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     const containFiles: boolean = fileHelpers.isMultipartForm(formFields);
     let validationError = null;
 
+    var queryParams: IQueryParam[] = [];
+
     formFields.forEach((field) => {
       if (field.type === 'file') {
         const fileInput: any = document.querySelector(`input[name="${field.name || 'file'}"]`) as HTMLInputElement;
@@ -144,7 +152,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
       finalObject[field.name] = field.value;
 
-      if (containFiles) {
+      if (containFiles && !field.useInUrl) {
         formData.append(field.name, field.value);
       }
 
@@ -168,6 +176,11 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
       if (field.type === 'encode') {
         finalObject[field.name] = encodeURIComponent(field.value);
       }
+
+      if (field.useInUrl) {
+        queryParams.push({ name: field.name, value: field.value });
+      }
+
     });
 
     if (validationError) {
@@ -179,7 +192,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
     try {
       const body = containFiles ? formData : unflatten(finalObject);
-      await submitCallback(body, containFiles);
+      await submitCallback(body, containFiles, queryParams);
 
       toast.success('Great Success!');
 
