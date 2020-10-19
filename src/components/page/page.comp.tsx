@@ -327,7 +327,7 @@ const PageComp = ({ context }: IProps) => {
     return await httpService.fetch({
       method: actualMethod || 'post',
       origUrl: url,
-      queryParams: queryParams,
+      queryParams,
       body: containFiles ? body : JSON.stringify(body),
       headers: {
         ...pageHeaders,

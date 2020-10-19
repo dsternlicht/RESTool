@@ -54,7 +54,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
           queryParams,
           headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
           rawData,
-          responseType: responseType
+          responseType
         });
 
         const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
