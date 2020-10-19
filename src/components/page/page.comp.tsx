@@ -405,6 +405,15 @@ const PageComp = ({ context }: IProps) => {
       updatedParams = buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams;
     }
 
+    updatedParams.map((queryParam, idx) => {
+        if (queryParam.type === 'select' && queryParam.value === '-- Select --') {
+            // default value means nothing was selected and thus we explicitly
+            // empty out the value in this case; otherwise the string '-- Select --'
+            // is used as the value for the given queryParams
+            queryParam.value = '';
+        }
+    });
+
     setQueryParams(updatedParams);
     setPagination(getUpdatedPaginationState(updatedParams, null));
 
@@ -416,16 +425,7 @@ const PageComp = ({ context }: IProps) => {
 
     // Building query string
     const queryState: string = paramsToUrl.map((queryParam, idx) => {
-      let value = queryParam.value;
-
-      if (queryParam.type === 'select' && value === '-- Select --') {
-          // default value means nothing was selected and thus we explicitly
-          // empty out the value in this case; otherwise the string '-- Select --'
-          // is used as the value for the given queryParams
-          value = '';
-      }
-
-      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(value || '')}`;
+      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
     }).join('&');
 
     // Pushing query state to url
