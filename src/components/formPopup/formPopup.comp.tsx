@@ -47,7 +47,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
     if (getSingleConfig && getSingleConfig.url) {
       try {
-        const { url, requestHeaders, actualMethod, dataPath, queryParams, responseType } = getSingleConfig;
+        const { url, requestHeaders, actualMethod, dataPath, queryParams, responseType, dataTransform } = getSingleConfig;
         const result = await httpService.fetch({
           method: actualMethod || 'get',
           origUrl: url,
@@ -57,7 +57,11 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
           responseType
         });
 
-        const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+        let extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
+
+        if (typeof dataTransform === 'function') {
+          extractedData = await dataTransform(extractedData);
+        }
 
         if (extractedData && (typeof extractedData === 'object' || typeof extractedData === 'string')) {
           finalRawData = extractedData;
