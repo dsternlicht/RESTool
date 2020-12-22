@@ -261,7 +261,12 @@
     },
     "getSingle": {
       "$ref": "#/definitions/method",
-      "description": "This method will be fired once you hit the edit button on an item in order to get a single item's data. By default, if this method hasn't been set, when editing an item, RESTool will take the raw data from the original getAll request."
+      "description": "This method will be fired once you hit the edit button on an item in order to get a single item's data. By default, if this method hasn't been set, when editing an item, RESTool will take the raw data from the original getAll request.",
+      "properties": {
+        "dataTransform": {
+          "description": "Relevant only when using dynamic (js) config. A function to allow manipulation on the response data. Useful for changing/adding data for display purposes."
+        }
+      }
     },
     "post": {
       "allOf": [

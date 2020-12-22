@@ -221,6 +221,22 @@ An example of a `getSingle` request:
 
 <br />
 
+###### `dataTransform` (Function | async Function)
+
+Optional. Relevant only when using dynamic (js) config.
+A function to allow manipulation on the response data.
+Useful for changing\adding data for display purposes.
+
+Here is an example for adding a new field named `wiki` to the data:
+```
+{
+  ...
+  "dataTransform": item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` })
+}
+```
+
+<br />
+
 ##### `post`
 The `post` method will be used to create new items in your API resource.
 
