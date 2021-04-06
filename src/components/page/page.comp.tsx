@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import { toast } from 'react-toastify';
 import { orderBy } from 'natural-orderby';
-import { find, remove } from 'lodash';
+import { find, get, remove } from 'lodash';
 
 import { IAppContext } from '../app.context';
 import { IConfigPage, IConfigMethods, IConfigGetAllMethod, IConfigPostMethod, IConfigPutMethod, IConfigDeleteMethod, IConfigInputField, IConfigCustomAction, IConfigGetSingleMethod, ICustomLabels, IConfigPagination } from '../../common/models/config.model';
@@ -58,7 +58,7 @@ const buildInitQueryParamsAndPaginationState = (
           sortBy: paginationConfig.params?.sortBy?.value,
         };
 
-        if (!find(initQueryParams, { name: 'page' })) {
+        if (!find(initQueryParams, { name: get(paginationConfig, 'params.page.name', 'page') })) {
           initQueryParams.push({
             name: paginationConfig?.params?.page?.name,
             label: paginationConfig?.params?.page?.label || 'Page',
@@ -66,7 +66,7 @@ const buildInitQueryParamsAndPaginationState = (
           });
         }
 
-        if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
+        if (paginationConfig?.params?.limit && !find(initQueryParams, { name: get(paginationConfig, 'params.limit.name', 'limit') })) {
           initQueryParams.push({
             name: paginationConfig.params.limit.name,
             label: paginationConfig.params.limit.label || 'Limit',
@@ -74,7 +74,7 @@ const buildInitQueryParamsAndPaginationState = (
           });
         }
 
-        if (paginationConfig?.params?.descending && !find(initQueryParams, { name: 'descending' })) {
+        if (paginationConfig?.params?.descending && !find(initQueryParams, { name: get(paginationConfig, 'params.descending.name', 'descending') })) {
           initQueryParams.push({
             name: paginationConfig.params.descending.name,
             label: paginationConfig.params.descending.label || 'Descending',
@@ -82,7 +82,7 @@ const buildInitQueryParamsAndPaginationState = (
           });
         }
 
-        if (paginationConfig?.params?.sortBy && !find(initQueryParams, { name: 'sortBy' })) {
+        if (paginationConfig?.params?.sortBy && !find(initQueryParams, { name: get(paginationConfig, 'params.sortBy.name', 'sortBy') })) {
           initQueryParams.push({
             name: paginationConfig.params.sortBy.name,
             label: 'Sort by',
@@ -100,7 +100,7 @@ const buildInitQueryParamsAndPaginationState = (
           limit: parseInt(paginationConfig.params?.limit?.value || '10')
         }
 
-        if (paginationConfig?.params?.limit && !find(initQueryParams, { name: 'limit' })) {
+        if (paginationConfig?.params?.limit && !find(initQueryParams, { name: get(paginationConfig, 'params.limit.name', 'limit') })) {
           initQueryParams.push({
             name: paginationConfig.params.limit.name,
             label: paginationConfig.params.limit.label || 'Limit',
