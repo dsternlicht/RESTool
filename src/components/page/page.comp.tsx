@@ -273,14 +273,18 @@ const PageComp = ({ context }: IProps) => {
 
   async function getAllRequest() {
     if (infiniteScroll) {
-      if(pagination) {
-        if(isQueryPaginationState(pagination)) {
-          if(pagination?.page !== 1) {
+      if (pagination) {
+        if (isQueryPaginationState(pagination)) {
+          if (pagination?.page !== 1) {
             setLoading(false);
+          } else {
+            setLoading(true);
           }
-        } else if( isBodyPaginationState(pagination)) {
-          if(pagination.previous) {
+        } else if (isBodyPaginationState(pagination)) {
+          if (pagination.previous) {
             setLoading(false);
+          } else {
+            setLoading(true);
           }
         } else {
           throw new Error('unrecognized pagination source');
@@ -440,8 +444,8 @@ const PageComp = ({ context }: IProps) => {
       return;
     }
 
-    if(isQueryPagination(paginationConfig)) {
-      if(pagination && !isQueryPaginationState(pagination)) {
+    if (isQueryPagination(paginationConfig)) {
+      if (pagination && !isQueryPaginationState(pagination)) {
         throw new Error('unexpected pagination source ' + pagination.source)
       }
       const newState: IQueryPaginationState = pagination ? pagination : {
@@ -464,7 +468,7 @@ const PageComp = ({ context }: IProps) => {
       newState.hasNextPage = paginationHelpers.hasNextPage(newState.page, newState.limit, newState.total);
       return newState;
     } else if(isBodyPagination(paginationConfig)) {
-      if(pagination && !isBodyPaginationState(pagination)) {
+      if (pagination && !isBodyPaginationState(pagination)) {
         throw new Error('unexpected pagination source ' + pagination.source)
       }
       const newState: IBodyPaginationState = pagination ? pagination : {
