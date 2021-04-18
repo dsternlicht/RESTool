@@ -99,6 +99,10 @@
             "actionButtonText": {
               "type": "string",
               "description": "Action button text  color."
+            },
+            "cardBackground": {
+              "type": "string",
+              "description": "Card background color."
             }
           }
         }

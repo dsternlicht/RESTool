@@ -433,6 +433,7 @@ Here's a list of variable names you may change:
 | actionButtonBackground | `string` | Action button background color. |
 | actionButtonHoverBackground | `string` | Action button background color on hover event. |
 | actionButtonText | `string` | Action button text color. |
+| cardBackground | `string` | Card background color. |
 
 Usage example in `config.json` file:
 

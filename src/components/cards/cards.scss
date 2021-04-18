@@ -13,7 +13,7 @@
   }
 
   .card {
-    background: #fff;
+    background: v(cardBackground, #fff);
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     font-weight: 300;
     margin: 0 20px 20px 0;
