@@ -25,6 +25,7 @@ export interface ICustomStyles {
     actionButtonBackground?: string
     actionButtonHoverBackground?: string
     actionButtonText?: string
+    cardBackground?: string
   }
 }
 
