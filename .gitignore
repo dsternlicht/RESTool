@@ -1,5 +1,6 @@
 .vscode
 .idea
+*.iml
 node_modules/
 public/config.json
 public/config.js

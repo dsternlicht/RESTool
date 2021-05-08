@@ -181,6 +181,12 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
         finalObject[field.name] = encodeURIComponent(field.value);
       }
 
+      // check if integer/number fields are empty;
+      // if so, set value to 'null' (otherwise would be rendered as string)
+      if ((field.type === 'integer' || field.type === 'number') && field.value === "") {
+        finalObject[field.name] = null;
+      }
+
       if (field.useInUrl) {
         queryParams.push({ name: field.name, value: field.value });
       }
