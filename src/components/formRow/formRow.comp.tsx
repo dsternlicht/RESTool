@@ -28,7 +28,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
 
   async function loadOptionSourceFromRemote(fieldName: string, optionSource: IConfigOptionSource) {
     try {
-      const { url, dataPath, actualMethod, requestHeaders } = optionSource;
+      const { url, dataPath, actualMethod, requestHeaders, displayPath, valuePath } = optionSource;
 
       if (!url) {
         throw new Error(`URL option source (for field "${fieldName}") is empty.`);
@@ -47,17 +47,30 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         throw new Error(`Option source data is empty (for field "${fieldName}")`);
       }
 
+
       // Map option source to fields
       const optionSourceData = extractedData.map((option: any, idx: number) => {
-        const { valuePath, displayPath } = optionSource;
+
+        const valueDataPath = dataHelpers.extractDataByDataPath(extractedData[idx], valuePath);
+        if (!valueDataPath || !valueDataPath.length) {
+          throw new Error(`Option source data is empty (for field "${valuePath}")`);
+        }
+
+        const displayDataPath = dataHelpers.extractDataByDataPath(extractedData[idx], displayPath);
+        if (!displayDataPath || !displayDataPath.length) {
+          throw new Error(`Option source data is empty (for field "${displayPath}")`);
+        }
+
+        option[valueDataPath] = valueDataPath;
+        option[displayDataPath] = displayDataPath;
 
         if (typeof option === 'string') {
           return option;
         }
 
         return {
-          display: displayPath && option[displayPath] ? option[displayPath] : `Option ${idx + 1}`,
-          value: valuePath && option[valuePath] ? option[valuePath] : `${idx}`,
+          display: displayDataPath && option[displayDataPath] ? option[displayDataPath] : `Option ${idx + 1}`,
+          value: valueDataPath && option[valueDataPath] ? option[valueDataPath] : `${idx}`,
         };
       });
 
