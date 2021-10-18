@@ -127,7 +127,7 @@ export interface IConfigOptionSource {
   displayPath: string
   valuePath: string
   actualMethod: TConfigMethod
-  sortBy: string
+  sortBy?: string | string[]
   requestHeaders: any
 }
 
