@@ -18,6 +18,12 @@ interface IProps {
   direction?: 'row' | 'column'
 }
 
+interface IOption {
+  value: string,
+  display: string,
+  sourceItem?: any,
+}
+
 export const FormRow = withAppContext(({ context, field, direction, showReset, onChange }: IProps) => {
   const [optionSources, setOptionSources] = useState<any>({});
   const { httpService, activePage, config } = context;
@@ -48,7 +54,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       }
 
       // Map option source to fields
-      const optionSourceData = extractedData.map((option: any, idx: number) => {
+      const optionSourceData: IOption[] = extractedData.map((option: any, idx: number) => {
         const { valuePath, displayPath } = optionSource;
 
         if (typeof option === 'string') {
@@ -58,6 +64,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         return {
           display: displayPath && option[displayPath] ? option[displayPath] : `Option ${idx + 1}`,
           value: valuePath && option[valuePath] ? option[valuePath] : `${idx}`,
+          sourceItem: option,
         };
       });
 
@@ -148,15 +155,25 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             return <select {...inputProps()}><option>-- Loading Options... --</option></select>
           }
 
-          const sortBy = field.optionSource?.sortBy;
-          const finalOptions: { value: string, display: string }[] = optionSources[field.name] || field.options || [];
-          const sortedOptions = orderBy(finalOptions, typeof sortBy === 'string' ? [sortBy] : (sortBy || []));
+          let finalOptions: Array<IOption | string>;
+          if (optionSources[field.name]) {
+            finalOptions = optionSources[field.name];
+            const sortBy = field.optionSource?.sortBy;
+            if (sortBy) {
+              const identifiers = typeof sortBy === 'string'
+                ? [(o: IOption) => o.sourceItem[sortBy]]
+                : sortBy.map(s => ((o: IOption) => o.sourceItem[s]));
+              finalOptions = orderBy(finalOptions as IOption[], identifiers);
+            }
+          } else {
+            finalOptions = field.options || [];
+          }
 
           return (
             <select {...inputProps()}>
               <option>-- Select --</option>
               {
-                sortedOptions.map((option, idx) => {
+                finalOptions.map((option, idx) => {
                   const key = `option_${idx}_`;
                   if (typeof option !== 'object') {
                     return <option key={`${key}_${option}`} value={option}>{option}</option>

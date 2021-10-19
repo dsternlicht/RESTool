@@ -410,7 +410,7 @@ const PageComp = ({ context }: IProps) => {
       updatedParams = buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams;
     }
 
-    updatedParams.map((queryParam, idx) => {
+    updatedParams.forEach((queryParam, idx) => {
         if (queryParam.type === 'select' && queryParam.value === '-- Select --') {
             // default value means nothing was selected and thus we explicitly
             // empty out the value in this case; otherwise the string '-- Select --'
