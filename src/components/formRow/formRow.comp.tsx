@@ -3,12 +3,15 @@ import { orderBy } from 'natural-orderby';
 import { toast } from 'react-toastify';
 
 import { IConfigInputField, IConfigOptionSource, ICustomLabels } from '../../common/models/config.model';
-import { Button } from '../button/button.comp';
+// import { Button } from '../button/button.comp';
 import { withAppContext } from '../withContext/withContext.comp';
 import { IAppContext } from '../app.context';
 import { dataHelpers } from '../../helpers/data.helpers';
 
 import './formRow.scss';
+import 'jsoneditor-react/es/editor.min.css';
+
+const { JsonEditor } = require('jsoneditor-react');
 
 interface IProps {
   context: IAppContext
@@ -29,7 +32,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
   const { httpService, activePage, config } = context;
   const pageHeaders: any = activePage?.requestHeaders || {};
   const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
-  const addArrayItemLabel = customLabels?.buttons?.addArrayItem || 'Add Item';
+  // const addArrayItemLabel = customLabels?.buttons?.addArrayItem || 'Add Item';
   const clearLabel = customLabels?.buttons?.clearInput || 'Clear';
 
   async function loadOptionSourceFromRemote(fieldName: string, optionSource: IConfigOptionSource) {
@@ -77,60 +80,60 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
     }
   }
 
-  function addItemToFieldArray(e: any, originalField: IConfigInputField) {
-    e.preventDefault();
+  // function addItemToFieldArray(e: any, originalField: IConfigInputField) {
+  //   e.preventDefault();
 
-    onChange(field.name, [
-      ...(originalField.value || []),
-      ''
-    ]);
-  }
+  //   onChange(field.name, [
+  //     ...(originalField.value || []),
+  //     ''
+  //   ]);
+  // }
 
-  function removeItemToFieldArray(originalField: IConfigInputField, idx: number) {
-    const updatedArray = [
-      ...(originalField.value || [])
-    ];
+  // function removeItemToFieldArray(originalField: IConfigInputField, idx: number) {
+  //   const updatedArray = [
+  //     ...(originalField.value || [])
+  //   ];
 
-    updatedArray.splice(idx, 1);
+  //   updatedArray.splice(idx, 1);
 
-    onChange(field.name, updatedArray);
-  }
+  //   onChange(field.name, updatedArray);
+  // }
 
-  function renderArrayItems(originalField: IConfigInputField) {
-    const array: any[] = originalField.value || [];
+  // function renderArrayItems(originalField: IConfigInputField) {
+  //   const array: any[] = originalField.value || [];
 
-    return (
-      <div className="array-form">
-        {
-          array.map((item, itemIdx) => {
-            const inputField = renderFieldInput({
-              value: item,
-              name: `${originalField.name}.${itemIdx}`,
-            } as IConfigInputField, (fieldName, value) => {
-              const updatedArray = (originalField.value || []).map((localValue: any, idx: number) => {
-                if (idx === itemIdx) {
-                  return value;
-                }
-                return localValue;
-              });
+  //   return (
+  //     <div className="array-form">
+  //       {
+  //         array.map((item, itemIdx) => {
+  //           const inputField = renderFieldInput({
+  //             value: item,
+  //             name: `${originalField.name}.${itemIdx}`,
+  //           } as IConfigInputField, (fieldName, value) => {
+  //             const updatedArray = (originalField.value || []).map((localValue: any, idx: number) => {
+  //               if (idx === itemIdx) {
+  //                 return value;
+  //               }
+  //               return localValue;
+  //             });
 
-              onChange(originalField.name, updatedArray);
-            });
+  //             onChange(originalField.name, updatedArray);
+  //           });
 
-            return (
-              <div className="array-form-item" key={`array_form_${itemIdx}`}>
-                {inputField}
-                <i title={clearLabel} onClick={() => removeItemToFieldArray(originalField, itemIdx)} aria-label="Remove" className="clear-input fa fa-times"></i>
-              </div>
-            )
-          })
-        }
-        <Button className="add-array-item" onClick={(e) => addItemToFieldArray(e, originalField)} title={addArrayItemLabel}>
-          <i className="fa fa-plus" aria-hidden="true"></i>
-        </Button>
-      </div>
-    );
-  }
+  //           return (
+  //             <div className="array-form-item" key={`array_form_${itemIdx}`}>
+  //               {inputField}
+  //               <i title={clearLabel} onClick={() => removeItemToFieldArray(originalField, itemIdx)} aria-label="Remove" className="clear-input fa fa-times"></i>
+  //             </div>
+  //           )
+  //         })
+  //       }
+  //       <Button className="add-array-item" onClick={(e) => addItemToFieldArray(e, originalField)} title={addArrayItemLabel}>
+  //         <i className="fa fa-plus" aria-hidden="true"></i>
+  //       </Button>
+  //     </div>
+  //   );
+  // }
 
   function renderFieldInput(field: IConfigInputField, changeCallback: (fieldName: string, value: any, submitAfterChange?: boolean) => void) {
     const inputProps = (defaultPlaceholder: string = '') => {
@@ -185,14 +188,20 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
           );
         };
       case 'object':
-        return <textarea {...inputProps(customLabels?.placeholders?.object || 'Enter JSON...')}></textarea>;
-      case 'array': {
-        const { arrayType, value } = field;
-        if (!value || !arrayType || arrayType === 'object') {
-          return <textarea {...inputProps(customLabels?.placeholders?.array || 'Enter JSON array...')}></textarea>;
-        }
-        return renderArrayItems(field);
-      }
+      case 'array':
+        return (
+          <JsonEditor 
+            value={JSON.parse(field.value || '{}')} 
+            onChange={(json: any) => changeCallback(field.name, JSON.stringify(json))}
+          />
+        );
+      // case 'array': {
+      //   const { arrayType, value } = field;
+      //   if (!value || !arrayType || arrayType === 'object') {
+      //     return <textarea {...inputProps(customLabels?.placeholders?.array || 'Enter JSON array...')}></textarea>;
+      //   }
+      //   return renderArrayItems(field);
+      // }
       case 'long-text':
         return <textarea {...inputProps(customLabels?.placeholders?.text || 'Enter text...')}></textarea>;
       case 'number':

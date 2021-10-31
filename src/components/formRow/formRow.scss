@@ -57,8 +57,16 @@
       opacity: 0.85;
     }
   }
-
-  input[type=text], select, textarea, input[type=url], input[type=number], input[type=date], input[type=email], input[type=password], input[type=date] {
+  
+  > input[type=text], 
+  > select, 
+  > textarea, 
+  > input[type=url], 
+  > input[type=number], 
+  > input[type=date], 
+  > input[type=email], 
+  > input[type=password], 
+  > input[type=date] {
     width: 100%;
     padding: 9px;
     border: 1px solid rgba(0,0,0,0.1);
@@ -111,6 +119,24 @@
 
   input[type=checkbox] {
     flex: 0 1;
+  }
+
+  .jsoneditor {
+    border-color: rgba(0, 0, 0, 0.1);
+    
+    .jsoneditor-menu {
+      border-color: rgba(0, 0, 0, 0.1);
+      background-color: rgba(0, 0, 0, 0.1);
+
+      > button {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .jsoneditor-navigation-bar {
+      border-bottom-color: rgba(0, 0, 0, 0.03);
+      background-color: rgba(0, 0, 0, 0.02);
+    }
   }
 
   .note {
