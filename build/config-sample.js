@@ -1,6 +1,6 @@
 // A dynamic config sample
 export default {
-  "name": "RESTool App",
+  "name": "RESTool Apps",
   "favicon": "https://www.commoninja.com/public/favicon.ico",
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
   "pages": [

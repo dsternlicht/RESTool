@@ -1,17 +1,17 @@
 {
-  "name": "RESTool Apps",
+  "name": "RESTool App",
   "favicon": "https://www.commoninja.com/public/favicon.ico",
-  "baseUrl": "https://restool-sample-app.herokuapp.com/api",
+  "baseUrl": "localhost:9191",
   "pages": [
     {
-      "name": "Cast & Characters",
-      "id": "characters",
-      "description": "Manage GOT characters location and budget.",
+      "name": "Image Service",
+      "id": "image",
+      "description": "POST ang GET Images",
       "methods": {
         "getAll": {
           "label": "Get All",
           "dataPath": "items",
-          "url": "/character",
+          "url": "/images",
           "queryParams": [
             {
               "name": "search",
@@ -57,7 +57,7 @@
           ]
         },
         "getSingle": {
-          "url": "/character/:id",
+          "url": "/character/:allImage",
           "queryParams": [],
           "requestHeaders": {}
         },
