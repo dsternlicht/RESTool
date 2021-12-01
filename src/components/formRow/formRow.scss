@@ -126,10 +126,26 @@
     
     .jsoneditor-menu {
       border-color: rgba(0, 0, 0, 0.1);
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: #efefef;
 
       > button {
         background-color: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .jsoneditor-selected {
+      background: #adadad !important;
+    }
+
+    .jsoneditor-modes {
+
+      button {
+        background: #adadad;
+        color: #ebebeb;
+
+        &:hover {
+          background: #c1c1c1;
+        }
       }
     }
 
