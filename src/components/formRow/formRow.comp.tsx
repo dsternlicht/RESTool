@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { orderBy } from 'natural-orderby';
 import { toast } from 'react-toastify';
+import { Multiselect } from 'multiselect-react-dropdown';
 
 import { IConfigInputField, IConfigOptionSource, ICustomLabels } from '../../common/models/config.model';
 // import { Button } from '../button/button.comp';
@@ -172,19 +173,34 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             finalOptions = field.options || [];
           }
 
+          const onSelect = (selectedList:object, selectedItem:object) => {
+            let selection = [];
+            var parsedJson = JSON.parse(JSON.stringify(selectedList))
+            for(var i = 0; i < parsedJson.length; i++) {
+              selection.push(JSON.stringify(parsedJson[i].value));
+            };
+            changeCallback(field.name, selection.toString().replace(/"/g, ''))
+          };
+
+          const onRemove = (selectedList:object, removedItem:object) => {
+            let selection = [];
+            var parsedJson = JSON.parse(JSON.stringify(selectedList))
+            for(var i = 0; i < parsedJson.length; i++) {
+              selection.push(JSON.stringify(parsedJson[i].value));
+            };
+            changeCallback(field.name, selection.toString().replace(/"/g, ''))
+          };
+
           return (
-            <select {...inputProps()}>
-              <option>-- Select --</option>
-              {
-                finalOptions.map((option, idx) => {
-                  const key = `option_${idx}_`;
-                  if (typeof option !== 'object') {
-                    return <option key={`${key}_${option}`} value={option}>{option}</option>
-                  }
-                  return <option key={`${key}_${option.value}`} value={option.value}>{option.display || option.value}</option>
-                })
-              }
-            </select>
+            <Multiselect
+            options={finalOptions} // Options to display in the dropdown
+            onSelect={onSelect}
+            onRemove={onRemove} // Function will trigger on remove event
+            displayValue="display" // Property name to display in the dropdown options
+            singleSelect={true}
+            selectionLimit={-1}
+            avoidHighlightFirstOption
+            />
           );
         };
       case 'object':
