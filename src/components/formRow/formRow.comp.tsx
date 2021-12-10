@@ -153,6 +153,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       case 'select':
         {
           const { optionSource } = field;
+          const singleSelectDropdown = (field.multi !== true);
 
           if (optionSource && !optionSources[field.name]) {
             loadOptionSourceFromRemote(field.name, optionSource);
@@ -197,8 +198,8 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             onSelect={onSelect}
             onRemove={onRemove} // Function will trigger on remove event
             displayValue="display" // Property name to display in the dropdown options
-            singleSelect={true}
-            selectionLimit={-1}
+            singleSelect={singleSelectDropdown}
+            selectionLimit={field.selectLimit || -1}
             avoidHighlightFirstOption
             />
           );

@@ -416,6 +416,14 @@
         "optionSource": {
           "$ref": "#/definitions/optionSource",
           "description": "Use the optionSource field to load options for a select box from a REST service. If this is used with options, the items from options will be added to the select box before those fetched from the api."
+        },
+        "multi": {
+          "type": "boolean",
+          "description": "If true, select dropdown will allow for multiple selections from a pre-defined list"
+        },
+        "selectLimit": {
+          "type": "number",
+          "description": "An optional setting for limiting the multiple selections from a pre-defined list"
         }
       },
       "required": [

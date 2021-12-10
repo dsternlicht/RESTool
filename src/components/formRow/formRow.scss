@@ -175,4 +175,19 @@
       margin: 0 5px 10px;
     }
   }
+  .chip, .singleChip, .searchBox {
+    font-size: 14px;
+    font-family: Arial;
+    font-weight: 400;
+    color: #7f848e;
+    margin: 0;
+    padding: 4px;
+  }
+  .optionContainer {
+    font-size: 14px;
+    font-family: Arial;
+    font-weight: 400;
+    margin: 0;
+    padding: 4px;
+  }
 }

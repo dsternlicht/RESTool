@@ -119,6 +119,8 @@ export interface IConfigInputField {
   useInUrl?: boolean
   accept?: string
   urlReplaceOnly?: boolean
+  multi?: boolean
+  selectLimit?: number
 }
 
 export interface IConfigOptionSource {
