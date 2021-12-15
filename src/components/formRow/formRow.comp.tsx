@@ -154,6 +154,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
         {
           const { optionSource } = field;
           const singleSelectDropdown = (field.multi !== true);
+          var isObject = false;
 
           if (optionSource && !optionSources[field.name]) {
             loadOptionSourceFromRemote(field.name, optionSource);
@@ -174,13 +175,25 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             finalOptions = field.options || [];
           }
 
+          finalOptions.map(option => {
+            if (typeof option !== 'object') {
+              return isObject = false;
+            } else {
+              return isObject = true;
+            }
+          })
+
           const onSelect = (selectedList:object, selectedItem:object) => {
             let selection = [];
             var parsedJson = JSON.parse(JSON.stringify(selectedList))
             for(var i = 0; i < parsedJson.length; i++) {
               selection.push(JSON.stringify(parsedJson[i].value));
             };
-            changeCallback(field.name, selection.toString().replace(/"/g, ''))
+            if (isObject === true) {
+              changeCallback(field.name, selection.toString().replace(/"/g, ''))
+            } else {
+              changeCallback(field.name, parsedJson.toString())
+            }
           };
 
           const onRemove = (selectedList:object, removedItem:object) => {
@@ -189,7 +202,11 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             for(var i = 0; i < parsedJson.length; i++) {
               selection.push(JSON.stringify(parsedJson[i].value));
             };
-            changeCallback(field.name, selection.toString().replace(/"/g, ''))
+            if (isObject === true) {
+              changeCallback(field.name, selection.toString().replace(/"/g, ''))
+            } else {
+              changeCallback(field.name, parsedJson.toString())
+            }
           };
 
           return (
@@ -201,6 +218,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             singleSelect={singleSelectDropdown}
             selectionLimit={field.selectLimit || -1}
             avoidHighlightFirstOption
+            isObject={isObject}
             />
           );
         };
