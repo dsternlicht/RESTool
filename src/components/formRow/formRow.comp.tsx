@@ -153,6 +153,44 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       case 'select':
         {
           const { optionSource } = field;
+
+          if (optionSource && !optionSources[field.name]) {
+            loadOptionSourceFromRemote(field.name, optionSource);
+            return <select {...inputProps()}><option>-- Loading Options... --</option></select>
+          }
+
+          let finalOptions: Array<IOption | string>;
+          if (optionSources[field.name]) {
+            finalOptions = optionSources[field.name];
+            const sortBy = field.optionSource?.sortBy;
+            if (sortBy) {
+              const identifiers = typeof sortBy === 'string'
+                ? [(o: IOption) => o.sourceItem[sortBy]]
+                : sortBy.map(s => ((o: IOption) => o.sourceItem[s]));
+              finalOptions = orderBy(finalOptions as IOption[], identifiers);
+            }
+          } else {
+            finalOptions = field.options || [];
+          }
+
+          return (
+            <select {...inputProps()}>
+              <option>-- Select --</option>
+              {
+                finalOptions.map((option, idx) => {
+                  const key = `option_${idx}_`;
+                  if (typeof option !== 'object') {
+                    return <option key={`${key}_${option}`} value={option}>{option}</option>
+                  }
+                  return <option key={`${key}_${option.value}`} value={option.value}>{option.display || option.value}</option>
+                })
+              }
+            </select>
+          );
+        };
+      case 'select-multi':
+        {
+          const { optionSource } = field;
           const singleSelectDropdown = (field.multi !== true);
           var isObject = false;
 

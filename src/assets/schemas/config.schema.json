@@ -343,6 +343,7 @@
             "email",
             "color",
             "select",
+            "select-multi",
             "array",
             "file",
             "password",
@@ -419,7 +420,7 @@
         },
         "multi": {
           "type": "boolean",
-          "description": "If true, select dropdown will allow for multiple selections from a pre-defined list"
+          "description": "If true, select-multi dropdown will allow for multiple selections from a pre-defined list"
         },
         "selectLimit": {
           "type": "number",

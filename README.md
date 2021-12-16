@@ -576,7 +576,7 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | accept | `string` | false | An optional setting for `file` type inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files. <br /><br />For example: `{ "accept": ".png,.jpeg,image/*" }`|
 | useInUrl | `boolean` | false | If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body. |
 | optionSource| `object` | false | Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api. Read more about it [here](#option-source).|
-| multi | `boolean` | false | If true, select dropdown will allow for multiple selections from a pre-defined list. |
+| multi | `boolean` | false | If true, select-multi dropdown will allow for multiple selections from a pre-defined list. |
 | selectLimit | `number` | unlimited | An optional setting for limiting the multiple selections from a pre-defined list. |
 
 <br />
