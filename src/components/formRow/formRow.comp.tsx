@@ -221,6 +221,21 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
             }
           })
 
+          const onLoad = (options:any, value:any) => {
+            let selection = [];
+            var parsedOptions = JSON.parse(JSON.stringify(options))
+            var parsedValues = value.toString().split(',');
+            for(var o = 0; o < parsedOptions.length; o++) {
+              for(var v = 0; v < parsedValues.length; v++) {
+                if (((typeof options[0] === 'object') ? parsedOptions[o].value.toString() : parsedOptions[o].toString()) === parsedValues[v].toString())
+                {
+                  selection.push(parsedOptions[o]);
+                }
+              }
+            }
+            return selection;
+          }
+
           const onSelect = (selectedList:object, selectedItem:object) => {
             let selection = [];
             var parsedJson = JSON.parse(JSON.stringify(selectedList))
@@ -250,6 +265,7 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
           return (
             <Multiselect
             options={finalOptions} // Options to display in the dropdown
+            selectedValues={onLoad(finalOptions, field.value)}
             onSelect={onSelect}
             onRemove={onRemove} // Function will trigger on remove event
             displayValue="display" // Property name to display in the dropdown options
