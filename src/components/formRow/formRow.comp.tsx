@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { orderBy } from 'natural-orderby';
 import { toast } from 'react-toastify';
+import { Multiselect } from 'multiselect-react-dropdown';
 
 import { IConfigInputField, IConfigOptionSource, ICustomLabels } from '../../common/models/config.model';
 // import { Button } from '../button/button.comp';
@@ -185,6 +186,94 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
                 })
               }
             </select>
+          );
+        };
+      case 'select-multi':
+        {
+          const { optionSource } = field;
+          const singleSelectDropdown = (field.multi !== true);
+          var isObject = false;
+
+          if (optionSource && !optionSources[field.name]) {
+            loadOptionSourceFromRemote(field.name, optionSource);
+            return <select {...inputProps()}><option>-- Loading Options... --</option></select>
+          }
+
+          let finalOptions: Array<IOption | string>;
+          if (optionSources[field.name]) {
+            finalOptions = optionSources[field.name];
+            const sortBy = field.optionSource?.sortBy;
+            if (sortBy) {
+              const identifiers = typeof sortBy === 'string'
+                ? [(o: IOption) => o.sourceItem[sortBy]]
+                : sortBy.map(s => ((o: IOption) => o.sourceItem[s]));
+              finalOptions = orderBy(finalOptions as IOption[], identifiers);
+            }
+          } else {
+            finalOptions = field.options || [];
+          }
+
+          finalOptions.map(option => {
+            if (typeof option !== 'object') {
+              return isObject = false;
+            } else {
+              return isObject = true;
+            }
+          })
+
+          const onLoad = (options:any, value:any) => {
+            let selection = [];
+            var parsedOptions = JSON.parse(JSON.stringify(options))
+            var parsedValues = value.toString().split(',');
+            for(var o = 0; o < parsedOptions.length; o++) {
+              for(var v = 0; v < parsedValues.length; v++) {
+                if (((typeof options[0] === 'object') ? parsedOptions[o].value.toString() : parsedOptions[o].toString()) === parsedValues[v].toString())
+                {
+                  selection.push(parsedOptions[o]);
+                }
+              }
+            }
+            return selection;
+          }
+
+          const onSelect = (selectedList:object, selectedItem:object) => {
+            let selection = [];
+            var parsedJson = JSON.parse(JSON.stringify(selectedList))
+            for(var i = 0; i < parsedJson.length; i++) {
+              selection.push(JSON.stringify(parsedJson[i].value));
+            };
+            if (isObject === true) {
+              changeCallback(field.name, selection.toString().replace(/"/g, ''))
+            } else {
+              changeCallback(field.name, parsedJson.toString())
+            }
+          };
+
+          const onRemove = (selectedList:object, removedItem:object) => {
+            let selection = [];
+            var parsedJson = JSON.parse(JSON.stringify(selectedList))
+            for(var i = 0; i < parsedJson.length; i++) {
+              selection.push(JSON.stringify(parsedJson[i].value));
+            };
+            if (isObject === true) {
+              changeCallback(field.name, selection.toString().replace(/"/g, ''))
+            } else {
+              changeCallback(field.name, parsedJson.toString())
+            }
+          };
+
+          return (
+            <Multiselect
+            options={finalOptions} // Options to display in the dropdown
+            selectedValues={onLoad(finalOptions, field.value)}
+            onSelect={onSelect}
+            onRemove={onRemove} // Function will trigger on remove event
+            displayValue="display" // Property name to display in the dropdown options
+            singleSelect={singleSelectDropdown}
+            selectionLimit={field.selectLimit || -1}
+            avoidHighlightFirstOption
+            isObject={isObject}
+            />
           );
         };
       case 'object':
