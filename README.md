@@ -50,11 +50,33 @@ If you wish to extend RESTool's functionality and develop on top of it, please g
 
 <br />
 
-## Configuration
+## Configuration Files
 
-One of the best things about RESTool (and the reason we actually built it) is that you don't need to develop anything. Everything is configurable and may be set simply by editing a configuration file (`config.json`).
+### Static
 
-The `config.json` file should be placed in the root folder of the project, alongside with the `index.html` file.
+One of the best things about RESTool (and the reason we actually built it) is that you don't need to develop anything. Everything can be statically configured by simply by editing a configuration file (`config.json`).
+
+An example static configuration file can be found in `public/config-sample.json`.
+
+The contents should be placed in `public/config.json`.
+
+**NOTE:** If you prefer, you can pre-compile the project, and then place your static config files in the `build` directory.
+
+### Dynamic
+
+Dynamic configuration files have additional features. You can, for example, provide filters to pre-process or re-shape data returned by a rest API before displaying it. Dynamic configuration files can be written in Javascript or Typescript.
+#### Javscript
+
+RESTool supports a dynamic js configuration file. To use it, copy `public/static/js/config-sample.js` to `public/static/js/config.js` and edit the file to your liking.
+
+**NOTE:** If you prefer, you can pre-compile the project, and then place your javascript config file in the `build/static/js` directory.
+<br />
+
+#### TypeScript or Javascript in the project tree
+
+If you wish to programatically build a config which is processed at compile time, edit 'src/config.ts', set 'INTERNAL_CONFIG = true', and implement the configuration function as shown in that file.
+
+## Configuration Options
 
 Here's a detailed list of properties you could add to your configuration file (just in case, we added a [`config-sample.json`](https://github.com/dsternlicht/RESTool/blob/master/public/config-sample.json) file you could learn from).
 
@@ -69,20 +91,6 @@ Here's a detailed list of properties you could add to your configuration file (j
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |
-
-#### Dynamic configuration file
-RESTool also support dynamic js configuration file. 
-Just replace the `config.json` file with `config.js` file with this content:
-
-```
-export default {
-  // Content is the same as the json config file
-}
-```
-
-**NOTE:** In case you're using the `build` folder, the config.js must be placed in the folder `/build/static/js`.
-<br />
-
 
 ### Pages
 
