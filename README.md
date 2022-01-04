@@ -108,7 +108,7 @@ A method object will tell RESTool how to work with your API. Available methods:
 * getSingle
 * post
 * put
-* post
+* delete
 
 Each method has the following common properties (which could be extended specifically for each use case):
 
