@@ -8,6 +8,7 @@ import { Navigation } from '../components/navigation/navigation.comp';
 import { AppContext } from './app.context';
 import HttpService from '../services/http.service';
 import { CustomStyles } from './customStyles/customStyles.comp';
+import inTreeConfig from "../config";
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,11 +34,13 @@ function App() {
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
   const appName: string = config?.name || defaultAppName;
-  
+
   async function loadConfig(url?: string): Promise<void> {
     try {
+      let itConfig = inTreeConfig();
+      if (itConfig) (window as any).RESTool = { config: itConfig };
       const windowConfig = (window as any).RESTool?.config;
-      let remoteConfig: IConfig; 
+      let remoteConfig: IConfig;
       // Try to load config from window object first
       if (!url && windowConfig) {
         remoteConfig = Object.assign({}, windowConfig, {});
