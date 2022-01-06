@@ -30,7 +30,7 @@
     "build-lib": "tsc --project ./tsconfig.lib.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "npm run build",
+    "prepare": "npm run build && tsc --project ./tsconfig.lib.json",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
