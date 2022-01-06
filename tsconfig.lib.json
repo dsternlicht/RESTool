@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build-lib",
+    "noEmit": false,
+    "declaration": true,
+  },
+  "include": ["src/common/models"]
+}
