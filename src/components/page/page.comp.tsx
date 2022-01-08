@@ -227,7 +227,7 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function fetchPageData(params: {
-    actualMethod: 'get' | 'put' | 'post' | 'patch' | 'delete', 
+    actualMethod: 'get' | 'put' | 'post' | 'patch' | 'delete' | undefined,
     url: string,
     requestHeaders?: any,
     dataPath: string,
@@ -403,7 +403,7 @@ const PageComp = ({ context }: IProps) => {
     if (loading) {
       return;
     }
-    
+
     if (reset) {
       setItems([]);
       remove(updatedParams, param => ['page', 'limit'].includes(param.name));
@@ -640,7 +640,7 @@ const PageComp = ({ context }: IProps) => {
     if (loading || !items.length) {
       return;
     }
-    
+
     if(!pagination || isQueryPaginationState(pagination)) {
       const currentCountFrom = (((pagination?.page || 1) - 1) * (pagination?.limit || 10)) + 1;
       const currentCountTo = currentCountFrom + items.length - 1;
@@ -728,7 +728,7 @@ const PageComp = ({ context }: IProps) => {
   }, [activePage]);
 
   useEffect(() => {
-    // Load data when query params 
+    // Load data when query params
     getAllRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryParams]);

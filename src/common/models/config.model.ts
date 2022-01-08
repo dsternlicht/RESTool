@@ -1,13 +1,13 @@
 export type ConfigFunction = (context?: any) => Promise<any> | any;
 
 export interface IConfig {
-  remoteUrl: string
+  remoteUrl?: string
   name: string
   favicon: string
   baseUrl: string
-  errorMessageDataPath: string | string[]
-  unauthorizedRedirectUrl: string
-  requestHeaders: any
+  errorMessageDataPath?: string | string[]
+  unauthorizedRedirectUrl?: string
+  requestHeaders?: any
   pages: IConfigPage[]
   customStyles?: ICustomStyles
   customLabels?: ICustomLabels
@@ -77,10 +77,10 @@ export interface IConfigPage {
   name: string
   id: string
   description: string
-  requestHeaders: any
+  requestHeaders?: any
   methods: IConfigMethods
-  customActions: IConfigCustomAction[]
-  customLabels: ICustomLabels
+  customActions?: IConfigCustomAction[]
+  customLabels?: ICustomLabels
 }
 
 export interface IConfigMethods {
@@ -95,10 +95,10 @@ export type TConfigMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
 export interface IConfigMethod {
   url: string
-  actualMethod: TConfigMethod
-  requestHeaders: any
-  queryParams: IConfigInputField[]
-  fields: IConfigInputField[] | IConfigDisplayField[]
+  actualMethod?: TConfigMethod
+  requestHeaders?: any
+  queryParams?: IConfigInputField[]
+  fields?: IConfigInputField[] | IConfigDisplayField[]
 }
 
 export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'integer' | 'number' | 'boolean' | 'email' | 'color' | 'select' | 'select-multi' | 'array' | 'file' | 'password' | 'note' | 'hidden' | 'date';
@@ -106,13 +106,13 @@ export type TConfigInputField = 'text' | 'long-text' | 'object' | 'encode' | 'in
 export interface IConfigInputField {
   originalName?: string
   name: string
-  value: any
+  value?: any
   type?: TConfigInputField
   label?: string
   dataPath?: string
   placeholder?: string
   readonly?: boolean
-  options?: [string | { display: string, value: string }],
+  options?: Array<string | { display: string, value: string }>,
   optionSource?: IConfigOptionSource
   arrayType?: 'object' | 'text' | 'number' | 'integer'
   required?: boolean
@@ -139,10 +139,10 @@ export interface IConfigDisplayField {
   name: string
   type: TConfigDisplayField
   label: string
-  dataPath: string
-  filterable: boolean
-  truncate: boolean
-  url: string
+  dataPath?: string
+  filterable?: boolean
+  truncate?: boolean
+  url?: string
   urlLabel?: string
   htmlCode?: string;
 }
@@ -152,18 +152,18 @@ export interface IConfigGetAllMethod extends IConfigMethod {
   queryParams: IConfigInputField[]
   display: {
     type: 'table' | 'cards',
-    fields: IConfigDisplayField[] // Deprecated
+    fields?: IConfigDisplayField[] // Deprecated
   },
-  sortBy: string
+  sortBy?: string
   fields: IConfigDisplayField[]
   dataTransform?: ConfigFunction
   pagination?: IConfigPagination
 }
 
 export interface IConfigGetSingleMethod extends IConfigMethod {
-  dataPath: string,
+  dataPath?: string,
   dataTransform?: ConfigFunction,
-  responseType: 'json' | 'text' | 'boolean' | 'status';
+  responseType?: 'json' | 'text' | 'boolean' | 'status';
 }
 
 export interface IConfigPostMethod extends IConfigMethod {
@@ -172,7 +172,7 @@ export interface IConfigPostMethod extends IConfigMethod {
 
 export interface IConfigPutMethod extends IConfigMethod {
   fields: IConfigInputField[]
-  includeOriginalFields: boolean
+  includeOriginalFields?: boolean
 }
 
 export interface IConfigDeleteMethod extends IConfigMethod { }
@@ -231,5 +231,5 @@ export interface IQueryParamConfig {
 
 
 export interface IQueryParam extends IQueryParamConfig {
-  value: string
+  value?: string
 }

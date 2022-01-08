@@ -2,14 +2,14 @@ import { IConfigInputField } from "../common/models/config.model";
 
 class DataHelpers {
 
-  public extractDataByDataPath(data: any, dataPath: string, attr: string | null = null) {
+  public extractDataByDataPath(data: any, dataPath: string | undefined, attr: string | null = null) {
     if (!data || !dataPath) {
       if (attr) {
         return data[attr];
       }
       return data;
     }
-	
+
     let extractedData: any = data;
     const digProps: string[] = dataPath.split('.');
 
