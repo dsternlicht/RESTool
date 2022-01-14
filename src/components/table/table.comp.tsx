@@ -40,7 +40,7 @@ export const Table = ({ items, fields, pagination, callbacks, customActions, cus
     }
 
     if (value && typeof value === 'object') {
-      return 'object';
+      return value.toString();
     }
 
     switch (origField.type) {
