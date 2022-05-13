@@ -625,6 +625,9 @@
         {
           "type": "object",
           "properties": {
+            "dataTransform": {
+              "description": "Relevant only when using dynamic (js) config. A function to allow manipulation on the body data. Useful for changing/adding data before the PUT."
+            },
             "icon": {
               "type": "string",
               "description": "You may configure the icon of the action. RESTool uses font-awesome and you may use any icon name you want from their collection."
