@@ -412,6 +412,21 @@ Here's an example for a configuration of 2 custom actions:
   ]
 }
 ```
+<br />
+
+###### `dataTransform` (Function | async Function)
+
+Optional. Relevant only when using dynamic (js) config.
+A function to allow manipulation on the body data.
+Useful for changing/adding data before the PUT.
+
+Here is an example for changing payload to literal:
+```
+{
+  ...
+  "dataTransform": item => { return item.value}
+}
+```
 
 <br />
 

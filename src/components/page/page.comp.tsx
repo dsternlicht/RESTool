@@ -190,7 +190,11 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function performAction(body: any, rawData: any, action: IConfigCustomAction, containFiles: boolean) {
-    const { url, requestHeaders, actualMethod } = action;
+    const { url, requestHeaders, actualMethod, dataTransform } = action;
+	
+	if (typeof dataTransform === 'function') {
+	  body = await dataTransform(body);
+	}	
 
     return await httpService.fetch({
       method: actualMethod || 'put',
