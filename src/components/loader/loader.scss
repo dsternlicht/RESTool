@@ -40,7 +40,7 @@ $speed4x: .5s;
 
     &.cp-balls {
       &:before, &:after {
-        @include bounding-box($smallBoxSize/2, $smallBoxSize/2);
+        @include bounding-box(calc($smallBoxSize / 2), calc($smallBoxSize / 2));
       }
     }
   }
@@ -52,7 +52,7 @@ $speed4x: .5s;
   &:before{
     border-radius: 50%;
     content: " ";
-    @include bounding-box($boxSize/2, $boxSize/2);
+    @include bounding-box(calc($boxSize / 2), calc($boxSize / 2));
     background-color: $firstColor;
     position: absolute;
     top: 0;
@@ -63,7 +63,7 @@ $speed4x: .5s;
   &:after{
     border-radius: 50%;
     content: " ";
-    @include bounding-box($boxSize/2, $boxSize/2);
+    @include bounding-box(calc($boxSize / 2), calc($boxSize / 2));
     background-color: $secondColor;
     position: absolute;
     bottom: 0;

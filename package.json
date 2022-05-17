@@ -1,6 +1,6 @@
 {
   "name": "restool",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
@@ -13,15 +13,15 @@
     "lodash": "^4.17.21",
     "multiselect-react-dropdown": "^2.0.7",
     "natural-orderby": "^2.0.3",
-    "node-sass": "^4.13.1",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-infinite-scroll-component": "^5.0.4",
     "react-loading-skeleton": "^2.0.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "^5.0.0",
     "react-toastify": "^5.4.1",
+    "sass": "^1.47.0",
     "typescript": "^3.7.4"
   },
   "scripts": {

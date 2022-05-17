@@ -39,7 +39,7 @@ export const Cards = ({ items, fields, callbacks, customActions, customLabels, p
     }
 
     if (value && typeof value === 'object') {
-      return 'object';
+      return value.toString();
     }
 
     switch (origField.type) {
