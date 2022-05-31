@@ -251,7 +251,7 @@ const PageComp = ({ context }: IProps) => {
     }
 
     if (!Array.isArray(extractedData)) {
-      throw new Error('Extracted data is invalid.');
+      extractedData = [extractedData];
     }
 
     if (typeof params.dataTransform === 'function') {
