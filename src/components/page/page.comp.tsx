@@ -251,7 +251,7 @@ const PageComp = ({ context }: IProps) => {
     }
 
     if (!Array.isArray(extractedData)) {
-    extractedData = [extractedData];
+      extractedData = [extractedData];
     }
 
     if (typeof params.dataTransform === 'function') {
