@@ -219,6 +219,11 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
     updatedFormFields = updatedFormFields.map((field: IConfigInputField) => {
       if (field.name === fieldName) {
+        // select-multi's value should be stored as an array
+        if (field.type === 'select-multi' && typeof value === 'string') {
+          value = value.split(",");
+        }
+
         field.value = value;
       }
 
