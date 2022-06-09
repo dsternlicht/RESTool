@@ -279,8 +279,8 @@ export const FormRow = withAppContext(({ context, field, direction, showReset, o
       case 'object':
       case 'array':
         return (
-          <JsonEditor 
-            value={JSON.parse(field.value || '{}')} 
+          <JsonEditor
+            value={JSON.parse(field.value || '{}')}
             onChange={(json: any) => changeCallback(field.name, JSON.stringify(json))}
             allowedModes={['tree', 'code']}
           />

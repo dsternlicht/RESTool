@@ -128,9 +128,9 @@ export interface IConfigOptionSource {
   dataPath: string
   displayPath: string
   valuePath: string
-  actualMethod: TConfigMethod
+  actualMethod?: TConfigMethod
   sortBy?: string | string[]
-  requestHeaders: any
+  requestHeaders?: any
 }
 
 export type TConfigDisplayField = 'text' | 'url' | 'image' | 'colorbox' | 'boolean' | 'html';

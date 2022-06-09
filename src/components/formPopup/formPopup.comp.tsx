@@ -217,13 +217,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
   function formChanged(fieldName: string, value: any) {
     let updatedFormFields: IConfigInputField[] = JSON.parse(JSON.stringify(formFields));
 
-    updatedFormFields = updatedFormFields.map((field: IConfigInputField) => {
-      if (field.name === fieldName) {
-        field.value = value;
-      }
-
-      return field;
-    });
+    updatedFormFields = dataHelpers.updateInputFieldFromFields(fieldName, value, updatedFormFields)
 
     setFormFields(updatedFormFields);
   }

@@ -46,6 +46,40 @@ class DataHelpers {
     return false;
   }
 
+  public normaliseInputFieldValue(field: IConfigInputField, value: any): any {
+    switch (field.type) {
+      case "boolean":
+        if (value === 'true') {
+          return true;
+        }
+
+        return value;
+      case "select-multi":
+        if (typeof value !== 'string') {
+          return value;
+        }
+
+        if (value === '') {
+          return [];
+        }
+
+        return value.split(",");
+      default:
+        return value;
+    }
+  }
+
+  public updateInputFieldFromFields(fieldName: string, value: any, fields: IConfigInputField[]): IConfigInputField[] {
+    return fields.map((field) => {
+      if (field.name !== fieldName) {
+        return field;
+      }
+
+      field.value = dataHelpers.normaliseInputFieldValue(field, value);
+
+      return field;
+    })
+  }
 }
 
 export const dataHelpers = new DataHelpers();
