@@ -1,5 +1,6 @@
 import { TConfigMethod, IQueryParam } from '../common/models/config.model';
 import { dataHelpers } from '../helpers/data.helpers';
+import {querystringHelpers} from "../helpers/querystring.helpers";
 
 export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
 
@@ -66,7 +67,7 @@ class HttpService {
         const urlParamName = `:${param.name}`;
         outputUrl = outputUrl.replace(urlParamName, param.value as string);
       } else {
-        params.push(`${param.name}=${param.value || ''}`);
+        params.push(querystringHelpers.encodeValue(param.name, param.value));
       }
     }
 

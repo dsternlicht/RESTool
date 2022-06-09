@@ -5,6 +5,7 @@ import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
 
 import './queryParams.scss';
+import {dataHelpers} from "../../helpers/data.helpers";
 
 interface IProps {
   initialParams: IConfigInputField[]
@@ -28,13 +29,9 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
   }
 
   function formChanged(fieldName: string, value: any, submitAfterChange?: boolean) {
-    const updatedQueryParams: IConfigInputField[] = [...queryParams].map((field) => {
-      if (field.name === fieldName) {
-        field.value = value;
-      }
+    const updatedQueryParams: IConfigInputField[] = [...queryParams];
 
-      return field;
-    });
+    dataHelpers.updateInputFieldFromFields(fieldName, value, updatedQueryParams)
 
     setQueryParams(updatedQueryParams);
 

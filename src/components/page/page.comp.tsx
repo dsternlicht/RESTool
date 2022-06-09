@@ -20,8 +20,8 @@ import { FormPopup } from '../formPopup/formPopup.comp';
 import { FilterField } from '../filterField/filterField.comp';
 import { isQueryPaginationState, isBodyPaginationState } from '../../common/models/states.types.helper';
 import { isQueryPagination, isBodyPagination } from '../../common/models/config.types.helper';
-
 import './page.scss';
+import {querystringHelpers} from "../../helpers/querystring.helpers";
 
 interface IProps {
   context: IAppContext
@@ -213,12 +213,15 @@ const PageComp = ({ context }: IProps) => {
   function extractQueryParams(params: IConfigInputField[]): IConfigInputField[] {
     if(!paginationConfig || isQueryPagination(paginationConfig)) {
       const parsedParams = QueryString.parse(location.search);
+
       const finalQueryParams = params.map((queryParam) => {
         if (typeof parsedParams[queryParam.name] !== 'undefined') {
-          queryParam.value = queryParam.type === 'boolean' ? (parsedParams[queryParam.name] === 'true') : decodeURIComponent(parsedParams[queryParam.name] as any);
+          const decodedValue = decodeURIComponent(parsedParams[queryParam.name] as any)
+          queryParam.value = dataHelpers.normaliseInputFieldValue(queryParam, decodedValue)
         } else {
           queryParam.value = queryParam.value || '';
         }
+
         return queryParam;
       });
 
@@ -434,7 +437,7 @@ const PageComp = ({ context }: IProps) => {
 
     // Building query string
     const queryState: string = paramsToUrl.map((queryParam, idx) => {
-      return `${idx === 0 ? '?' : ''}${queryParam.name}=${encodeURIComponent(queryParam.value || '')}`;
+      return `${idx === 0 ? '?' : ''}${querystringHelpers.encodeValue(queryParam.name, queryParam.value)}`;
     }).join('&');
 
     // Pushing query state to url
