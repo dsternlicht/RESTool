@@ -266,6 +266,19 @@ Example:
 }
 ```
 
+###### `dataTransform` (Function | async Function)
+
+Optional. Relevant only when using dynamic (js) config.
+A function to allow manipulation on the data before making the request.
+
+Here is an example for adding a new field named `wiki` to the data:
+```
+{
+  ...
+  "dataTransform": items => items.map(item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` }))
+}
+```
+
 <br />
 
 #####  `put` - additional properties
@@ -300,6 +313,19 @@ Example:
 ###### `includeOriginalFields` (boolean)
 When set to `true`, all fields from the original object are merged and sent in the request body.
 Default is `false`.
+
+###### `dataTransform` (Function | async Function)
+
+Optional. Relevant only when using dynamic (js) config.
+A function to allow manipulation on the data before making the request.
+
+Here is an example for adding a new field named `wiki` to the data:
+```
+{
+  ...
+  "dataTransform": items => items.map(item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` }))
+}
+```
 
 <br />
 
