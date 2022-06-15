@@ -201,7 +201,12 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
     setLoading(true);
 
     try {
-      const body = containFiles ? formData : unflatten(finalObject);
+      let body = containFiles ? formData : unflatten(finalObject);
+
+      if (typeof methodConfig.dataTransform === 'function') {
+        body = await methodConfig.dataTransform(body)
+      }
+
       await submitCallback(body, containFiles, queryParams);
 
       toast.success('Great Success!');

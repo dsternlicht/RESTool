@@ -168,10 +168,12 @@ export interface IConfigGetSingleMethod extends IConfigMethod {
 
 export interface IConfigPostMethod extends IConfigMethod {
   fields: IConfigInputField[]
+  dataTransform?: ConfigFunction
 }
 
 export interface IConfigPutMethod extends IConfigMethod {
   fields: IConfigInputField[]
+  dataTransform?: ConfigFunction
   includeOriginalFields?: boolean
 }
 
