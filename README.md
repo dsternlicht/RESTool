@@ -271,11 +271,19 @@ Example:
 Optional. Relevant only when using dynamic (js) config.
 A function to allow manipulation on the data before making the request.
 
-Here is an example for adding a new field named `wiki` to the data:
+Here is an example for transforming an array of ids into an array of objects.
 ```
 {
   ...
-  "dataTransform": items => items.map(item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` }))
+  "dataTransform": (body) => {
+    body.character.ids = body.character.ids.map((id) => {
+      return {
+        id: id,
+      }
+    })
+    return body
+  },
+  ...
 }
 ```
 
@@ -319,11 +327,19 @@ Default is `false`.
 Optional. Relevant only when using dynamic (js) config.
 A function to allow manipulation on the data before making the request.
 
-Here is an example for adding a new field named `wiki` to the data:
+Here is an example for transforming an array of ids into an array of objects.
 ```
 {
   ...
-  "dataTransform": items => items.map(item => Object.assign(item, { wiki: `https://en.wikipedia.org/wiki/${item.name}` }))
+  "dataTransform": (body) => {
+    body.character.ids = body.character.ids.map((id) => {
+      return {
+        id: id,
+      }
+    })
+    return body
+  },
+  ...
 }
 ```
 
