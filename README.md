@@ -266,6 +266,27 @@ Example:
 }
 ```
 
+###### `dataTransform` (Function | async Function)
+
+Optional. Relevant only when using dynamic (js) config.
+A function to allow manipulation on the data before making the request.
+
+Here is an example for transforming an array of ids into an array of objects.
+```
+{
+  ...
+  "dataTransform": (body) => {
+    body.character.ids = body.character.ids.map((id) => {
+      return {
+        id: id,
+      }
+    })
+    return body
+  },
+  ...
+}
+```
+
 <br />
 
 #####  `put` - additional properties
@@ -300,6 +321,27 @@ Example:
 ###### `includeOriginalFields` (boolean)
 When set to `true`, all fields from the original object are merged and sent in the request body.
 Default is `false`.
+
+###### `dataTransform` (Function | async Function)
+
+Optional. Relevant only when using dynamic (js) config.
+A function to allow manipulation on the data before making the request.
+
+Here is an example for transforming an array of ids into an array of objects.
+```
+{
+  ...
+  "dataTransform": (body) => {
+    body.character.ids = body.character.ids.map((id) => {
+      return {
+        id: id,
+      }
+    })
+    return body
+  },
+  ...
+}
+```
 
 <br />
 
