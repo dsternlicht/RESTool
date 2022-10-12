@@ -69,6 +69,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |
+| customLink | `string` | false | External Link for navigation item (instead of default page app) |
 
 #### Dynamic configuration file
 RESTool also support dynamic js configuration file. 
