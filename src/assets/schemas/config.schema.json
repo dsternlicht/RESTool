@@ -139,6 +139,10 @@
         },
         "customLabels": {
           "$ref": "#/definitions/customLabels"
+        },
+        "customLink": {
+          "type": "string",
+          "description": "External link to page"
         }
       },
       "required": [

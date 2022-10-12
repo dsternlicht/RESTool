@@ -18,8 +18,8 @@ const NavigationComp = ({ context: { config } }: IProps) => {
     <nav className="app-nav">
       <Button className="app-nav-opener" onClick={() => setIsOpened(!isOpened)}>
         {
-          isOpened ? 
-          <i className="fa fa-times" aria-hidden="true"></i> : 
+          isOpened ?
+          <i className="fa fa-times" aria-hidden="true"></i> :
           <i className="fa fa-bars" aria-hidden="true"></i>
         }
       </Button>
@@ -27,9 +27,12 @@ const NavigationComp = ({ context: { config } }: IProps) => {
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
         <div className="app-nav-links">
           {
-            (config?.pages || []).map((page, idx) => (
-              <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`} onClick={() => setIsOpened(false)}>{page.name}</NavLink>
-            ))
+            (config?.pages || []).map((page, idx) => {
+              return page?.customLink ?
+                <a href={page?.customLink} target="_blank" key={`page_${idx}`}>{page.name}</a> :
+                <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}
+                         onClick={() => setIsOpened(false)}>{page.name}</NavLink>
+            })
           }
         </div>
       </div>

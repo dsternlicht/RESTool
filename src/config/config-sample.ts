@@ -410,6 +410,12 @@ const config: IConfig = {
         },
       },
     },
+    {
+      name: "Custom Link",
+      id: "customLink",
+      description: "External custom link to the page",
+      customLink: 'https://gringos.outbrain.com/'
+    }
   ],
 };
 

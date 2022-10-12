@@ -78,9 +78,10 @@ export interface IConfigPage {
   id: string
   description: string
   requestHeaders?: any
-  methods: IConfigMethods
+  methods?: IConfigMethods
   customActions?: IConfigCustomAction[]
   customLabels?: ICustomLabels
+  customLink?: string;
 }
 
 export interface IConfigMethods {
