@@ -255,7 +255,7 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
                 })
               }
               <div className="buttons-wrapper center">
-                <Button type="submit" onClick={submitForm} color="green">Submit</Button>
+                <Button type="submit" onClick={submitForm} >{customLabels?.buttons?.submitItem || 'Submit' }</Button>
               </div>
             </form>
           }

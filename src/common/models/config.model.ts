@@ -44,6 +44,7 @@ export interface ICustomButtonLabels {
   clearInput?: string
   closeForm?: string
   addArrayItem?: string
+  submitItem?: string
 }
 
 export interface ICustomFormTitleLabels {

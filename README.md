@@ -492,6 +492,12 @@ Here's a list of variable names you may change:
 | actionButtonHoverBackground | `string` | Action button background color on hover event. |
 | actionButtonText | `string` | Action button text color. |
 | cardBackground | `string` | Card background color. |
+| addButtonText | `string` |  Add button text color. |
+| addButtonBackground | `string` | Add button background color. |
+| addButtonHoverBackground | `string` | Add button background color. (hover event) |
+| submitButtonText | `string` | Submit button text color. |
+| submitButtonBackground | `string` | Submit button background color. |
+| submitButtonHoverBackground | `string` | Submit button background color. (hover event) |
 
 Usage example in `config.json` file:
 
@@ -524,6 +530,7 @@ List of variable names you may change within the `buttons`property:
 | clearInput   | `string` | Title of the clear button on form inputs.          | Clear         |
 | closeForm    | `string` | Title of the close button in forms.                | Close         |
 | addArrayItem | `string` | Title of the add button on arrays inputs in forms. | Add Item      |
+| submitItem   | `string` | Content of the submit button on forms.
 
 List of variable names you may change within the `formTitles` property:
 

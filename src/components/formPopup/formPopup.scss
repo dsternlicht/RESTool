@@ -1,3 +1,5 @@
+@import '../../common/styles//functions.scss';
+
 .form-popup {
   .popup-content {
     width: 90%;
@@ -35,6 +37,8 @@
         padding: 7px 15px;
         text-transform: uppercase;
         font-weight: 400;
+        background-color: v(submitButtonBackground, "green");
+        color: v(submitButtonText, "#000000");
       }
     }
   }
