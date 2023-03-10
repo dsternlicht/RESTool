@@ -103,6 +103,26 @@
             "cardBackground": {
               "type": "string",
               "description": "Card background color."
+            },
+            "addButtonBackground": {
+              "type": "string",
+              "description": "Add button background color."
+            },
+            "addButtonHoverBackground": {
+              "type": "string",
+              "description": "Add button background color on hover event."
+            },
+            "addButtonText": {
+              "type": "string",
+              "description": "Add button text  color."
+            },
+            "submitButtonBackground": {
+              "type": "string",
+              "description": "Submit button background color."
+            },
+            "submitButtonText": {
+              "type": "string",
+              "description": "Submit button text  color."
             }
           }
         }
@@ -693,6 +713,11 @@
           "type": "string",
           "description": "Title of the add button on arrays inputs in forms.",
           "default": "Add Item"
+        },
+        "submitItem": {
+          "type": "string",
+          "description": "Title of the submit button on forms.",
+          "default": "Submit"
         }
       }
     },
