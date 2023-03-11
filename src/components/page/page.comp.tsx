@@ -752,7 +752,7 @@ const PageComp = ({ context }: IProps) => {
         </hgroup>
         {
           postConfig &&
-          <Button className="add-item" color="green" onClick={() => setOpenedPopup({ type: 'add', title: addItemFormTitle, config: postConfig, submitCallback: addItem })}>{addItemLabel}</Button>
+          <Button className="add-item"  onClick={() => setOpenedPopup({ type: 'add', title: addItemFormTitle, config: postConfig, submitCallback: addItem })}>{addItemLabel}</Button>
         }
       </header>
       <main className="app-page-content">
