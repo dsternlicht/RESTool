@@ -56,6 +56,8 @@ One of the best things about RESTool (and the reason we actually built it) is th
 
 The `config.json` file should be placed in the root folder of the project, alongside with the `index.html` file.
 
+You can copy `./public/config-sample.json` to `./public/config.json` and adopt the settings to your liking.
+
 Here's a detailed list of properties you could add to your configuration file (just in case, we added a [`config-sample.json`](https://github.com/dsternlicht/RESTool/blob/master/public/config-sample.json) file you could learn from).
 
 | Property | Type | Required? | Description |
