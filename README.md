@@ -596,6 +596,8 @@ The list of fields you want to present in the main view of the app. Each one is 
 | dataPath | `string` | false | Read more about dataPath [here](#data-path).
 | filterable | `boolean` | false | Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields. |
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
+| htmlCode | `string` | false | HTML code to display in a cell. Use {value} to insert item value at this place. |
+| queryShortcut | `object` | false | A shortcut to add a query parameter to the url. For example, if you have a field called "name" and you want to add a query parameter called "name" with the value of the field, you can set this to "name". Object example: `{ name: 'search', value: 'name=' }` |
 | url | `string` | false | If the type of the field is set to `url`, this property can be used to provide a custom URL that receives the `value` of this field as a parameter. If `url` is not provided, the value of the field will be the target of the anchor. Example below. |
 
 Example for URL field:
@@ -780,6 +782,8 @@ We used React for developing this awesome tool so no need to install anything gl
 
 In order to start developing:
 
+* Make sure you copy the `/public/config-sample.json` to `/public/config.json`.
+* Start the mocks server by running `npm run server`.
 * Start the development server by running `npm start`.
 * Browse to `http://localhost:3000/`.
 * The app will automatically reload on changes.
