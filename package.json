@@ -32,7 +32,8 @@
     "eject": "react-scripts eject",
     "prepare": "npm run build && tsc --project ./tsconfig.lib.json",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "server": "json-server --watch mocks.js --port 3001"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -65,6 +66,7 @@
   "homepage": ".",
   "devDependencies": {
     "@types/lodash": "^4.14.150",
-    "gh-pages": "^2.2.0"
+    "gh-pages": "^2.2.0",
+    "json-server": "^0.17.3"
   }
 }

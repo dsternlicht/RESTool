@@ -502,6 +502,20 @@
         "htmlCode": {
           "type": "string",
           "description": "HTML code to display in a cell. Use {value} to insert item value at this place"
+        },
+        "queryShortcut": {
+          "type": "object",
+          "description": "A shortcut to add a query parameter to the url. For example, if you have a field called \"name\" and you want to add a query parameter called \"name\" with the value of the field, you can set this to \"name\".",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the query parameter."
+            },
+            "value": {
+              "type": "string",
+              "description": "The value of the query parameter."
+            }
+          }
         }
       },
       "required": [
