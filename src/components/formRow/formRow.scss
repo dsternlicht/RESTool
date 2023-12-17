@@ -5,6 +5,11 @@
   margin-bottom: 15px;
   position: relative;
 
+  @media screen and (max-width: 620px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   > label {
     font-size: 12px;
     color: #666;
@@ -15,6 +20,10 @@
     font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
+
+    @media screen and (max-width: 620px) {
+      width: 100%;
+    }
 
     .premium-star {
       margin-right: 5px;

@@ -7,12 +7,14 @@
   align-items: stretch;
   min-height: 100vh;
 
+  --nav-width: 260px;
+
   @media screen and (max-width: 800px) {
     flex-direction: column;
   }
 
   aside {
-    width: $aside-width;
+    width: var(--nav-width);
     background: v(navBackground, #3C3E6F);
     color: v(navText, #fff);
     box-shadow: inset -2px 0px 3px rgba(0, 0, 0, 0.3);
@@ -47,5 +49,6 @@
   main {
     position: relative;
     flex: 1;
+    max-width: calc(100vw - 30px - var(--nav-width));
   }
 }
