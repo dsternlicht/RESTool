@@ -645,7 +645,7 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | accept | `string` | false | An optional setting for `file` type inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files. <br /><br />For example: `{ "accept": ".png,.jpeg,image/*" }`|
 | useInUrl | `boolean` | false | If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body. |
 | optionSource| `object` | false | Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api. Read more about it [here](#option-source).|
-| multi | `boolean` | false | If true, select-multi dropdown will allow for multiple selections from a pre-defined list. |
+| multi | `boolean` | false | If true, select-multi dropdown will allow for multiple selections from a pre-defined list. Make sure defining the right input type first: `"type": "select-multi"`. |
 | selectLimit | `number` | unlimited | An optional setting for limiting the multiple selections from a pre-defined list. |
 
 <br />
@@ -665,6 +665,7 @@ Available options:
 *  ``email`` - A text box for [an email address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email). Falls back to a simple text input on unsupported browsers.
 *  ``color`` - A [color selector](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color) yielding #RRGGBB hex value strings. Falls back to a simple text input on unsupported browsers.
 *  ``select`` - This will render a select box. See [options](#options-array) and [optionSource](#option-source) properties
+*  `select-multi` - This will render a multiselect box by means of [multiselect-react-dropdown](https://www.npmjs.com/package/multiselect-react-dropdown) third-party component.
 *  ``array`` - Enter multiple values. POST and PUT page only.
 *  ``file`` - A file-input form element, to upload files as `Content-Type: multipart/form-data`. All non-file form inputs will be sent as individual string values. The current implementation supports only one file input per form.
 *  ``password`` - A password text box.
