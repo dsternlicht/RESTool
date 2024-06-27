@@ -1,6 +1,6 @@
 # RESTool 2.0 ([demo](https://dsternlicht.github.io/RESTool/))
 
-  
+
 
 <p  align="center">
 
@@ -8,17 +8,17 @@
 
 </p>
 
-  
+
 
 The best tool in the neighborhood. Managing your **RESTful APIs** has never been so easy.
 
 RESTool gives you an out of the box UI that connects to your RESTful API with a simple configuration file.
 
-  
+
 
 The idea behind it is simple. Given the fact that each entity in your API has a RESTful implementation, RESTool will provide you UI tool for managing these entities in no time by simply editing a configuration file. No front end engineers, no JavaScript, no CSS, no html. Just a simple JSON file.
 
-  
+
 
 **Live Demo**: [https://dsternlicht.github.io/RESTool/](https://dsternlicht.github.io/RESTool/)
 
@@ -74,7 +74,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |
 
 #### Dynamic configuration file
-RESTool also support dynamic js configuration file. 
+RESTool also support dynamic js configuration file.
 Just replace the `config.json` file with `config.js` file with this content:
 
 ```
@@ -194,7 +194,7 @@ Optional. This allows to handle pagination. See [Pagination](#pagination).
 ###### `dataTransform` (Function | async Function)
 
 Optional. Relevant only when using dynamic (js) config.
-A function to allow manipulation on the response data. 
+A function to allow manipulation on the response data.
 Useful for changing\adding data for display purposes.
 
 Here is an example for adding a new field named `wiki` to the data:
@@ -264,7 +264,7 @@ Example:
       "name": "isAlive",
       "label": "Alive?",
       "type": "boolean"
-    }		
+    }
   ]
 }
 ```
@@ -618,9 +618,9 @@ fields: [
 
 Here's a list of available display field types:
 
-* `text` - will parse the value as a text 
-* `url` - will render an anchor element with a clickable link 
-* `image` - will render an image from the url 
+* `text` - will parse the value as a text
+* `url` - will render an anchor element with a clickable link
+* `image` - will render an image from the url
 * `colorbox` - will render a #RRGGBB hex string as an 80 x 20 pixel colored rectangle, overlaid with the hex color string
 * `boolean` - will render as a green or red dot
 
@@ -684,7 +684,8 @@ You can use the following properties on the `optionSource` object:
 *  `dataPath` - let us know where we should take the data from
 *  `displayPath` - property of the object to take the display value from
 *  `valuePath` - property of the object to take the option value from
-*  `sortBy` - one or more properties to sort the objects by  
+*  `sortBy` - one or more properties to sort the objects by
+*  `queryParamAlias` - query parameter alias used in multiselect's onSearch function. Default value is `q`
 
 For example:
 
@@ -704,6 +705,46 @@ fields: [
   }
 ]
 ```
+#### Multiselect with `q` as a search query alias (default):
+```
+fields: [
+  {
+    name: "bestFriend",
+    label: "Best Friend",
+    type: "select-multi",
+    multi: true,
+    optionSource: {
+      url: "https://restool-sample-app.herokuapp.com/api/character",
+      dataPath: null,
+      displayPath: "name",
+      valuePath: "id",
+      sortBy: ["name"]
+    }
+  }
+]
+```
+Searhcing for `Arya` keyword results in the following request URL: `https://restool-sample-app.herokuapp.com/api/character?q=Arya`
+
+#### Multiselect with custom search query alias:
+```
+fields: [
+  {
+    name: "bestFriend",
+    label: "Best Friend",
+    type: "select-multi",
+    multi: true,
+    optionSource: {
+      url: "https://restool-sample-app.herokuapp.com/api/character",
+      dataPath: null,
+      displayPath: "name",
+      valuePath: "id",
+      sortBy: ["name"]
+      queryParamAlias: "friend"
+    }
+  }
+]
+```
+Searhcing for `Arya` keyword results in the following request URL: `https://restool-sample-app.herokuapp.com/api/character?friend=Arya`
 
 <br />
 
@@ -735,10 +776,10 @@ And you want to present the `numberOfChildrens` field in the main view, the data
     childrens: [
       {
         nickName: 'Spiderman'
-      }, 
-      { 
+      },
+      {
         nickName: 'Ironman'
-      }    
+      }
     ]
   },
   ...
