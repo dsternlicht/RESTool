@@ -148,6 +148,14 @@ class HttpService {
     const { url, params } = this.buildRequest({ method, origUrl, queryParams, rawData, body, headers });
     return await this.makeRequest(url, params, responseType);
   }
+
+  public buildSearchUrl(url: string, query: string, queryParamAlias?: string): string {
+    const searchUrlParams = new URLSearchParams();
+    const searchQueryAlias = queryParamAlias || "q";
+    searchUrlParams.append(searchQueryAlias, query);
+
+    return query ? `${url}?${searchUrlParams.toString()}` : url;
+  }
 }
 
 export default HttpService;
