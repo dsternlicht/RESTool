@@ -150,6 +150,7 @@ export interface IConfigOptionSource {
   actualMethod?: TConfigMethod;
   sortBy?: string | string[];
   requestHeaders?: any;
+  queryParamAlias?: string;
 }
 
 export type TConfigDisplayField =

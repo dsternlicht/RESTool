@@ -554,6 +554,10 @@
             "type": "string"
           },
           "description": "one or more properties to sort the objects by"
+        },
+        "queryParamAlias": {
+          "type": "string",
+          "description": "query parameter alias used in multiselect's onSearch function. Default value is 'q'"
         }
       }
     },
