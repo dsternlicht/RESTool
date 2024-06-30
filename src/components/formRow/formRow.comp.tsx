@@ -39,6 +39,7 @@ interface IOption {
 export const FormRow = withAppContext(
   ({ context, field, direction, showReset, onChange }: IProps) => {
     const [optionSources, setOptionSources] = useState<any>({});
+    const [originalOptions, setOriginalOptions] = useState<any>({});
     const { httpService, activePage, config } = context;
     const pageHeaders: any = activePage?.requestHeaders || {};
     const customLabels: ICustomLabels | undefined = {
@@ -50,12 +51,18 @@ export const FormRow = withAppContext(
 
     async function loadOptionSourceFromRemote(
       fieldName: string,
-      optionSource: IConfigOptionSource
+      optionSource: IConfigOptionSource,
+      query: string = ""
     ) {
       try {
-        const { url, dataPath, actualMethod, requestHeaders } = optionSource;
+        const { url, dataPath, actualMethod, requestHeaders, queryParamAlias } = optionSource;
+        const searchUrl = httpService.buildSearchUrl(
+          url,
+          query,
+          queryParamAlias
+        );
 
-        if (!url) {
+        if (!searchUrl) {
           throw new Error(
             `URL option source (for field "${fieldName}") is empty.`
           );
@@ -63,7 +70,7 @@ export const FormRow = withAppContext(
 
         const result = await httpService.fetch({
           method: actualMethod || "get",
-          origUrl: url,
+          origUrl: searchUrl,
           queryParams: [],
           headers: Object.assign({}, pageHeaders, requestHeaders || {}),
         });
@@ -104,6 +111,12 @@ export const FormRow = withAppContext(
           ...optionSources,
           [fieldName]: optionSourceData,
         });
+        if (!query) {
+          setOriginalOptions({
+            ...originalOptions,
+            [fieldName]: optionSourceData,
+          });
+        }
       } catch (e) {
         toast.error((e as Error).message);
       }
@@ -332,11 +345,34 @@ export const FormRow = withAppContext(
             }
           };
 
+          const onSearch = async (fieldName: string, query: string) => {
+            const { optionSource } = field;
+
+            if (!optionSource) {
+              return;
+            }
+
+            if (query.length < 3) {
+              if (query === "") {
+                await loadOptionSourceFromRemote(fieldName, optionSource);
+              } else {
+                setOptionSources({
+                  ...optionSources,
+                  [fieldName]: originalOptions[fieldName],
+                });
+              }
+              return;
+            }
+
+            await loadOptionSourceFromRemote(fieldName, optionSource, query);
+          };
+
           return (
             <Multiselect
               options={finalOptions} // Options to display in the dropdown
               selectedValues={onLoad(finalOptions, field.value)}
               onSelect={onSelect}
+              onSearch={(query) => onSearch(field.name, query)}
               onRemove={onRemove} // Function will trigger on remove event
               displayValue="display" // Property name to display in the dropdown options
               singleSelect={singleSelectDropdown}
