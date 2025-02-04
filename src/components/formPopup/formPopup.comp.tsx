@@ -25,6 +25,7 @@ const unflatten = require('flat').unflatten;
 interface IProps {
   context: IAppContext
   title: string
+  successMessage: string
   fields: IConfigInputField[]
   rawData?: any
   getSingleConfig?: IConfigGetSingleMethod
@@ -33,7 +34,7 @@ interface IProps {
   submitCallback: (body: any, containFiles: boolean, queryParams: IQueryParam[]) => void
 }
 
-export const FormPopup = withAppContext(({ context, title, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
+export const FormPopup = withAppContext(({ context, title, successMessage, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
   const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
   const { httpService, activePage, config } = context;
   const [loading, setLoading] = useState<boolean>(true);
@@ -202,10 +203,10 @@ export const FormPopup = withAppContext(({ context, title, fields, rawData, getS
 
     try {
       let body = containFiles ? formData : unflatten(finalObject);
-
       await submitCallback(body, containFiles, queryParams);
-
-      toast.success('Great Success!');
+      if (successMessage) {
+        toast.success(successMessage);
+      }
 
       closeCallback(true);
     } catch (e) {

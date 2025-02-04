@@ -520,7 +520,7 @@ Usage example in `config.json` file:
 
 ####  Custom Labels
 
-The `customLabels` property allows you to control the different labels that are shown across the pages of your RESTool app. The object has three fields that contain properties that you can customize: `buttons`, `formTitles` and `placeholders`.
+The `customLabels` property allows you to control the different labels that are shown across the pages of your RESTool app. The object has three fields that contain properties that you can customize: `buttons`, `formTitles`, `placeholders`, `successMessages` and `pagination`.
 
 List of variable names you may change within the `buttons`property:
 
@@ -555,6 +555,15 @@ List of variable names you may change within the `placeholders` property:
 | date     | `string` | Date input placeholder.       | Enter date...       |
 | file     | `string` | File input placeholder.       | Select file...      |
 
+List of variable names you may change within the `successMessages` property:
+
+| Name     | Value    | Description                   | Default value       |
+| -------- | -------- | ----------------------------- | ------------------- |
+| addItem  | `string` | Success message for adding an item. Set to null to disable the message toast. | Item added successfully |
+| editItem | `string` | Success message for editing an item. Set to null to disable the message toast. | Item updated successfully |
+| deleteItem | `string` | Success message for deleting an item. Set to null to disable the message toast. | Item deleted successfully |
+| customActions | `string` | Success message for custom action. Set to null to disable the message toast. | Action completed successfully |
+
 List of variable names you may change within the `pagination` property:
 
 | Name       | Value    | Description                                                  | Default value                                  |
@@ -577,7 +586,13 @@ Usage example in `config.json` file:
     },
     "placeholders": {
       "color": "Enter color in HEX format..."
-    }
+    },
+    "successMessages": {
+      "addItem": "GOT character added successfully",
+      "editItem": "GOT character edited successfully",
+      "deleteItem": "GOT character deleted successfully",
+      "customActions": "GOT action completed successfully"
+    },
   }
 }
 ```

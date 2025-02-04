@@ -691,6 +691,9 @@
         "placeholders": {
           "$ref": "#/definitions/placeholderLabels"
         },
+        "successMessages": {
+          "$ref": "#/definitions/successMessages"
+        },
         "tableColumnHeaders": {
           "$ref": "#/definitions/tableColumnHeaders"
         },
@@ -801,6 +804,31 @@
           "type": "string",
           "description": "File input placeholder.",
           "default": "Select file..."
+        }
+      }
+    },
+    "successMessages": {
+      "additionalProperties": false,
+      "properties": {
+        "addItem": {
+          "type": ["string", "null"],
+          "description": "Message displayed when an item is successfully added.",
+          "default": "Item added successfully"
+        },
+        "editItem": {
+          "type": ["string", "null"],
+          "description": "Message displayed when an item is successfully edited.",
+          "default": "Item updated successfully"
+        },
+        "deleteItem": {
+          "type": ["string", "null"],
+          "description": "Message displayed when an item is successfully deleted.",
+          "default": "Item deleted successfully"
+        },
+        "customActions": {
+          "type": ["string", "null"],
+          "description": "Message displayed when a custom action is successfully executed.",
+          "default": "Action executed successfully"
         }
       }
     },
