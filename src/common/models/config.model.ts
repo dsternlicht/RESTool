@@ -33,6 +33,7 @@ export interface ICustomLabels {
   buttons?: ICustomButtonLabels;
   formTitles?: ICustomFormTitleLabels;
   placeholders?: ICustomPlaceholderLabels;
+  successMessages?: ICustomSuccessMessages;
   tableColumnHeaders?: ICustomTableColumnHeaders;
   pagination?: ICustomPaginationLabels;
 }
@@ -50,6 +51,13 @@ export interface ICustomButtonLabels {
 export interface ICustomFormTitleLabels {
   addItem: string;
   editItem: string;
+}
+
+export interface ICustomSuccessMessages {
+  addItem?: string;
+  editItem?: string;
+  deleteItem?: string;
+  customActions?: string;
 }
 
 export interface ICustomPlaceholderLabels {

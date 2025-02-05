@@ -52,6 +52,7 @@ interface IProps {
 interface IPopupProps {
   type: "add" | "update" | "action";
   title: string;
+  successMessage: string;
   config: IConfigPostMethod | IConfigPutMethod;
   submitCallback: (body: any, containFiles: boolean) => void;
   getSingleConfig?: IConfigGetSingleMethod;
@@ -187,6 +188,18 @@ const PageComp = ({ context }: IProps) => {
   const addItemLabel = customLabels?.buttons?.addItem || "+ Add Item";
   const addItemFormTitle = customLabels?.formTitles?.addItem || "Add Item";
   const editItemFormTitle = customLabels?.formTitles?.editItem || "Update Item";
+  const addItemSuccessMessage = customLabels?.successMessages?.addItem !== undefined
+    ? customLabels.successMessages.addItem
+    : "Item added successfully";
+  const editItemSuccessMessage = customLabels?.successMessages?.editItem !== undefined
+    ? customLabels.successMessages.editItem
+    : "Item updated successfully";
+  const deleteItemSuccessMessage = customLabels?.successMessages?.deleteItem !== undefined
+    ? customLabels.successMessages.deleteItem
+    : "Item deleted successfully";
+  const customActionSuccessMessage = customLabels?.successMessages?.customActions !== undefined
+    ? customLabels.successMessages.customActions
+    : "Action performed successfully";
   const { initQueryParams, initialPagination } =
     buildInitQueryParamsAndPaginationState(
       getAllConfig?.queryParams || [],
@@ -229,6 +242,7 @@ const PageComp = ({ context }: IProps) => {
       rawData,
       type: "update",
       title: editItemFormTitle,
+      successMessage: editItemSuccessMessage,
       config: putConfig as IConfigPutMethod,
       getSingleConfig,
       submitCallback: async (body: any, containFiles: boolean) => {
@@ -244,6 +258,7 @@ const PageComp = ({ context }: IProps) => {
       rawData,
       type: "action",
       title: action.name || "Custom Action",
+      successMessage: customActionSuccessMessage,
       config: action as IConfigCustomAction,
       submitCallback: async (body: any, containFiles: boolean) => {
         return await performAction(body, rawData, action, containFiles);
@@ -492,6 +507,10 @@ const PageComp = ({ context }: IProps) => {
       });
 
       if (success) {
+        if (deleteItemSuccessMessage) {
+          toast.success(deleteItemSuccessMessage);
+        }
+
         if (pagination?.type === "infinite-scroll") {
           setItems([]);
           const updatedParams = [...queryParams];
@@ -949,6 +968,7 @@ const PageComp = ({ context }: IProps) => {
               setOpenedPopup({
                 type: "add",
                 title: addItemFormTitle,
+                successMessage: addItemSuccessMessage,
                 config: postConfig,
                 submitCallback: addItem,
               })
@@ -962,6 +982,7 @@ const PageComp = ({ context }: IProps) => {
       {openedPopup && (
         <FormPopup
           title={openedPopup.title}
+          successMessage={openedPopup.successMessage}
           closeCallback={closeFormPopup}
           submitCallback={openedPopup.submitCallback}
           fields={openedPopup.config?.fields || []}
