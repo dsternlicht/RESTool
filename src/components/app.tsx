@@ -12,8 +12,12 @@ import inTreeConfig from "../config";
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import { LoginPage } from './loginPage/loginPage.comp';
+import { ChangePasswordPage } from './changePasswortPage/changePasswortPage.comp';
+import AuthService from '../services/auth.service';
 
 const httpService = new HttpService();
+const authService = new AuthService();
 const defaultAppName: string = 'RESTool App';
 
 function changeFavicon(src: string) {
@@ -23,16 +27,18 @@ function changeFavicon(src: string) {
   link.rel = 'shortcut icon';
   link.href = src;
   if (oldLink) {
-   document.head.removeChild(oldLink);
+    document.head.removeChild(oldLink);
   }
   document.head.appendChild(link);
- }
+}
 
 function App() {
   const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [config, setConfig] = useState<IConfig | null>(null);
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
+  const [loggedInUsername, setLoggedInUsername] = useState<string | null>(null);
+
   const appName: string = config?.name || defaultAppName;
 
   async function loadConfig(url?: string): Promise<void> {
@@ -41,18 +47,21 @@ function App() {
       if (itConfig) (window as any).RESTool = { config: itConfig };
       const windowConfig = (window as any).RESTool?.config;
       let remoteConfig: IConfig;
-      // Try to load config from window object first
       if (!url && windowConfig) {
         remoteConfig = Object.assign({}, windowConfig, {});
       } else {
         remoteConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
       }
 
-      // Setting global config for httpService
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
-      httpService.unauthorizedRedirectUrl = remoteConfig.unauthorizedRedirectUrl || '';
       httpService.requestHeaders = remoteConfig.requestHeaders || {};
+
+      authService.baseUrl = remoteConfig.baseUrl || '';
+      authService.loginEndpoint = remoteConfig.loginEndpoint || '';
+      authService.logoutEndpoint = remoteConfig.logoutEndpoint || '';
+      authService.userEndpoint = remoteConfig.userEndpoint || '';
+      authService.changePasswordEndpoint = remoteConfig.changePasswordEndpoint || '';
       document.title = remoteConfig.name || defaultAppName;
 
       if (remoteConfig?.favicon) {
@@ -73,10 +82,10 @@ function App() {
 
   function scrollToTop(scrollDuration: number = 250) {
     var cosParameter = window.scrollY / 2,
-    scrollCount = 0,
-    oldTimestamp = performance.now();
+      scrollCount = 0,
+      oldTimestamp = performance.now();
 
-    function step (newTimestamp: number) {
+    function step(newTimestamp: number) {
       scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
 
       if (scrollCount >= Math.PI) {
@@ -96,9 +105,12 @@ function App() {
   }
 
   useEffect(() => {
-    loadConfig();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    loadConfig().then(() => {
+      authService.getLoggedInUser().then((username) => {
+        setLoggedInUsername(username);
+      });
+    });
+  }, [loadConfig]);
 
   useEffect(() => {
     const { isValid, errorMessage } = ConfigService.validateConfig(config);
@@ -114,37 +126,28 @@ function App() {
     <div className="restool-app">
       {
         !config ?
-        <div className="app-error">
-          {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
-        </div> :
-        <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService }}>
-          {
-            config.customStyles &&
-            <CustomStyles
-              styles={config.customStyles}
-            />
-          }
-          <Router>
-            <aside>
-              <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
-              {
-                <Navigation />
-              }
-            </aside>
+          <div className="app-error">
+            {firstLoad ? 'Loading Configuration...' : 'Could not find config file.'}
+          </div> :
+          <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService, authService, loggedInUsername, setLoggedInUsername }}>
             {
-              config &&
+              config.customStyles &&
+              <CustomStyles styles={config.customStyles} />
+            }
+            <Router>
+              <aside>
+                <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
+                <Navigation />
+              </aside>
               <Switch>
+                <Route exact path='/login' component={LoginPage} />
+                <Route exact path='/change-password' component={ChangePasswordPage} />
                 <Route exact path="/:page" component={Page} />
                 <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
               </Switch>
-            }
-            <ToastContainer
-              position={toast.POSITION.TOP_CENTER}
-              autoClose={4000}
-              draggable={false}
-            />
-          </Router>
-        </AppContext.Provider>
+              <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} draggable={false} />
+            </Router>
+          </AppContext.Provider>
       }
     </div>
   );

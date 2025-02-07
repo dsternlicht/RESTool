@@ -67,7 +67,9 @@ Here's a detailed list of properties you could add to your configuration file (j
 | baseUrl | `string` | false | Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: `"https://restool-sample-app.herokuapp.com/api"` <br /><br /> Note: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | errorMessageDataPath | `string[]` | false | The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found. |
-| unauthorizedRedirectUrl | `string` | false | Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"` |
+| loginEndpoint | `string` | false | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. |
+| logoutEndpoint | `string` | false | The endpoint to send the logout request to. |
+| userEndpoint | `string` | false | The endpoint to get the user data from. It should return a JSON object with the property `username`. |
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |

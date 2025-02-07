@@ -1,6 +1,6 @@
 import { TConfigMethod, IQueryParam } from '../common/models/config.model';
 import { dataHelpers } from '../helpers/data.helpers';
-import {querystringHelpers} from "../helpers/querystring.helpers";
+import { querystringHelpers } from "../helpers/querystring.helpers";
 
 export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
 
@@ -16,15 +16,13 @@ export interface IFetchParams {
 
 class HttpService {
   public baseUrl: string;
-  public unauthorizedRedirectUrl: string;
   public errorMessageDataPath: string | string[];
   public requestHeaders: any;
 
-  constructor(baseUrl: string = '', unauthorizedRedirectUrl: string = '', errorMessageDataPath: string = '') {
+  constructor(baseUrl: string = '', errorMessageDataPath: string = '') {
     this.baseUrl = baseUrl || '';
-    this.unauthorizedRedirectUrl = unauthorizedRedirectUrl || '';
     this.errorMessageDataPath = errorMessageDataPath || '';
-    this.requestHeaders = {};
+    this.requestHeaders = {}
   }
 
   private urlIsAbsolute(url: string) {
@@ -85,7 +83,8 @@ class HttpService {
     const requestParams = {
       method: params.method ? params.method.toUpperCase() : 'GET',
       headers: Object.assign({}, this.requestHeaders, params.headers || {}),
-      body: params.method === 'post' || params.method === 'put' || params.method === 'patch' ? params.body : undefined
+      body: params.method === 'post' || params.method === 'put' || params.method === 'patch' ? params.body : undefined,
+      credentials: 'include' // Include cookies in the request
     };
 
     return {
@@ -116,9 +115,8 @@ class HttpService {
 
   private async handleError(res: Response) {
     // In case response status is "Unauthorized", redirect to relevant url
-    if (res.status === 401 && this.unauthorizedRedirectUrl) {
-      const redirectUrl: string = this.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(document.location.href));
-      document.location.href = redirectUrl;
+    if (res.status === 401) {
+      document.location.href = '#/login';
       return;
     }
 

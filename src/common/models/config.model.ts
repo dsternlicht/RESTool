@@ -6,7 +6,10 @@ export interface IConfig {
   favicon: string;
   baseUrl: string;
   errorMessageDataPath?: string | string[];
-  unauthorizedRedirectUrl?: string;
+  loginEndpoint?: string;
+  logoutEndpoint?: string;
+  userEndpoint?: string;
+  changePasswordEndpoint?: string;
   requestHeaders?: any;
   pages: IConfigPage[];
   customStyles?: ICustomStyles;

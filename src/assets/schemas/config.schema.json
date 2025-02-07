@@ -25,9 +25,21 @@
     "requestHeaders": {
       "$ref": "#/definitions/requestHeaders"
     },
-    "unauthorizedRedirectUrl": {
+    "loginEndpoint": {
       "type": "string",
-      "description": "Path to navigate to when the api returns a 401 (Unauthorized) error. You can use :returnUrl to pass a return location. For example: \"/login/myLoginPage?return=:returnUrl\""
+      "description": "The endpoint to use for login. This is a POST request that should set a session cookie."
+    },
+    "logoutEndpoint": {
+      "type": "string",
+      "description": "The endpoint to use for logout. This is a POST request that should clear the session cookie."
+    },
+    "userEndpoint": {
+      "type": "string",
+      "description": "The endpoint to use for getting the current user. This is a GET request that should return the user object with the propertiy 'username'."
+    },
+    "changePasswordEndpoint": {
+      "type": "string",
+      "description": "The endpoint to use for changing the user's password. This is a POST request that should return a success message."
     },
     "favicon": {
       "type": "string",
