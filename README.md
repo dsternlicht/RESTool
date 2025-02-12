@@ -76,7 +76,7 @@ The `auth` property allows you to configure authentication endpoints. It has the
 
 | Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
-| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic"` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. This design allows for future authentication methods to be added while making it clear what is currently supported. |
+| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic" \| ...` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. |
 | loginEndpoint | `string` | true | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. |
 | logoutEndpoint | `string` | true | The endpoint to send the logout request to. |
 | userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. |
