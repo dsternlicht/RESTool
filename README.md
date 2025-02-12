@@ -70,6 +70,19 @@ Here's a detailed list of properties you could add to your configuration file (j
 | auth | `object` | false | Authentication configuration. See [Auth Config](#auth-config) below. |
 | favicon | `string` | false | A URL for you app's favicon. |
 
+#### Dynamic configuration file
+RESTool also support dynamic js configuration file.
+Just replace the `config.json` file with `config.js` file with this content:
+
+```
+export default {
+  // Content is the same as the json config file
+}
+```
+
+**NOTE:** In case you're using the `build` folder, the config.js must be placed in the folder `/build/static/js`.
+<br />
+
 ### Auth Config
 
 The `auth` property allows you to configure authentication endpoints. It has the following properties:
@@ -125,19 +138,6 @@ By following these conventions, you can integrate RESTool with any backend authe
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |
-
-#### Dynamic configuration file
-RESTool also support dynamic js configuration file.
-Just replace the `config.json` file with `config.js` file with this content:
-
-```
-export default {
-  // Content is the same as the json config file
-}
-```
-
-**NOTE:** In case you're using the `build` folder, the config.js must be placed in the folder `/build/static/js`.
-<br />
 
 
 ### Pages
