@@ -22,6 +22,7 @@ export interface IConfig {
   favicon: string;
   baseUrl: string;
   errorMessageDataPath?: string | string[];
+  unauthorizedRedirectUrl?: string;
   auth?: IAuthConfig;
   requestHeaders?: any;
   pages: IConfigPage[];

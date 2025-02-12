@@ -25,6 +25,10 @@
     "requestHeaders": {
       "$ref": "#/definitions/requestHeaders"
     },
+    "unauthorizedRedirectUrl": {
+      "type": "string",
+      "description": "Path to navigate to when the api returns a 401 (Unauthorized) error. You can use :returnUrl to pass a return location. For example: \"/login/myLoginPage?return=:returnUrl\""
+    },
     "auth": {
       "loginEndpoint": {
         "type": "string",

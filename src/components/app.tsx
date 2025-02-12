@@ -55,8 +55,9 @@ function App() {
 
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
+      httpService.unauthorizedRedirectUrl = remoteConfig.unauthorizedRedirectUrl || '';
       httpService.requestHeaders = remoteConfig.requestHeaders || {};
-
+      
       authService.baseUrl = remoteConfig.baseUrl || '';
       if (remoteConfig.auth) {
         authService.loginEndpoint = remoteConfig.auth.loginEndpoint || '';

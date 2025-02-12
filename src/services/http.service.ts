@@ -17,11 +17,13 @@ export interface IFetchParams {
 class HttpService {
   public baseUrl: string;
   public errorMessageDataPath: string | string[];
+  public unauthorizedRedirectUrl: string;
   public requestHeaders: any;
 
-  constructor(baseUrl: string = '', errorMessageDataPath: string = '') {
+  constructor(baseUrl: string = '', unauthorizedRedirectUrl: string = '', errorMessageDataPath: string = '') {
     this.baseUrl = baseUrl || '';
     this.errorMessageDataPath = errorMessageDataPath || '';
+    this.unauthorizedRedirectUrl = unauthorizedRedirectUrl || '';
     this.requestHeaders = {}
   }
 
@@ -114,15 +116,22 @@ class HttpService {
   }
 
   private async handleError(res: Response) {
-    // In case response status is "Unauthorized", redirect to relevant url
     if (res.status === 401) {
       const currentPath = document.location.hash.substring(1); // Remove the # from the hash
-      if (!currentPath.startsWith('/login')) {
-        // Extract base path without query parameters
-        const basePath = currentPath.split('?')[0];
-        document.location.href = `#/login?return=${encodeURIComponent(basePath)}`;
+      const basePath = currentPath.split('?')[0]; // Extract base path without query parameters
+
+      // Use legacy unauthorizedRedirectUrl if set
+      if (this.unauthorizedRedirectUrl) {
+        const redirectUrl = this.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(basePath));
+        document.location.href = redirectUrl;
+        return;
       }
-      return;
+
+      // Fall back to built-in auth if we're not already on the login page
+      if (!currentPath.startsWith('/login')) {
+        document.location.href = `#/login?return=${encodeURIComponent(basePath)}`;
+        return;
+      }
     }
 
     throw new Error(await this.getErrorMessage(res));
