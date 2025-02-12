@@ -94,6 +94,34 @@ Example auth configuration:
   }
 }
 ```
+
+#### Authentication Behavior
+
+The RESTool authentication system provides a seamless integration with your backend API:
+
+1. **Automatic Login Form Display**
+   - When any API request returns a `401 Unauthorized` status, RESTool will automatically display the login form
+   - After successful login, the original request will be retried
+
+2. **Password Change Flow**
+   - During login, if the backend sets the `x-password-change: true` response header, the user will be automatically redirected to the password change form
+   - After successful password change, the user is redirected back to their original destination
+
+3. **Return URL Handling**
+   - When a request returns 401, RESTool stores the current path (without any query parameters) and redirects to `/login?return=<encoded-path>`
+   - After successful login:
+     - User is redirected back to their original destination
+     - If return URL points to the login page itself, redirects to root path instead (prevents redirect loops)
+     - If no return URL is present, redirects to the root path
+
+4. **Session Handling**
+   - For `sessioncookie` auth type:
+     - All requests include `credentials: 'include'` to ensure cookies are sent
+     - No manual token handling is needed as the browser handles cookie management
+     - Login state is checked by calling the `userEndpoint`, which should return `{ username: string }`
+
+By following these conventions, you can integrate RESTool with any backend authentication system that uses cookie-based sessions with proper return URL handling.
+
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |

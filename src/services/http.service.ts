@@ -116,7 +116,12 @@ class HttpService {
   private async handleError(res: Response) {
     // In case response status is "Unauthorized", redirect to relevant url
     if (res.status === 401) {
-      document.location.href = '#/login';
+      const currentPath = document.location.hash.substring(1); // Remove the # from the hash
+      if (!currentPath.startsWith('/login')) {
+        // Extract base path without query parameters
+        const basePath = currentPath.split('?')[0];
+        document.location.href = `#/login?return=${encodeURIComponent(basePath)}`;
+      }
       return;
     }
 

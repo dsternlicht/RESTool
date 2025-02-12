@@ -49,8 +49,11 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
         </div>
         {!!loggedInUsername && (
           <div className="app-nav-logout">
-            <NavLink to="/login" onClick={logout} className="logout-link">Logout
-              ({loggedInUsername})
+            <NavLink to="/change-password" className="change-password-link">
+              Change Password
+            </NavLink>
+            <NavLink to="/login" onClick={logout} className="logout-link">
+              Logout ({loggedInUsername})
             </NavLink>
           </div>
         )}

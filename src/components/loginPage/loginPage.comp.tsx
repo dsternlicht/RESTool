@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Button } from '../button/button.comp';
 import { toast } from 'react-toastify';
 
@@ -13,7 +13,10 @@ interface IProps {
 
 export const LoginPage = withAppContext(
   ({ context }: IProps) => {
-    const { replace } = useHistory();
+    const history = useHistory();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const returnUrl = queryParams.get('return');
     const [user, setUser] = useState<string>('');
     const [pwd, setPwd] = useState<string>('');
     const { authService, setLoggedInUsername } = context;
@@ -25,10 +28,15 @@ export const LoginPage = withAppContext(
         setLoggedInUsername(user);
         if (passwordChangeRequired) {
           toast.info('Password change required');
-          replace('/change-password');
+          history.replace('/change-password');
           return;
         }
-        replace('/');
+        // Only redirect if returnUrl exists and is not /login
+        if (returnUrl && !returnUrl.startsWith('/login')) {
+          history.replace(decodeURIComponent(returnUrl));
+        } else {
+          history.replace('/');
+        }
       } catch (error) {
         toast.error('Login failed');
         console.error(error);
