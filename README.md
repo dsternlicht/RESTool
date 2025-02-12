@@ -67,10 +67,33 @@ Here's a detailed list of properties you could add to your configuration file (j
 | baseUrl | `string` | false | Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: `"https://restool-sample-app.herokuapp.com/api"` <br /><br /> Note: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | errorMessageDataPath | `string[]` | false | The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found. |
-| loginEndpoint | `string` | false | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. |
-| logoutEndpoint | `string` | false | The endpoint to send the logout request to. |
-| userEndpoint | `string` | false | The endpoint to get the user data from. It should return a JSON object with the property `username`. |
+| auth | `object` | false | Authentication configuration. See [Auth Config](#auth-config) below. |
 | favicon | `string` | false | A URL for you app's favicon. |
+
+### Auth Config
+
+The `auth` property allows you to configure authentication endpoints. It has the following properties:
+
+| Property | Type | Required? | Description |
+|----------------|--------------|-----|----------------------------------------------------------------|
+| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic"` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. This design allows for future authentication methods to be added while making it clear what is currently supported. |
+| loginEndpoint | `string` | true | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. |
+| logoutEndpoint | `string` | true | The endpoint to send the logout request to. |
+| userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. |
+| changePasswordEndpoint | `string` | true | The endpoint to send password change requests to. |
+
+Example auth configuration:
+```json
+{
+  "auth": {
+    "type": "sessioncookie",
+    "loginEndpoint": "/auth/login",
+    "logoutEndpoint": "/auth/logout",
+    "userEndpoint": "/auth/user",
+    "changePasswordEndpoint": "/auth/change-password"
+  }
+}
+```
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |

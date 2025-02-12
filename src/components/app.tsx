@@ -58,10 +58,12 @@ function App() {
       httpService.requestHeaders = remoteConfig.requestHeaders || {};
 
       authService.baseUrl = remoteConfig.baseUrl || '';
-      authService.loginEndpoint = remoteConfig.loginEndpoint || '';
-      authService.logoutEndpoint = remoteConfig.logoutEndpoint || '';
-      authService.userEndpoint = remoteConfig.userEndpoint || '';
-      authService.changePasswordEndpoint = remoteConfig.changePasswordEndpoint || '';
+      if (remoteConfig.auth) {
+        authService.loginEndpoint = remoteConfig.auth.loginEndpoint || '';
+        authService.logoutEndpoint = remoteConfig.auth.logoutEndpoint || '';
+        authService.userEndpoint = remoteConfig.auth.userEndpoint || '';
+        authService.changePasswordEndpoint = remoteConfig.auth.changePasswordEndpoint || '';
+      }
       document.title = remoteConfig.name || defaultAppName;
 
       if (remoteConfig?.favicon) {

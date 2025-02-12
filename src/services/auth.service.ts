@@ -1,17 +1,23 @@
+import { IAuthConfig } from '../common/models/config.model';
 
 class AuthService {
     public baseUrl: string;
-    public loginEndpoint: string;
-    public logoutEndpoint: string;
-    public userEndpoint: string;
-    public changePasswordEndpoint: string
+    public loginEndpoint: string = '';
+    public logoutEndpoint: string = '';
+    public userEndpoint: string = '';
+    public changePasswordEndpoint: string = '';
 
-    constructor(baseUrl: string = '', loginEndpoint: string = '', logoutEndpoint: string = '', userEndpoint: string = '', changePasswordEndpoint: string = '') {
+    constructor(baseUrl: string = '', auth?: IAuthConfig) {
         this.baseUrl = baseUrl || '';
-        this.loginEndpoint = loginEndpoint || '';
-        this.logoutEndpoint = logoutEndpoint || '';
-        this.userEndpoint = userEndpoint || '';
-        this.changePasswordEndpoint = changePasswordEndpoint || '';
+        if (auth) {
+            if (auth.type !== 'sessioncookie') {
+                throw new Error(`Authentication type '${auth.type}' is not implemented. Currently only 'sessioncookie' type is supported.`);
+            }
+            this.loginEndpoint = auth.loginEndpoint || '';
+            this.logoutEndpoint = auth.logoutEndpoint || '';
+            this.userEndpoint = auth.userEndpoint || '';
+            this.changePasswordEndpoint = auth.changePasswordEndpoint || '';
+        }
     }
 
     public async login(username: string, password: string) {
