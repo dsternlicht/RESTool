@@ -74,13 +74,13 @@ Here's a detailed list of properties you could add to your configuration file (j
 
 The `auth` property allows you to configure authentication endpoints. It has the following properties:
 
-| Property | Type | Required? | Description |
-|----------------|--------------|-----|----------------------------------------------------------------|
-| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic" \| ...` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. |
-| loginEndpoint | `string` | true | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. |
-| logoutEndpoint | `string` | true | The endpoint to send the logout request to. |
-| userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. |
-| changePasswordEndpoint | `string` | true | The endpoint to send password change requests to. |
+| Property | Type | Required? | Description | Expected Format |
+|----------------|--------------|-----|----------------------------------------------------------------|----------------|
+| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic"` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. This design allows for future authentication methods to be added while making it clear what is currently supported. | - |
+| loginEndpoint | `string` | true | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. | Request: `POST { username: string, password: string }` <br> Response: `200 OK` with optional `X-Change-Password: true` header |
+| logoutEndpoint | `string` | true | The endpoint to send the logout request to. | Request: `POST` <br> Response: `200 OK` |
+| userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. | Request: `GET` <br> Response: `{ username: string }` |
+| changePasswordEndpoint | `string` | true | The endpoint to send password change requests to. | Request: `PUT { oldPassword: string, newPassword: string }` <br> Response: `200 OK` |
 
 Example auth configuration:
 ```json
