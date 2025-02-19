@@ -3,7 +3,6 @@
 .app-nav {
   text-align: left;
   overflow: auto;
-  max-height: calc(100vh - 63px);
 
   .app-nav-opener {
     position: absolute;
@@ -82,6 +81,10 @@
       &.active {
         background: v(navItemActiveBackground, #57578f);
       }
+    }
+
+    .app-nav-logout {
+      padding-top: 2rem;
     }
   }
 }
