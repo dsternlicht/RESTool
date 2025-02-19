@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Button } from '../button/button.comp';
+import { Button } from '../../button/button.comp';
 import { toast } from 'react-toastify';
 
 import './loginPage.scss';
-import { withAppContext } from '../withContext/withContext.comp';
-import { IAppContext } from '../app.context';
+import { withAppContext } from '../../withContext/withContext.comp';
+import { IAppContext } from '../../app.context';
 
 interface IProps {
   context: IAppContext

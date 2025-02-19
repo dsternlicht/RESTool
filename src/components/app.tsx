@@ -12,8 +12,8 @@ import inTreeConfig from "../config";
 
 import './app.scss';
 import 'react-toastify/dist/ReactToastify.css';
-import { LoginPage } from './loginPage/loginPage.comp';
-import { ChangePasswordPage } from './changePasswortPage/changePasswortPage.comp';
+import { LoginPage } from './auth/loginPage/loginPage.comp';
+import { ChangePasswordPage } from './auth/changePasswortPage/changePasswortPage.comp';
 import AuthService from '../services/auth.service';
 
 const httpService = new HttpService();
