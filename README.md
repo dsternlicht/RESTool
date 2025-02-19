@@ -93,7 +93,7 @@ The `auth` property allows you to configure authentication endpoints. It has the
 
 | Property | Type | Required? | Description | Expected Format |
 |----------------|--------------|-----|----------------------------------------------------------------|----------------|
-| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic"` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. This design allows for future authentication methods to be added while making it clear what is currently supported. | - |
+| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic"` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. | - |
 | loginEndpoint | `string` | true | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. | Request: `POST { username: string, password: string }` <br> Response: `200 OK` with optional `X-Change-Password: true` header |
 | logoutEndpoint | `string` | true | The endpoint to send the logout request to. | Request: `POST` <br> Response: `200 OK` |
 | userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. | Request: `GET` <br> Response: `{ username: string }` |
@@ -111,26 +111,30 @@ Example auth configuration:
   }
 }
 ```
-
 #### Authentication Behavior
 
-The RESTool authentication system provides a seamless integration with your backend API:
+RESTool provides a configurable authentication system that integrates with your backend API:
 
-1. **Automatic Login Form Display**
-   - When any API request returns a `401 Unauthorized` status, RESTool will automatically display the login form
-   - After successful login, the original request will be retried
+##### Session Cookie Authentication
 
-2. **Password Change Flow**
-   - During login, if the backend sets the `x-password-change: true` response header, the user will be automatically redirected to the password change form
-   - After successful password change, the user is redirected back to their original destination
+When using `"type": "sessioncookie"`, the following behavior applies:
 
-3. **Session Handling**
-   - For `sessioncookie` auth type:
-     - All requests include `credentials: 'include'` to ensure cookies are sent
-     - No manual token handling is needed as the browser handles cookie management
-     - Login state is checked by calling the `userEndpoint`, which should return `{ username: string }`
+1. **Request Handling**
+   - All requests include `credentials: 'include'` to ensure cookies are sent
+   - Browser handles cookie management automatically
 
-By following these conventions, you can integrate RESTool with any backend authentication system that uses cookie-based sessions with proper return URL handling.
+2. **Authentication State**
+   - RESTool verifies authentication by calling the configured `userEndpoint` 
+   - The endpoint must return a user object containing at least `{ username: string }`
+
+3. **Login Flow**
+   - When any request returns `401 Unauthorized`, RESTool displays the login form
+   - After successful login, the original request is retried
+
+4. **Password Change Flow**
+   - If login response includes `x-password-change: true` header
+   - User is redirected to password change form
+   - After successful change, returns to original destination
 
 ### Pages
 
