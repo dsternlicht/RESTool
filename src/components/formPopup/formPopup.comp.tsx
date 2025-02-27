@@ -35,7 +35,10 @@ interface IProps {
 }
 
 export const FormPopup = withAppContext(({ context, title, successMessage, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
-  const fieldsCopy: IConfigInputField[] = JSON.parse(JSON.stringify(fields));
+  const fieldsCopy: IConfigInputField[] = fields.map(field => ({
+    ...field,
+    showFieldWhen: field.showFieldWhen
+  }));
   const { httpService, activePage, config } = context;
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
@@ -145,6 +148,10 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
     var queryParams: IQueryParam[] = [];
 
     formFields.forEach((field) => {
+      // Skip if field should not be visible
+      if (!shouldFieldBeVisible(field, formFields)) {
+        return;
+      }
       if (field.type === 'file') {
         const fileInput: any = document.querySelector(`input[name="${field.name || 'file'}"]`) as HTMLInputElement;
 
@@ -162,7 +169,15 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
       }
 
       // eslint-disable-next-line eqeqeq
-      if (field.required && field.type !== 'boolean' && !field.value && field.value != 0) {
+      const isFieldValueEmpty = (field: IConfigInputField): boolean => {
+        if (field.value === 0 || field.value === false) return false;
+        if (field.value === '' || field.value === null || field.value === undefined) return true;
+        if (Array.isArray(field.value)) return field.value.length === 0;
+        return false;
+      }
+      
+      // Replace the validation code with:
+      if (field.required && field.type !== 'boolean' && isFieldValueEmpty(field)) {
         validationError = 'Please fill up all required fields.';
       }
 
@@ -217,11 +232,21 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
   }
 
   function formChanged(fieldName: string, value: any) {
-    let updatedFormFields: IConfigInputField[] = JSON.parse(JSON.stringify(formFields));
+    let updatedFormFields: IConfigInputField[] = formFields; // JSON.parse(JSON.stringify(formFields));
 
     updatedFormFields = dataHelpers.updateInputFieldFromFields(fieldName, value, updatedFormFields)
 
     setFormFields(updatedFormFields);
+  }
+
+  // Check if field should be visible based on showFieldWhen condition
+  function shouldFieldBeVisible(field: IConfigInputField, fields: IConfigInputField[]): boolean {
+    if (!field.showFieldWhen) return true;
+    if (typeof field.showFieldWhen !== 'function') {
+      console.warn('showFieldWhen must be a function');
+      return true;
+    }
+    return field.showFieldWhen(fields);
   }
 
   useEffect(() => {
@@ -241,24 +266,25 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
         <section>
           {
             loading ?
-            <Loader /> :
-            <form onSubmit={submitForm}>
-              {
-                formFields.map((field, idx) => {
-                  return (
-                    <FormRow
-                      key={`field_${idx}`}
-                      field={field}
-                      onChange={formChanged}
-                      showReset={!field.type || field.type === 'text'}
-                    />
-                  );
-                })
-              }
-              <div className="buttons-wrapper center">
-                <Button type="submit" onClick={submitForm} >{customLabels?.buttons?.submitItem || 'Submit' }</Button>
-              </div>
-            </form>
+              <Loader /> :
+              <form onSubmit={submitForm}>
+                {
+                  formFields.map((field, idx) => {
+                    if (!shouldFieldBeVisible(field, formFields)) return null;
+                    return (
+                      <FormRow
+                        key={`field_${idx}`}
+                        field={field}
+                        onChange={formChanged}
+                        showReset={!field.type || field.type === 'text'}
+                      />
+                    );
+                  })
+                }
+                <div className="buttons-wrapper center">
+                  <Button type="submit" onClick={submitForm} >{customLabels?.buttons?.submitItem || 'Submit'}</Button>
+                </div>
+              </form>
           }
         </section>
       </React.Fragment>
