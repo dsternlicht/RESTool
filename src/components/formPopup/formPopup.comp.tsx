@@ -148,16 +148,22 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
     var queryParams: IQueryParam[] = [];
 
     formFields.forEach((field) => {
-      // Skip if field should not be visible
-      if (!shouldFieldBeVisible(field, formFields)) {
-        return;
-      }
+
       if (field.type === 'file') {
         const fileInput: any = document.querySelector(`input[name="${field.name || 'file'}"]`) as HTMLInputElement;
 
         if (fileInput.files.length > 0) {
           const firstFile = fileInput.files[0];
           formData.append(field.name || 'file', firstFile, firstFile.name);
+        }
+        return;
+      }
+
+      // Add null value for fields that should not be visible
+      if (!shouldFieldBeVisible(field, formFields)) {
+        finalObject[field.name] = null;
+        if (containFiles) {
+          formData.append(field.name, '');
         }
         return;
       }
