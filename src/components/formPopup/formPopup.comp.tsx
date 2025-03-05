@@ -174,7 +174,6 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
         formData.append(field.name, field.value);
       }
 
-      // eslint-disable-next-line eqeqeq
       const isFieldValueEmpty = (field: IConfigInputField): boolean => {
         if (field.value === 0 || field.value === false) return false;
         if (field.value === '' || field.value === null || field.value === undefined) return true;
@@ -238,7 +237,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
   }
 
   function formChanged(fieldName: string, value: any) {
-    let updatedFormFields: IConfigInputField[] = formFields; // JSON.parse(JSON.stringify(formFields));
+    let updatedFormFields: IConfigInputField[] = structuredClone(formFields);
 
     updatedFormFields = dataHelpers.updateInputFieldFromFields(fieldName, value, updatedFormFields)
 
