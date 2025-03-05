@@ -66,9 +66,9 @@ export default {
           "url": "/character/:id",
           "fields": [
             {
-              "name": "numberTest",
-              "label": "Number Test",
-              "type": "number"
+              "name": "isAlive",
+              "label": "Alive?",
+              "type": "boolean"
             },
             {
               "name": "location",
@@ -77,10 +77,11 @@ export default {
               "options": ["Kings Landing", "Beyond the Wall", "Winterfell"]
             },
             {
-              "name": "isAlive",
-              "label": "Alive?",
-              "type": "boolean"
-            }
+              "name": "causeOfDeath",
+              "label": "Cause of Death",
+              "type": "text",
+              "showFieldWhen": (fields) => !fields.find(f => f.originalName === "isAlive")?.value
+            },
           ]
         },
         "post": {
@@ -399,4 +400,3 @@ export default {
     }
   ]
 }
-

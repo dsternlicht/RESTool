@@ -379,6 +379,9 @@
         "readonly": {
           "type": "boolean"
         },
+        "showFieldWhen": {
+          "description": "A function that determines if the field should be visible. The function receives an array of all form fields as its argument and should return a boolean. Example: `(fields) => fields.find(f => f.originalName === 'status')?.value === 'active'`"
+        },
         "label": {
           "type": "string",
           "description": "A label that describes the field. This will act as a label in RESTool's forms."
