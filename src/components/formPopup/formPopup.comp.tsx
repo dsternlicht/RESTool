@@ -237,7 +237,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
   }
 
   function formChanged(fieldName: string, value: any) {
-    let updatedFormFields: IConfigInputField[] = structuredClone(formFields);
+    let updatedFormFields: IConfigInputField[] = [...formFields];
 
     updatedFormFields = dataHelpers.updateInputFieldFromFields(fieldName, value, updatedFormFields)
 
