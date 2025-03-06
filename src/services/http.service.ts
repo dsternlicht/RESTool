@@ -1,6 +1,6 @@
 import { TConfigMethod, IQueryParam } from '../common/models/config.model';
 import { dataHelpers } from '../helpers/data.helpers';
-import {querystringHelpers} from "../helpers/querystring.helpers";
+import { querystringHelpers } from "../helpers/querystring.helpers";
 
 export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
 
@@ -16,15 +16,15 @@ export interface IFetchParams {
 
 class HttpService {
   public baseUrl: string;
-  public unauthorizedRedirectUrl: string;
   public errorMessageDataPath: string | string[];
+  public unauthorizedRedirectUrl: string;
   public requestHeaders: any;
 
   constructor(baseUrl: string = '', unauthorizedRedirectUrl: string = '', errorMessageDataPath: string = '') {
     this.baseUrl = baseUrl || '';
-    this.unauthorizedRedirectUrl = unauthorizedRedirectUrl || '';
     this.errorMessageDataPath = errorMessageDataPath || '';
-    this.requestHeaders = {};
+    this.unauthorizedRedirectUrl = unauthorizedRedirectUrl || '';
+    this.requestHeaders = {}
   }
 
   private urlIsAbsolute(url: string) {
@@ -85,7 +85,8 @@ class HttpService {
     const requestParams = {
       method: params.method ? params.method.toUpperCase() : 'GET',
       headers: Object.assign({}, this.requestHeaders, params.headers || {}),
-      body: params.method === 'post' || params.method === 'put' || params.method === 'patch' ? params.body : undefined
+      body: params.method === 'post' || params.method === 'put' || params.method === 'patch' ? params.body : undefined,
+      credentials: 'include' // Include cookies in the request
     };
 
     return {
@@ -115,11 +116,22 @@ class HttpService {
   }
 
   private async handleError(res: Response) {
-    // In case response status is "Unauthorized", redirect to relevant url
-    if (res.status === 401 && this.unauthorizedRedirectUrl) {
-      const redirectUrl: string = this.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(document.location.href));
-      document.location.href = redirectUrl;
-      return;
+    if (res.status === 401) {
+      const currentPath = document.location.hash.substring(1); // Remove the # from the hash
+      const basePath = currentPath.split('?')[0]; // Extract base path without query parameters
+
+      // Use legacy unauthorizedRedirectUrl if set
+      if (this.unauthorizedRedirectUrl) {
+        const redirectUrl = this.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(basePath));
+        document.location.href = redirectUrl;
+        return;
+      }
+
+      // Fall back to built-in auth if we're not already on the login page
+      if (!currentPath.startsWith('/login')) {
+        document.location.href = `#/login?return=${encodeURIComponent(basePath)}`;
+        return;
+      }
     }
 
     throw new Error(await this.getErrorMessage(res));

@@ -1,5 +1,21 @@
 export type ConfigFunction = (context?: any) => Promise<any> | any;
 
+// Authentication types that could be supported in the future
+export type AuthType = 'sessioncookie' | 'jwt' | 'oauth2' | 'basic';
+
+export interface IAuthConfig {
+  /**
+   * The type of authentication to use.
+   * Currently only 'sessioncookie' is implemented.
+   * Other types will throw an error until implemented.
+   */
+  type: AuthType;
+  loginEndpoint: string;
+  logoutEndpoint: string;
+  userEndpoint: string;
+  changePasswordEndpoint: string;
+}
+
 export interface IConfig {
   remoteUrl?: string;
   name: string;
@@ -7,6 +23,7 @@ export interface IConfig {
   baseUrl: string;
   errorMessageDataPath?: string | string[];
   unauthorizedRedirectUrl?: string;
+  auth?: IAuthConfig;
   requestHeaders?: any;
   pages: IConfigPage[];
   customStyles?: ICustomStyles;

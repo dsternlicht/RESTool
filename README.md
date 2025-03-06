@@ -67,7 +67,8 @@ Here's a detailed list of properties you could add to your configuration file (j
 | baseUrl | `string` | false | Base url of the api. This will prefix the url of all the api methods defined for all pages. This is normally the domain plus a base path. For example: `"https://restool-sample-app.herokuapp.com/api"` <br /><br /> Note: If different pages use different base urls this should not be used. Instead, you should explicitly define absolute urls for each method. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | errorMessageDataPath | `string[]` | false | The path within an error response object to look for an error message. If multiple are provided, each will be tried in order until a message is found. |
-| unauthorizedRedirectUrl | `string` | false | Path to navigate to when the api returns a 401 (Unauthorized) error. You can use `:returnUrl` to pass a return location. For example: `"/login/myLoginPage?return=:returnUrl"` |
+| unauthorizedRedirectUrl | `string` | false | Legacy option that takes priority over `auth` config: URL to redirect to when the API returns a 401 (Unauthorized) error. Use `:returnUrl` to pass a return location. For example: `"/login?return=:returnUrl"` |
+| auth | `object` | false | Built-in authentication configuration (used only if `unauthorizedRedirectUrl` is not set). See [Auth Config](#auth-config) below. |
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) |
@@ -86,6 +87,54 @@ export default {
 **NOTE:** In case you're using the `build` folder, the config.js must be placed in the folder `/build/static/js`.
 <br />
 
+### Auth Config
+
+The `auth` property allows you to configure authentication endpoints. It has the following properties:
+
+| Property | Type | Required? | Description | Expected Format |
+|----------------|--------------|-----|----------------------------------------------------------------|----------------|
+| type | `"sessioncookie" \| "jwt" \| "oauth2" \| "basic"` | true | The authentication type. Currently only `"sessioncookie"` is implemented - other types will throw an error. | - |
+| loginEndpoint | `string` | true | The endpoint to send the login request to. If the response header 'X-Change-Password' is set to 'true', the user will be redirected to the change password page. | Request: `POST { username: string, password: string }` <br> Response: `200 OK` with optional `X-Change-Password: true` header |
+| logoutEndpoint | `string` | true | The endpoint to send the logout request to. | Request: `POST` <br> Response: `200 OK` |
+| userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. | Request: `GET` <br> Response: `{ username: string }` |
+| changePasswordEndpoint | `string` | true | The endpoint to send password change requests to. | Request: `PUT { oldPassword: string, newPassword: string }` <br> Response: `200 OK` |
+
+Example auth configuration:
+```json
+{
+  "auth": {
+    "type": "sessioncookie",
+    "loginEndpoint": "/auth/login",
+    "logoutEndpoint": "/auth/logout",
+    "userEndpoint": "/auth/user",
+    "changePasswordEndpoint": "/auth/change-password"
+  }
+}
+```
+#### Authentication Behavior
+
+RESTool provides a configurable authentication system that integrates with your backend API:
+
+##### Session Cookie Authentication
+
+When using `"type": "sessioncookie"`, the following behavior applies:
+
+1. **Request Handling**
+   - All requests include `credentials: 'include'` to ensure cookies are sent
+   - Browser handles cookie management automatically
+
+2. **Authentication State**
+   - RESTool verifies authentication by calling the configured `userEndpoint` 
+   - The endpoint must return a user object containing at least `{ username: string }`
+
+3. **Login Flow**
+   - When any request returns `401 Unauthorized`, RESTool displays the login form
+   - After successful login, the original request is retried
+
+4. **Password Change Flow**
+   - If login response includes `x-password-change: true` header
+   - User is redirected to password change form
+   - After successful change, returns to original destination
 
 ### Pages
 
