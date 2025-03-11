@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
 import * as QueryString from "query-string";
 import { toast } from "react-toastify";
@@ -51,7 +52,7 @@ interface IProps {
 
 interface IPopupProps {
   type: "add" | "update" | "action";
-  title: string;
+  title: string | undefined;
   successMessage: string;
   config: IConfigPostMethod | IConfigPutMethod;
   submitCallback: (body: any, containFiles: boolean) => void;
@@ -185,21 +186,22 @@ const PageComp = ({ context }: IProps) => {
     ...config?.customLabels,
     ...activePage?.customLabels,
   };
-  const addItemLabel = customLabels?.buttons?.addItem || "+ Add Item";
-  const addItemFormTitle = customLabels?.formTitles?.addItem || "Add Item";
-  const editItemFormTitle = customLabels?.formTitles?.editItem || "Update Item";
+  const { t } = useTranslation();
+  const addItemLabel = customLabels?.buttons?.addItem || t('buttons.addItem');
+  const addItemFormTitle = customLabels?.formTitles?.addItem || t('formTitles.addItem');
+  const editItemFormTitle = customLabels?.formTitles?.editItem || t('formTitles.editItem');
   const addItemSuccessMessage = customLabels?.successMessages?.addItem !== undefined
     ? customLabels.successMessages.addItem
-    : "Item added successfully";
+    : t('successMessages.addItem');
   const editItemSuccessMessage = customLabels?.successMessages?.editItem !== undefined
     ? customLabels.successMessages.editItem
-    : "Item updated successfully";
+    : t('successMessages.editItem');
   const deleteItemSuccessMessage = customLabels?.successMessages?.deleteItem !== undefined
     ? customLabels.successMessages.deleteItem
-    : "Item deleted successfully";
+    : t('successMessages.deleteItem');
   const customActionSuccessMessage = customLabels?.successMessages?.customActions !== undefined
     ? customLabels.successMessages.customActions
-    : "Action performed successfully";
+    : t('successMessages.customActions');
   const { initQueryParams, initialPagination } =
     buildInitQueryParamsAndPaginationState(
       getAllConfig?.queryParams || [],
@@ -958,8 +960,8 @@ const PageComp = ({ context }: IProps) => {
     <div className="app-page">
       <header className="app-page-header">
         <hgroup>
-          <h2>{activePage?.name}</h2>
-          {activePage?.description && <h4>{activePage?.description}</h4>}
+          <h2>{t(`pages.${page}.title`) || activePage?.name} </h2>
+          <h4>{t(`pages.${page}.description`) || activePage?.description}</h4>
         </hgroup>
         {postConfig && (
           <Button

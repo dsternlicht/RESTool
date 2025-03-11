@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IConfigInputField, IConfigPagination } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
@@ -15,6 +16,7 @@ interface IProps {
 
 export const QueryParams = ({ initialParams, paginationConfig, submitCallback }: IProps) => {
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(initialParams);
+  const { t } = useTranslation();
 
   function submit(e?: any) {
     if (e) {
@@ -53,9 +55,10 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
     return <React.Fragment></React.Fragment>;
   }
 
+  
   return (
     <section className="query-params-form">
-      <h5>Query Params:</h5>
+      <h5>{t('forms.queryParams.title')}</h5>
       <form onSubmit={submit}>
         {
           queryParams.map((queryParam, idx) => {
@@ -69,7 +72,7 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
             );
           })
         }
-        <Button type="submit" onClick={submit}>Submit</Button>
+        <Button type="submit" onClick={submit}>{t('buttons.submit')}</Button>
       </form>
     </section>
   );

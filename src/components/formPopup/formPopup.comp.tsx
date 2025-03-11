@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import { Popup } from '../popup/popup.comp';
@@ -40,6 +41,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
     showFieldWhen: field.showFieldWhen
   }));
   const { httpService, activePage, config } = context;
+  const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
@@ -56,7 +58,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
           method: actualMethod || 'get',
           origUrl: url,
           queryParams,
-          headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
+          headers: Object.assign({}, pageHeaders, requestHeaders || {}),
           rawData,
           responseType
         });
@@ -71,8 +73,8 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
           finalRawData = extractedData;
         }
       } catch (e) {
-        console.error('Could not load single item\'s data.', e);
-        toast.error('Could not load single item\'s data.');
+        console.error(t('forms.errors.loadItemFailed'), e);
+        toast.error(t('forms.errors.loadItemFailed'));
       }
     }
 
@@ -92,8 +94,8 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
 
       const lookup = () => {
         let objToLookIn = finalRawData;
-        for(const pathElem of dataPathSplit) {
-          if(objToLookIn[pathElem] !== undefined && objToLookIn[pathElem] !== null) {
+        for (const pathElem of dataPathSplit) {
+          if (objToLookIn[pathElem] !== undefined && objToLookIn[pathElem] !== null) {
             objToLookIn = objToLookIn[pathElem];
           } else {
             return undefined;
@@ -180,17 +182,17 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
         if (Array.isArray(field.value)) return field.value.length === 0;
         return false;
       }
-      
+
       // Replace the validation code with:
       if (field.required && field.type !== 'boolean' && isFieldValueEmpty(field)) {
-        validationError = 'Please fill up all required fields.';
+        validationError = t('forms.errors.requiredFields');
       }
 
       if (dataHelpers.checkIfFieldIsObject(field) && field.value) {
         try {
           finalObject[field.name] = JSON.parse(field.value);
         } catch (e) {
-          validationError = `Invalid JSON for field "${field.name}".`;
+          validationError = t('forms.errors.invalidJson', { field: field.name });
         }
       }
 
@@ -248,7 +250,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
   function shouldFieldBeVisible(field: IConfigInputField, fields: IConfigInputField[]): boolean {
     if (!field.showFieldWhen) return true;
     if (typeof field.showFieldWhen !== 'function') {
-      console.warn('showFieldWhen must be a function');
+      console.warn(t('common.warnings.showFieldWhenFunction'));
       return true;
     }
     return field.showFieldWhen(fields);
@@ -287,7 +289,9 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
                   })
                 }
                 <div className="buttons-wrapper center">
-                  <Button type="submit" onClick={submitForm} >{customLabels?.buttons?.submitItem || 'Submit'}</Button>
+                  <Button type="submit" onClick={submitForm}>
+                    {customLabels?.buttons?.submitItem || t('buttons.submitItem')}
+                  </Button>
                 </div>
               </form>
           }

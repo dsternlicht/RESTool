@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import {
@@ -11,10 +12,13 @@ import { Button } from "../button/button.comp";
 import { InfiniteLoader } from "../infiniteLoader/infiniteLoader.comp";
 import { IPaginationState } from "../../common/models/states.model";
 import { Pagination } from "../pagination/pagination.comp";
+import { IAppContext } from "../app.context";
+import { withAppContext } from "../withContext/withContext.comp";
 
 import "./table.scss";
 
 interface IProps {
+  context: IAppContext;
   items: any[];
   pagination?: IPaginationState;
   callbacks: {
@@ -30,18 +34,12 @@ interface IProps {
   customLabels?: ICustomLabels;
 }
 
-export const Table = ({
-  items,
-  fields,
-  pagination,
-  callbacks,
-  customActions,
-  customLabels,
-}: IProps) => {
-  const editLabel = customLabels?.buttons?.editItem || "Edit";
-  const deleteLabel = customLabels?.buttons?.deleteItem || "Delete";
+export const Table = withAppContext(({ context, items, fields, pagination, callbacks, customActions, customLabels }: IProps) => {
+  const { t } = useTranslation();
+  const editLabel = customLabels?.buttons?.editItem || t('buttons.editItem');
+  const deleteLabel = customLabels?.buttons?.deleteItem || t('buttons.deleteItem');
   const actionColumnHeader =
-    customLabels?.tableColumnHeaders?.actions || "Actions";
+    customLabels?.tableColumnHeaders?.actions || t('common.actions');
   const paginationCallbacks = {
     nextPage:
       callbacks.getNextPage ||
@@ -133,7 +131,7 @@ export const Table = ({
           <div className="actions-wrapper">
             {callbacks.put && (
               <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
-                <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <i className="fa fa-pencil-square-o" aria-hidden="true" />
               </Button>
             )}
             {customActions &&
@@ -185,7 +183,7 @@ export const Table = ({
                     }
                   }}
                 >
-                  {field.label || field.name}
+                  {field.label || t(`pages.${context.activePage?.id}.fields.${field.name}.label`) || field.name}
                 </th>
               );
             })}
@@ -233,4 +231,4 @@ export const Table = ({
       )}
     </div>
   );
-};
+});

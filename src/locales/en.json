@@ -1,0 +1,90 @@
+{
+  "aria": {
+    "clear": "Clear",
+    "close": "Close"
+  },
+  "auth": {
+    "changePassword": "Change Password",
+    "labels": {
+      "confirmPassword": "Confirm New Password",
+      "newPassword": "New Password",
+      "oldPassword": "Old Password",
+      "password": "Password",
+      "user": "User"
+    },
+    "loginFailed": "Login failed",
+    "logout": "Logout",
+    "logoutFailed": "Logout failed",
+    "logoutSuccess": "Logged out successfully",
+    "passwordChangeRequired": "Password change required",
+    "passwordChanged": "Password changed successfully",
+    "passwordChangeFailed": "Password change failed",
+    "passwordMismatch": "Confirmed password does not match"
+  },
+  "buttons": {
+    "addArrayItem": "Add Item",
+    "addItem": "+ Add Item",
+    "clearInput": "Clear",
+    "closeForm": "Close",
+    "deleteItem": "Delete",
+    "editItem": "Edit",
+    "submit": "Submit",
+    "submitItem": "Submit"
+  },
+  "common": {
+    "actions": "Actions",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "emptyResults": "Nothing to see here. Result is empty.",
+    "error": "Error",
+    "loading": "Loading...",
+    "success": "Success",
+    "warning": "Warning"
+  },
+  "filter": {
+    "searchPlaceholder": "Search...",
+    "title": "Filter:"
+  },
+  "forms": {
+    "defaultOption": "Option {index}",
+    "errors": {
+      "invalidJson": "Invalid JSON for field \"{field}\"",
+      "loadItemFailed": "Could not load single item's data",
+      "requiredFields": "Please fill up all required fields"
+    },
+    "loading": "Loading options...",
+    "queryParams": {
+      "title": "Query Params:"
+    },
+    "select": "-- Select --"
+  },
+  "formTitles": {
+    "addItem": "Add Item",
+    "editItem": "Edit Item"
+  },
+  "pagination": {
+    "itemsCount": "Showing :currentCountFrom-:currentCountTo out of :totalCount items",
+    "nextPage": "Next page",
+    "previousPage": "Previous page"
+  },
+  "placeholders": {
+    "array": "Enter JSON array...",
+    "color": "Enter color...",
+    "confirmPassword": "Confirm new password...",
+    "date": "Enter date...",
+    "email": "Enter email...",
+    "file": "Select file...",
+    "newPassword": "Enter new password...",
+    "number": "0",
+    "object": "Enter JSON...",
+    "oldPassword": "Enter old password...",
+    "password": "Enter password...",
+    "text": "Enter text...",
+    "user": "Enter user...."
+  },
+  "successMessages": {
+    "addItem": "Item added successfully",
+    "customActions": "Action completed successfully",
+    "deleteItem": "Item deleted successfully",
+    "editItem": "Item updated successfully"
+  }
+}

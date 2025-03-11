@@ -1,17 +1,18 @@
 import React, { Component, RefObject, ReactChild } from 'react';
 import ReactDOM from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 import './popup.scss';
 import { ICustomLabels } from '../../common/models/config.model';
 
 interface IPopupProps {
-  className?: string
-  style?: any
-  show: boolean
-  closeCallback: any
-  children: ReactChild
-  refCallback?: string | ((instance: HTMLDivElement | null) => void) | RefObject<HTMLDivElement> | null | undefined
-  customLabels?: ICustomLabels
+  className?: string;
+  style?: any;
+  show: boolean;
+  closeCallback: any;
+  children: ReactChild;
+  refCallback?: string | ((instance: HTMLDivElement | null) => void) | RefObject<HTMLDivElement> | null | undefined;
+  customLabels?: ICustomLabels;
 }
 
 let portalRoot: HTMLDivElement = document.getElementById('popup-portal') as HTMLDivElement;
@@ -26,7 +27,6 @@ class PortalPopup extends Component {
 
   constructor(props: any) {
     super(props);
-
     this.el = document.createElement('div');
   }
 
@@ -43,43 +43,44 @@ class PortalPopup extends Component {
   }
 }
 
-export class Popup extends Component<IPopupProps> {
-  render() {
-    const style: any = Object.assign({}, { display: this.props.show ? 'block' : 'none' }, this.props.style || {});
-    const closeLabel = this.props.customLabels?.buttons?.closeForm || 'Close';
+export const Popup = ({ className, style, show, closeCallback, children, refCallback, customLabels }: IPopupProps) => {
+  const { t } = useTranslation();
+  const finalStyle: any = Object.assign({}, { display: show ? 'block' : 'none' }, style || {});
+  const closeLabel = customLabels?.buttons?.closeForm || t('buttons.closeForm');
 
-    return (
-      <PortalPopup>
-        {
-          this.props.show ?
-            <div className={`popup ${this.props.className || ''}`} style={style}>
-              <div className="overlay" onClick={(e: any) => this.props.closeCallback(e)}></div>
-              <div className="popup-content" ref={this.props.refCallback}>
-                {this.props.children}
-                <button title={closeLabel} className="close-popup" onClick={(e: any) => this.props.closeCallback(e)}>
-                  <i className="fa fa-times" aria-hidden="true"></i>
-                </button>
-              </div>
-            </div> :
-            null
-        }
-      </PortalPopup>
-    );
-  }
-
-  componentDidMount() {
-    document.addEventListener('keydown', this._handleKeyDown.bind(this));
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this._handleKeyDown.bind(this));
-  }
-
-  _handleKeyDown = (e: KeyboardEvent) => {
-    const { show, closeCallback } = this.props;
-
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (show && e.keyCode === 27) {
       closeCallback(e);
     }
-  }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [show]);
+
+  return (
+    <PortalPopup>
+      {
+        show ?
+          <div className={`popup ${className || ''}`} style={finalStyle}>
+            <div className="overlay" onClick={(e: any) => closeCallback(e)}></div>
+            <div className="popup-content" ref={refCallback}>
+              {children}
+              <button 
+                title={closeLabel}
+                className="close-popup" 
+                onClick={(e: any) => closeCallback(e)}
+                aria-label={t('aria.close')}
+              >
+                <i className="fa fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div> :
+          null
+      }
+    </PortalPopup>
+  );
 };
