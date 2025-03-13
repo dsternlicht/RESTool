@@ -1,24 +1,16 @@
 # RESTool 2.0 ([demo](https://dsternlicht.github.io/RESTool/))
 
-
-
 <p  align="center">
 
 <img  src="https://raw.githubusercontent.com/dsternlicht/RESTool/master/screenshots/screenshot_1.png?raw=true"  alt="RESTool Sample App"/>
 
 </p>
 
-
-
 The best tool in the neighborhood. Managing your **RESTful APIs** has never been so easy.
 
 RESTool gives you an out of the box UI that connects to your RESTful API with a simple configuration file.
 
-
-
 The idea behind it is simple. Given the fact that each entity in your API has a RESTful implementation, RESTool will provide you UI tool for managing these entities in no time by simply editing a configuration file. No front end engineers, no JavaScript, no CSS, no html. Just a simple JSON file.
-
-
 
 **Live Demo**: [https://dsternlicht.github.io/RESTool/](https://dsternlicht.github.io/RESTool/)
 
@@ -36,6 +28,7 @@ Some new features and capabilities in V2:
 * Custom app colors
 * Data path extraction from arrays
 * New & improved design
+* Internationalization (i18n) support with auto-detect browser language
 * Custom favicon support
 * Custom icons for actions
 * Better error handling in configuration and requests
@@ -71,7 +64,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | auth | `object` | false | Built-in authentication configuration (used only if `unauthorizedRedirectUrl` is not set). See [Auth Config](#auth-config) below. |
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
-| customLabels | `object` | false | [Custom labels](#custom-labels) |
+| customLabels | `object` | false | ⚠️ Deprecated. Use i18n language files instead. See [Internationalization (i18n)](#internationalization-i18n) section. <br> [Custom labels](#custom-labels) |
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |
 
 #### Dynamic configuration file
@@ -86,6 +79,7 @@ export default {
 
 **NOTE:** In case you're using the `build` folder, the config.js must be placed in the folder `/build/static/js`.
 <br />
+
 
 ### Auth Config
 
@@ -142,13 +136,13 @@ Each **page** is an object and represents a resource in your API. It should have
 
 | Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
-| name | `string` | true | The name of the page. This will be presented in the menu.|
+| name | `string` | true | The name of the page. This will be presented in the menu. <br> ⚠️ Deprecated. Define in i18n language files under the page's namespace. |
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
-| description | `string` | false | A short description about the page and its usage. |
+| description | `string` | false | A short description about the page and its usage.  <br> ⚠️ Deprecated. Define in i18n language files under the page's namespace.|
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
-| customLabels | `object` | false | [Custom labels](#custom-labels) |
+| customLabels | `object` | false | [Custom labels](#custom-labels) <br> ⚠️ Deprecated. Use i18n language files instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 
 <br />
 
@@ -569,6 +563,9 @@ Usage example in `config.json` file:
 
 ####  Custom Labels
 
+> ⚠️ Deprecated. Use i18n language files instead. See [Internationalization (i18n)](#internationalization-i18n) section.
+
+
 The `customLabels` property allows you to control the different labels that are shown across the pages of your RESTool app. The object has three fields that contain properties that you can customize: `buttons`, `formTitles`, `placeholders`, `successMessages` and `pagination`.
 
 List of variable names you may change within the `buttons`property:
@@ -656,7 +653,7 @@ The list of fields you want to present in the main view of the app. Each one is 
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The property name of the field that contains the value in the API result. |
 | type | `string` | true | This will help RESTool to render the main view. See a list of available type below. |
-| label | `string` | false | A label that describes the field. Will be presented as table headers in the main view. |
+| label | `string` | false | ⚠️ Deprecated. Define field labels in i18n language files. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | dataPath | `string` | false | Read more about dataPath [here](#data-path).
 | filterable | `boolean` | false | Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields. |
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
@@ -870,6 +867,77 @@ The field name will be `url`, the type will be `text`, and the data path will be
 
 
 <br />
+
+### Internationalization (i18n)
+
+RESTool supports internationalization (i18n) of your application through language files. This allows you to provide your application in multiple languages.
+
+#### Language Configuration
+
+1. Create language files in the `src/locales` directory (e.g., `fr.json`, `de.json`, ...) with translations.
+Use the `en.json` file as a template for the structure of the language files.
+
+2. The browser language is automatically detected and the corresponding language file is loaded. Falls back to English (en) if the detected language is not available.
+
+#### Page-Specific Translations
+
+##### Title and description (subtitle)
+Define the title and description of a page in the language files under the page's namespace. 
+Use the `id` of the page as defined in the configuration file.
+For example, for the "Characters" page:
+
+```json
+{
+  "pages": {
+    "characters": {
+      "title": "Personnages",
+      "description": "Liste des personnages"
+    }
+  }
+}
+```
+
+##### Field labels
+
+Define the field labels in the language files under the namespace of the page.
+Use the `id` of the page as defined in the configuration file.
+Then define the translations of the field labels under the `fields` property with the field `name` as the key.
+For example, for the "Characters" page:
+
+```json
+{
+  "pages": {
+    "characters": {
+      "fields": {
+        "name": "Nom",
+        "age": "Âge",
+      }
+    }
+  }
+}
+```
+
+##### Other translations
+
+You can also override all translations of the `global` namespace for a specific page.
+
+```json
+{
+  "pages": [
+    {
+      "characters": {
+        "title": "Personnages",
+        "description": "Liste des personnages",
+        // Page-specific translations, overwrites translations of the `global` properties
+        "buttons": {
+          "addItem": "Ajouter un personnage",
+          "editItem": "Modifier",
+        }
+      }
+    }
+  ]
+}
+```
 
 ## Development
 
