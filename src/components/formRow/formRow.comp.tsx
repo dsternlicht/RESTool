@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { orderBy } from "natural-orderby";
 import { toast } from "react-toastify";
 import { Multiselect } from "multiselect-react-dropdown";
@@ -16,6 +15,7 @@ import { dataHelpers } from "../../helpers/data.helpers";
 
 import "./formRow.scss";
 import "jsoneditor-react/es/editor.min.css";
+import { usePageTranslation } from "../../hooks/usePageTranslation";
 
 const { JsonEditor } = require("jsoneditor-react");
 
@@ -42,13 +42,13 @@ export const FormRow = withAppContext(
     const [optionSources, setOptionSources] = useState<any>({});
     const [originalOptions, setOriginalOptions] = useState<any>({});
     const { httpService, activePage, config } = context;
-    const { t } = useTranslation();
+    const { translatePage } = usePageTranslation(activePage?.id);
     const pageHeaders: any = activePage?.requestHeaders || {};
     const customLabels: ICustomLabels | undefined = {
       ...config?.customLabels,
       ...activePage?.customLabels,
     };
-    const clearLabel = customLabels?.buttons?.clearInput || t('buttons.clearInput');
+    const clearLabel = customLabels?.buttons?.clearInput || translatePage('buttons.clearInput');
 
     const getFieldLabel = () => {
       // Try to get label in this order:
@@ -61,7 +61,7 @@ export const FormRow = withAppContext(
 
       const pageId = activePage?.id;
       if (pageId && field.name) {
-        const i18nLabel = t(`pages.${pageId}.fields.${field.originalName}.label`, { returnNull: true, });
+        const i18nLabel = translatePage(`fields.${field.originalName}.label`, { returnNull: true, });
         if (i18nLabel) {
           return i18nLabel;
         }
@@ -117,7 +117,7 @@ export const FormRow = withAppContext(
               display:
                 displayPath && option[displayPath]
                   ? option[displayPath]
-                  : t('forms.defaultOption', { index: idx + 1 }),
+                  : translatePage('forms.defaultOption', { index: idx + 1 }),
               value:
                 valuePath && option[valuePath] ? option[valuePath] : `${idx}`,
               sourceItem: option,
@@ -234,7 +234,7 @@ export const FormRow = withAppContext(
             loadOptionSourceFromRemote(field.name, optionSource);
             return (
               <select {...inputProps()}>
-                <option>{t('forms.loading')}</option>
+                <option>{translatePage('forms.loading')}</option>
               </select>
             );
           }
@@ -256,7 +256,7 @@ export const FormRow = withAppContext(
 
           return (
             <select {...inputProps()}>
-              <option>{t('forms.select')}</option>
+              <option>{translatePage('forms.select')}</option>
               {finalOptions.map((option, idx) => {
                 const key = `option_${idx}_`;
                 if (typeof option !== "object") {
@@ -284,7 +284,7 @@ export const FormRow = withAppContext(
             loadOptionSourceFromRemote(field.name, optionSource);
             return (
               <select {...inputProps()}>
-                <option>{t('forms.loading')}</option>
+                <option>{translatePage('forms.loading')}</option>
               </select>
             );
           }
@@ -422,7 +422,7 @@ export const FormRow = withAppContext(
           return (
             <textarea
               {...inputProps(
-                customLabels?.placeholders?.text || t('placeholders.text')
+                customLabels?.placeholders?.text || translatePage('placeholders.text')
               )}
             ></textarea>
           );
@@ -431,7 +431,7 @@ export const FormRow = withAppContext(
           return (
             <input
               type="number"
-              {...inputProps(customLabels?.placeholders?.number || t('placeholders.number'))}
+              {...inputProps(customLabels?.placeholders?.number || translatePage('placeholders.number'))}
               onChange={(e) =>
                 changeCallback(field.name, e.target.valueAsNumber)
               }
@@ -441,21 +441,21 @@ export const FormRow = withAppContext(
           return (
             <input
               type="color"
-              {...inputProps(customLabels?.placeholders?.color || t('placeholders.color'))}
+              {...inputProps(customLabels?.placeholders?.color || translatePage('placeholders.color'))}
             />
           );
         case "email":
           return (
             <input
               type="email"
-              {...inputProps(customLabels?.placeholders?.email || t('placeholders.email'))}
+              {...inputProps(customLabels?.placeholders?.email || translatePage('placeholders.email'))}
             />
           );
         case "password":
           return (
             <input
               type="password"
-              {...inputProps(customLabels?.placeholders?.password || t('placeholders.password'))}
+              {...inputProps(customLabels?.placeholders?.password || translatePage('placeholders.password'))}
             />
           );
         case "hidden":
@@ -468,7 +468,7 @@ export const FormRow = withAppContext(
               placeholder={
                 field.placeholder ||
                 customLabels?.placeholders?.file ||
-                t('placeholders.file')
+                translatePage('placeholders.file')
               }
               name={field.name || "file"}
               disabled={field.readonly}
@@ -481,7 +481,7 @@ export const FormRow = withAppContext(
           return (
             <input
               type="date"
-              {...inputProps(customLabels?.placeholders?.date || t('placeholders.date'))}
+              {...inputProps(customLabels?.placeholders?.date || translatePage('placeholders.date'))}
             />
           );
         case "text":
@@ -489,7 +489,7 @@ export const FormRow = withAppContext(
           return (
             <input
               type="text"
-              {...inputProps(customLabels?.placeholders?.text || t('placeholders.text'))}
+              {...inputProps(customLabels?.placeholders?.text || translatePage('placeholders.text'))}
             />
           );
       }
@@ -511,7 +511,7 @@ export const FormRow = withAppContext(
             <i
               title={clearLabel}
               onClick={() => onChange(field.name, "", true)}
-              aria-label={t('aria.clear')}
+              aria-label={translatePage('aria.clear')}
               className="clear-input fa fa-times"
             ></i>
           )}

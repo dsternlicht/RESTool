@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { usePageTranslation } from '../../../hooks/usePageTranslation';
 import { Button } from '../../button/button.comp';
 import { toast } from 'react-toastify';
 
@@ -16,7 +16,7 @@ export const LoginPage = withAppContext(
   ({ context }: IProps) => {
     const history = useHistory();
     const location = useLocation();
-    const { t } = useTranslation();
+    const { translate } = usePageTranslation();
     const queryParams = new URLSearchParams(location.search);
     const returnUrl = queryParams.get('return');
     const [user, setUser] = useState<string>('');
@@ -29,7 +29,7 @@ export const LoginPage = withAppContext(
         const { passwordChangeRequired } = await authService.login(user, pwd);
         setLoggedInUsername(user);
         if (passwordChangeRequired) {
-          toast.info(t('auth.passwordChangeRequired'));
+          toast.info(translate('auth.passwordChangeRequired'));
           history.replace('/change-password');
           return;
         }
@@ -40,7 +40,7 @@ export const LoginPage = withAppContext(
           history.replace('/');
         }
       } catch (error) {
-        toast.error(t('auth.loginFailed'));
+        toast.error(translate('auth.loginFailed'));
         setPwd('');
         return;
       }
@@ -58,26 +58,26 @@ export const LoginPage = withAppContext(
       <div className="auth-page">
         <form className='form-content' onSubmit={submitForm}>
           <div className='form-row row'>
-            <label>{t('auth.labels.user')}</label>
+            <label>{translate('auth.labels.user')}</label>
             <input 
               type="text" 
-              placeholder={t('placeholders.user')}
+              placeholder={translate('auth.placeholders.user')}
               value={user} 
               onChange={handleUserChange} 
             />
           </div>
           <div className='form-row row'>
-            <label>{t('auth.labels.password')}</label>
+            <label>{translate('auth.labels.password')}</label>
             <input 
               type="password" 
-              placeholder={t('placeholders.password')}
+              placeholder={translate('auth.placeholders.password')}
               value={pwd} 
               onChange={handlePwdChange} 
             />
           </div>
           <div className="buttons-wrapper center">
             <Button type="submit" onClick={submitForm} color="green">
-              {t('buttons.submit')}
+              {translate('buttons.login')}
             </Button>
           </div>
         </form>

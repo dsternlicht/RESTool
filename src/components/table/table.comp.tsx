@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { usePageTranslation } from "../../hooks/usePageTranslation";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import {
@@ -35,11 +35,11 @@ interface IProps {
 }
 
 export const Table = withAppContext(({ context, items, fields, pagination, callbacks, customActions, customLabels }: IProps) => {
-  const { t } = useTranslation();
-  const editLabel = customLabels?.buttons?.editItem || t('buttons.editItem');
-  const deleteLabel = customLabels?.buttons?.deleteItem || t('buttons.deleteItem');
+  const { translatePage } = usePageTranslation(context.activePage?.id);
+  const editLabel = customLabels?.buttons?.editItem || translatePage('buttons.editItem');
+  const deleteLabel = customLabels?.buttons?.deleteItem || translatePage('buttons.deleteItem');
   const actionColumnHeader =
-    customLabels?.tableColumnHeaders?.actions || t('common.actions');
+    customLabels?.tableColumnHeaders?.actions || translatePage('common.actions');
   const paginationCallbacks = {
     nextPage:
       callbacks.getNextPage ||
@@ -183,7 +183,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
                     }
                   }}
                 >
-                  {field.label || t(`pages.${context.activePage?.id}.fields.${field.name}.label`) || field.name}
+                  {field.label || translatePage(`fields.${field.name}.label`) || field.name}
                 </th>
               );
             })}

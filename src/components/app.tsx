@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { LoginPage } from './auth/loginPage/loginPage.comp';
 import { ChangePasswordPage } from './auth/changePasswortPage/changePasswortPage.comp';
 import AuthService from '../services/auth.service';
-import { useTranslation } from 'react-i18next';
+import { usePageTranslation } from '../hooks/usePageTranslation';
 
 const httpService = new HttpService();
 const authService = new AuthService();
@@ -39,7 +39,7 @@ function App() {
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
   const [loggedInUsername, setLoggedInUsername] = useState<string | null>(null);
-  const { t } = useTranslation();
+  const { translate } = usePageTranslation();
 
   const appName: string = config?.name || defaultAppName;
 
@@ -132,7 +132,7 @@ function App() {
       {
         !config ?
           <div className="app-error">
-             {firstLoad ? t('common.loadingConfiguration') : t('common.loadingConfigurationFailed')}
+             {firstLoad ? translate('configuration.loadingConfiguration') : translate('configuration.loadingConfigurationFailed')}
           
             </div> :
           <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService, authService, loggedInUsername, setLoggedInUsername }}>

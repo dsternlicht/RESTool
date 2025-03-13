@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { usePageTranslation } from '../../hooks/usePageTranslation';
 import { toast } from 'react-toastify';
 
 import { Popup } from '../popup/popup.comp';
@@ -41,7 +41,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
     showFieldWhen: field.showFieldWhen
   }));
   const { httpService, activePage, config } = context;
-  const { t } = useTranslation();
+  const { translatePage } = usePageTranslation(activePage?.id);
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
@@ -73,8 +73,8 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
           finalRawData = extractedData;
         }
       } catch (e) {
-        console.error(t('forms.errors.loadItemFailed'), e);
-        toast.error(t('forms.errors.loadItemFailed'));
+        console.error(translatePage('forms.errors.loadItemFailed'), e);
+        toast.error(translatePage('forms.errors.loadItemFailed'));
       }
     }
 
@@ -185,14 +185,14 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
 
       // Replace the validation code with:
       if (field.required && field.type !== 'boolean' && isFieldValueEmpty(field)) {
-        validationError = t('forms.errors.requiredFields');
+        validationError = translatePage('forms.errors.requiredFields');
       }
 
       if (dataHelpers.checkIfFieldIsObject(field) && field.value) {
         try {
           finalObject[field.name] = JSON.parse(field.value);
         } catch (e) {
-          validationError = t('forms.errors.invalidJson', { field: field.name });
+          validationError = translatePage('forms.errors.invalidJson', { field: field.name });
         }
       }
 
@@ -250,7 +250,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
   function shouldFieldBeVisible(field: IConfigInputField, fields: IConfigInputField[]): boolean {
     if (!field.showFieldWhen) return true;
     if (typeof field.showFieldWhen !== 'function') {
-      console.warn(t('common.warnings.showFieldWhenFunction'));
+      console.warn(translatePage('common.warnings.showFieldWhenFunction'));
       return true;
     }
     return field.showFieldWhen(fields);
@@ -290,7 +290,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
                 }
                 <div className="buttons-wrapper center">
                   <Button type="submit" onClick={submitForm}>
-                    {customLabels?.buttons?.submitItem || t('buttons.submitItem')}
+                    {customLabels?.buttons?.submitItem || translatePage('buttons.submitItem')}
                   </Button>
                 </div>
               </form>

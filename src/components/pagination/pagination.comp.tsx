@@ -1,24 +1,28 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { usePageTranslation } from '../../hooks/usePageTranslation';
 import { ICustomLabels } from '../../common/models/config.model';
+import { IAppContext } from '../app.context';
+import { withAppContext } from '../withContext/withContext.comp';
 import { IPaginationState } from '../../common/models/states.model';
 import { Button } from '../button/button.comp';
 
 import './pagination.scss';
 
 interface IProps {
-  pagination: IPaginationState
+  context: IAppContext;
+  pagination: IPaginationState;
   callbacks: {
-    previousPage: () => void,
-    nextPage: () => void,
-  }
-  customLabels?: ICustomLabels
+    previousPage: () => void;
+    nextPage: () => void;
+  };
+  customLabels?: ICustomLabels;
 }
 
-export const Pagination = ({ callbacks, pagination, customLabels }: IProps) => {
-  const { t } = useTranslation();
-  const previousTitle = customLabels?.pagination?.previousPageTitle || t('pagination.previousPage');
-  const nextTitle = customLabels?.pagination?.nextPageTitle || t('pagination.nextPage');
+const PaginationComp = ({ context, callbacks, pagination, customLabels }: IProps) => {
+  const { translatePage } = usePageTranslation(context.activePage?.id);
+  const previousTitle = customLabels?.pagination?.previousPageTitle || translatePage('pagination.previousPage');
+  const nextTitle = customLabels?.pagination?.nextPageTitle || translatePage('pagination.nextPage');
+
   return (
     <div className="pagination-wrapper">
       <Button 
@@ -38,3 +42,5 @@ export const Pagination = ({ callbacks, pagination, customLabels }: IProps) => {
     </div>
   );
 };
+
+export const Pagination = withAppContext(PaginationComp);

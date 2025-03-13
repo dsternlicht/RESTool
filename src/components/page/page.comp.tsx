@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { usePageTranslation } from "../../hooks/usePageTranslation";
 import { useParams, useHistory } from "react-router-dom";
 import * as QueryString from "query-string";
 import { toast } from "react-toastify";
@@ -186,22 +186,22 @@ const PageComp = ({ context }: IProps) => {
     ...config?.customLabels,
     ...activePage?.customLabels,
   };
-  const { t } = useTranslation();
-  const addItemLabel = customLabels?.buttons?.addItem || t('buttons.addItem');
-  const addItemFormTitle = customLabels?.formTitles?.addItem || t('formTitles.addItem');
-  const editItemFormTitle = customLabels?.formTitles?.editItem || t('formTitles.editItem');
+  const { translatePage } = usePageTranslation(page);
+  const addItemLabel = customLabels?.buttons?.addItem || translatePage('buttons.addItem');
+  const addItemFormTitle = customLabels?.formTitles?.addItem || translatePage('formTitles.addItem');
+  const editItemFormTitle = customLabels?.formTitles?.editItem || translatePage('formTitles.editItem');
   const addItemSuccessMessage = customLabels?.successMessages?.addItem !== undefined
     ? customLabels.successMessages.addItem
-    : t('successMessages.addItem');
+    : translatePage('successMessages.addItem');
   const editItemSuccessMessage = customLabels?.successMessages?.editItem !== undefined
     ? customLabels.successMessages.editItem
-    : t('successMessages.editItem');
+    : translatePage('successMessages.editItem');
   const deleteItemSuccessMessage = customLabels?.successMessages?.deleteItem !== undefined
     ? customLabels.successMessages.deleteItem
-    : t('successMessages.deleteItem');
+    : translatePage('successMessages.deleteItem');
   const customActionSuccessMessage = customLabels?.successMessages?.customActions !== undefined
     ? customLabels.successMessages.customActions
-    : t('successMessages.customActions');
+    : translatePage('successMessages.customActions');
   const { initQueryParams, initialPagination } =
     buildInitQueryParamsAndPaginationState(
       getAllConfig?.queryParams || [],
@@ -960,8 +960,8 @@ const PageComp = ({ context }: IProps) => {
     <div className="app-page">
       <header className="app-page-header">
         <hgroup>
-          <h2>{t(`pages.${page}.title`) || activePage?.name} </h2>
-          <h4>{t(`pages.${page}.description`) || activePage?.description}</h4>
+          <h2>{translatePage('title') || activePage?.name} </h2>
+          <h4>{translatePage('description') || activePage?.description}</h4>
         </hgroup>
         {postConfig && (
           <Button

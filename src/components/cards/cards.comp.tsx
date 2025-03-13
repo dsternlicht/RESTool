@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { usePageTranslation } from "../../hooks/usePageTranslation";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Skeleton from "react-loading-skeleton";
 
@@ -35,9 +35,9 @@ interface IProps {
 }
 
 export const Cards = withAppContext(({ context, items, fields, callbacks, customActions, customLabels, pagination }: IProps) => {
-  const { t } = useTranslation();
-  const editLabel: string = customLabels?.buttons?.editItem || t('buttons.editItem');
-  const deleteLabel: string = customLabels?.buttons?.deleteItem || t('buttons.deleteItem');
+  const { translatePage } = usePageTranslation(context.activePage?.id);
+  const editLabel: string = customLabels?.buttons?.editItem || translatePage('buttons.editItem');
+  const deleteLabel: string = customLabels?.buttons?.deleteItem || translatePage('buttons.deleteItem');
   const paginationCallbacks = {
     nextPage:
       callbacks.getNextPage ||
@@ -169,7 +169,7 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
                     }
                   }}
                 >
-                  {field.label || t(`pages.${context.activePage?.id}.fields.${field.name}.label`) || field.name}:{" "}
+                  {field.label || translatePage(`fields.${field.name}.label`) || field.name}:{" "}
                 </label>
               )}
               {renderRow(field, item, value)}
@@ -191,7 +191,7 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
               key={`card_${cardIdx}_${fieldIdx}`}
             >
               {field.type !== "image" && (
-                <label>{field.label || t(`pages.${context.activePage?.id}.fields.${field.name}.label`) || field.name}: </label>
+                <label>{field.label || translatePage(`fields.${field.name}.label`) || field.name}: </label>
               )}
               <Skeleton duration={0.6} />
             </div>

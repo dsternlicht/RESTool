@@ -1,11 +1,14 @@
 import React, { Component, RefObject, ReactChild } from 'react';
 import ReactDOM from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import { usePageTranslation } from '../../hooks/usePageTranslation';
 
 import './popup.scss';
 import { ICustomLabels } from '../../common/models/config.model';
+import { IAppContext } from '../app.context';
+import { withAppContext } from '../withContext/withContext.comp';
 
-interface IPopupProps {
+interface IProps {
+  context: IAppContext;
   className?: string;
   style?: any;
   show: boolean;
@@ -43,10 +46,10 @@ class PortalPopup extends Component {
   }
 }
 
-export const Popup = ({ className, style, show, closeCallback, children, refCallback, customLabels }: IPopupProps) => {
-  const { t } = useTranslation();
+const PopupComp = ({ context, className, style, show, closeCallback, children, refCallback, customLabels }: IProps) => {
+  const { translatePage } = usePageTranslation(context.activePage?.id);
   const finalStyle: any = Object.assign({}, { display: show ? 'block' : 'none' }, style || {});
-  const closeLabel = customLabels?.buttons?.closeForm || t('buttons.closeForm');
+  const closeLabel = customLabels?.buttons?.closeForm || translatePage('buttons.closeForm');
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (show && e.keyCode === 27) {
@@ -73,7 +76,7 @@ export const Popup = ({ className, style, show, closeCallback, children, refCall
                 title={closeLabel}
                 className="close-popup" 
                 onClick={(e: any) => closeCallback(e)}
-                aria-label={t('aria.close')}
+                aria-label={translatePage('aria.close')}
               >
                 <i className="fa fa-times" aria-hidden="true"></i>
               </button>
@@ -84,3 +87,5 @@ export const Popup = ({ className, style, show, closeCallback, children, refCall
     </PortalPopup>
   );
 };
+
+export const Popup = withAppContext(PopupComp);
