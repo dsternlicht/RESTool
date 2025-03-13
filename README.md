@@ -64,7 +64,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | auth | `object` | false | Built-in authentication configuration (used only if `unauthorizedRedirectUrl` is not set). See [Auth Config](#auth-config) below. |
 | favicon | `string` | false | A URL for you app's favicon. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
-| customLabels | `object` | false | ⚠️ Deprecated. Use i18n language files instead. See [Internationalization (i18n)](#internationalization-i18n) section. <br> [Custom labels](#custom-labels) |
+| customLabels | `object` | false | [Custom labels](#custom-labels) <br> ⚠️ Deprecated. Use i18n language files instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |
 
 #### Dynamic configuration file
