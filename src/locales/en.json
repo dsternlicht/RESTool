@@ -37,6 +37,8 @@
     "emptyResults": "Nothing to see here. Result is empty.",
     "error": "Error",
     "loading": "Loading...",
+    "loadingConfiguration": "Loading configuration...",
+    "loadingConfigurationFailed": "Could not load configuration",
     "success": "Success",
     "warning": "Warning"
   },
