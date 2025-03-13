@@ -42,7 +42,7 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
         <div className="app-nav-links">
           {
             (config?.pages || []).map((page, idx) => {
-              const pageName = translate(`pages.${page.id}.title`) || page.name;
+              const pageName = translate(`pages.${page.id}.title`) || page.id;
               return page?.customLink ?
                 <a href={page?.customLink} target="_blank" key={`page_${idx}`}>{pageName}</a> :
                 <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}
