@@ -29,7 +29,7 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "start": "PORT=3006 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "build-lib": "tsc --project ./tsconfig.lib.json",
     "test": "react-scripts test",
