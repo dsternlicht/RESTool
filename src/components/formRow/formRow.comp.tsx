@@ -15,6 +15,7 @@ import { dataHelpers } from "../../helpers/data.helpers";
 
 import "./formRow.scss";
 import "jsoneditor-react/es/editor.min.css";
+import { usePageTranslation } from "../../hooks/usePageTranslation";
 
 const { JsonEditor } = require("jsoneditor-react");
 
@@ -41,13 +42,33 @@ export const FormRow = withAppContext(
     const [optionSources, setOptionSources] = useState<any>({});
     const [originalOptions, setOriginalOptions] = useState<any>({});
     const { httpService, activePage, config } = context;
+    const { translatePage } = usePageTranslation(activePage?.id);
     const pageHeaders: any = activePage?.requestHeaders || {};
     const customLabels: ICustomLabels | undefined = {
       ...config?.customLabels,
       ...activePage?.customLabels,
     };
-    // const addArrayItemLabel = customLabels?.buttons?.addArrayItem || 'Add Item';
-    const clearLabel = customLabels?.buttons?.clearInput || "Clear";
+    const clearLabel = customLabels?.buttons?.clearInput || translatePage('buttons.clearInput');
+
+    const getFieldLabel = () => {
+      // Try to get label in this order:
+      // 1. Field's label property (backward compatibility)
+      // 2. i18n field label from current page
+      // 3. Field's original name
+      if (field.label) {
+        return field.label;
+      }
+
+      const pageId = activePage?.id;
+      if (pageId && field.name) {
+        const i18nLabel = translatePage(`fields.${field.originalName}.label`, { returnNull: true, });
+        if (i18nLabel) {
+          return i18nLabel;
+        }
+      }
+
+      return field.originalName;
+    };
 
     async function loadOptionSourceFromRemote(
       fieldName: string,
@@ -75,10 +96,7 @@ export const FormRow = withAppContext(
           headers: Object.assign({}, pageHeaders, requestHeaders || {}),
         });
 
-        const extractedData = dataHelpers.extractDataByDataPath(
-          result,
-          dataPath
-        );
+        const extractedData = dataHelpers.extractDataByDataPath(result, dataPath);
 
         if (!extractedData || !extractedData.length) {
           throw new Error(
@@ -99,7 +117,7 @@ export const FormRow = withAppContext(
               display:
                 displayPath && option[displayPath]
                   ? option[displayPath]
-                  : `Option ${idx + 1}`,
+                  : translatePage('forms.defaultOption', { index: idx + 1 }),
               value:
                 valuePath && option[valuePath] ? option[valuePath] : `${idx}`,
               sourceItem: option,
@@ -216,7 +234,7 @@ export const FormRow = withAppContext(
             loadOptionSourceFromRemote(field.name, optionSource);
             return (
               <select {...inputProps()}>
-                <option>-- Loading Options... --</option>
+                <option>{translatePage('forms.loading')}</option>
               </select>
             );
           }
@@ -238,7 +256,7 @@ export const FormRow = withAppContext(
 
           return (
             <select {...inputProps()}>
-              <option>-- Select --</option>
+              <option>{translatePage('forms.select')}</option>
               {finalOptions.map((option, idx) => {
                 const key = `option_${idx}_`;
                 if (typeof option !== "object") {
@@ -266,7 +284,7 @@ export const FormRow = withAppContext(
             loadOptionSourceFromRemote(field.name, optionSource);
             return (
               <select {...inputProps()}>
-                <option>-- Loading Options... --</option>
+                <option>{translatePage('forms.loading')}</option>
               </select>
             );
           }
@@ -404,7 +422,7 @@ export const FormRow = withAppContext(
           return (
             <textarea
               {...inputProps(
-                customLabels?.placeholders?.text || "Enter text..."
+                customLabels?.placeholders?.text || translatePage('placeholders.text')
               )}
             ></textarea>
           );
@@ -413,7 +431,7 @@ export const FormRow = withAppContext(
           return (
             <input
               type="number"
-              {...inputProps(customLabels?.placeholders?.number || "0")}
+              {...inputProps(customLabels?.placeholders?.number || translatePage('placeholders.number'))}
               onChange={(e) =>
                 changeCallback(field.name, e.target.valueAsNumber)
               }
@@ -423,27 +441,21 @@ export const FormRow = withAppContext(
           return (
             <input
               type="color"
-              {...inputProps(
-                customLabels?.placeholders?.color || "Enter color..."
-              )}
+              {...inputProps(customLabels?.placeholders?.color || translatePage('placeholders.color'))}
             />
           );
         case "email":
           return (
             <input
               type="email"
-              {...inputProps(
-                customLabels?.placeholders?.email || "Enter email..."
-              )}
+              {...inputProps(customLabels?.placeholders?.email || translatePage('placeholders.email'))}
             />
           );
         case "password":
           return (
             <input
               type="password"
-              {...inputProps(
-                customLabels?.placeholders?.password || "Enter password..."
-              )}
+              {...inputProps(customLabels?.placeholders?.password || translatePage('placeholders.password'))}
             />
           );
         case "hidden":
@@ -456,7 +468,7 @@ export const FormRow = withAppContext(
               placeholder={
                 field.placeholder ||
                 customLabels?.placeholders?.file ||
-                "Select file..."
+                translatePage('placeholders.file')
               }
               name={field.name || "file"}
               disabled={field.readonly}
@@ -469,9 +481,7 @@ export const FormRow = withAppContext(
           return (
             <input
               type="date"
-              {...inputProps(
-                customLabels?.placeholders?.date || "Enter date..."
-              )}
+              {...inputProps(customLabels?.placeholders?.date || translatePage('placeholders.date'))}
             />
           );
         case "text":
@@ -479,9 +489,7 @@ export const FormRow = withAppContext(
           return (
             <input
               type="text"
-              {...inputProps(
-                customLabels?.placeholders?.text || "Enter text..."
-              )}
+              {...inputProps(customLabels?.placeholders?.text || translatePage('placeholders.text'))}
             />
           );
       }
@@ -491,7 +499,7 @@ export const FormRow = withAppContext(
       <div className={`form-row ${direction || "row"}`}>
         {field.type !== "hidden" && (
           <label>
-            {field.label || field.originalName}
+            {getFieldLabel()}
             {field.required ? " *" : ""}
           </label>
         )}
@@ -503,7 +511,7 @@ export const FormRow = withAppContext(
             <i
               title={clearLabel}
               onClick={() => onChange(field.name, "", true)}
-              aria-label="Clear"
+              aria-label={translatePage('aria.clear')}
               className="clear-input fa fa-times"
             ></i>
           )}

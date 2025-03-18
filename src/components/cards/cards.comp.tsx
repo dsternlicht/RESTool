@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { usePageTranslation } from "../../hooks/usePageTranslation";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Skeleton from "react-loading-skeleton";
 
@@ -11,10 +12,13 @@ import { IPaginationState } from "../../common/models/states.model";
 import { dataHelpers } from "../../helpers/data.helpers";
 import { Button } from "../button/button.comp";
 import { Pagination } from "../pagination/pagination.comp";
+import { IAppContext } from "../app.context";
+import { withAppContext } from "../withContext/withContext.comp";
 
 import "./cards.scss";
 
 interface IProps {
+  context: IAppContext;
   items: any[];
   pagination?: IPaginationState;
   callbacks: {
@@ -30,16 +34,10 @@ interface IProps {
   customLabels?: ICustomLabels;
 }
 
-export const Cards = ({
-  items,
-  fields,
-  callbacks,
-  customActions,
-  customLabels,
-  pagination,
-}: IProps) => {
-  const editLabel: string = customLabels?.buttons?.editItem || "Edit";
-  const deleteLabel: string = customLabels?.buttons?.deleteItem || "Delete";
+export const Cards = withAppContext(({ context, items, fields, callbacks, customActions, customLabels, pagination }: IProps) => {
+  const { translatePage } = usePageTranslation(context.activePage?.id);
+  const editLabel: string = customLabels?.buttons?.editItem || translatePage('buttons.editItem');
+  const deleteLabel: string = customLabels?.buttons?.deleteItem || translatePage('buttons.deleteItem');
   const paginationCallbacks = {
     nextPage:
       callbacks.getNextPage ||
@@ -171,7 +169,7 @@ export const Cards = ({
                     }
                   }}
                 >
-                  {field.label || field.name}:{" "}
+                  {field.label || translatePage(`fields.${field.name}.label`) || field.name}:{" "}
                 </label>
               )}
               {renderRow(field, item, value)}
@@ -193,7 +191,7 @@ export const Cards = ({
               key={`card_${cardIdx}_${fieldIdx}`}
             >
               {field.type !== "image" && (
-                <label>{field.label || field.name}: </label>
+                <label>{field.label || translatePage(`fields.${field.name}.label`) || field.name}: </label>
               )}
               <Skeleton duration={0.6} />
             </div>
@@ -216,8 +214,8 @@ export const Cards = ({
     if (
       pagination?.type === "infinite-scroll" &&
       document.body.clientHeight <= window.innerHeight &&
-      callbacks.getNextPage &&
-      pagination?.hasNextPage
+      pagination?.hasNextPage &&
+      callbacks.getNextPage
     ) {
       callbacks.getNextPage();
     }
@@ -245,8 +243,9 @@ export const Cards = ({
         <Pagination
           callbacks={paginationCallbacks}
           pagination={pagination}
+          customLabels={customLabels}
         ></Pagination>
       )}
     </React.Fragment>
   );
-};
+});

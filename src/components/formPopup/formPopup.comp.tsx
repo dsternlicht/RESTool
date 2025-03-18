@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { usePageTranslation } from '../../hooks/usePageTranslation';
 import { toast } from 'react-toastify';
 
 import { Popup } from '../popup/popup.comp';
@@ -25,6 +26,7 @@ const unflatten = require('flat').unflatten;
 interface IProps {
   context: IAppContext
   title: string
+  type: string
   successMessage: string
   fields: IConfigInputField[]
   rawData?: any
@@ -34,12 +36,13 @@ interface IProps {
   submitCallback: (body: any, containFiles: boolean, queryParams: IQueryParam[]) => void
 }
 
-export const FormPopup = withAppContext(({ context, title, successMessage, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
+export const FormPopup = withAppContext(({ context, title, type, successMessage, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
   const fieldsCopy: IConfigInputField[] = fields.map(field => ({
     ...field,
     showFieldWhen: field.showFieldWhen
   }));
   const { httpService, activePage, config } = context;
+  const { translatePage } = usePageTranslation(activePage?.id);
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
@@ -56,7 +59,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
           method: actualMethod || 'get',
           origUrl: url,
           queryParams,
-          headers: Object.assign({}, pageHeaders,  requestHeaders || {}),
+          headers: Object.assign({}, pageHeaders, requestHeaders || {}),
           rawData,
           responseType
         });
@@ -71,8 +74,8 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
           finalRawData = extractedData;
         }
       } catch (e) {
-        console.error('Could not load single item\'s data.', e);
-        toast.error('Could not load single item\'s data.');
+        console.error(translatePage('forms.errors.loadItemFailed'), e);
+        toast.error(translatePage('forms.errors.loadItemFailed'));
       }
     }
 
@@ -92,8 +95,8 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
 
       const lookup = () => {
         let objToLookIn = finalRawData;
-        for(const pathElem of dataPathSplit) {
-          if(objToLookIn[pathElem] !== undefined && objToLookIn[pathElem] !== null) {
+        for (const pathElem of dataPathSplit) {
+          if (objToLookIn[pathElem] !== undefined && objToLookIn[pathElem] !== null) {
             objToLookIn = objToLookIn[pathElem];
           } else {
             return undefined;
@@ -180,17 +183,17 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
         if (Array.isArray(field.value)) return field.value.length === 0;
         return false;
       }
-      
+
       // Replace the validation code with:
       if (field.required && field.type !== 'boolean' && isFieldValueEmpty(field)) {
-        validationError = 'Please fill up all required fields.';
+        validationError = translatePage('forms.errors.requiredFields');
       }
 
       if (dataHelpers.checkIfFieldIsObject(field) && field.value) {
         try {
           finalObject[field.name] = JSON.parse(field.value);
         } catch (e) {
-          validationError = `Invalid JSON for field "${field.name}".`;
+          validationError = translatePage('forms.errors.invalidJson', { field: field.name });
         }
       }
 
@@ -248,7 +251,7 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
   function shouldFieldBeVisible(field: IConfigInputField, fields: IConfigInputField[]): boolean {
     if (!field.showFieldWhen) return true;
     if (typeof field.showFieldWhen !== 'function') {
-      console.warn('showFieldWhen must be a function');
+      console.warn(translatePage('common.warnings.showFieldWhenFunction'));
       return true;
     }
     return field.showFieldWhen(fields);
@@ -287,7 +290,14 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
                   })
                 }
                 <div className="buttons-wrapper center">
-                  <Button type="submit" onClick={submitForm} >{customLabels?.buttons?.submitItem || 'Submit'}</Button>
+                  <Button type="submit" onClick={submitForm}>
+                    {(customLabels?.buttons?.submitItem ||
+                      type === 'add' ? translatePage('buttons.submitAdd') :
+                      type === 'action' ? translatePage('buttons.submitAction') :
+                        type === 'update' ? translatePage('buttons.submitUpdate') :
+                          '')
+                    }
+                  </Button>
                 </div>
               </form>
           }

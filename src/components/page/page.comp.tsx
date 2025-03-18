@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { usePageTranslation } from "../../hooks/usePageTranslation";
 import { useParams, useHistory } from "react-router-dom";
 import * as QueryString from "query-string";
 import { toast } from "react-toastify";
@@ -51,7 +52,7 @@ interface IProps {
 
 interface IPopupProps {
   type: "add" | "update" | "action";
-  title: string;
+  title: string | undefined;
   successMessage: string;
   config: IConfigPostMethod | IConfigPutMethod;
   submitCallback: (body: any, containFiles: boolean) => void;
@@ -185,21 +186,22 @@ const PageComp = ({ context }: IProps) => {
     ...config?.customLabels,
     ...activePage?.customLabels,
   };
-  const addItemLabel = customLabels?.buttons?.addItem || "+ Add Item";
-  const addItemFormTitle = customLabels?.formTitles?.addItem || "Add Item";
-  const editItemFormTitle = customLabels?.formTitles?.editItem || "Update Item";
+  const { translatePage } = usePageTranslation(page);
+  const addItemLabel = customLabels?.buttons?.addItem || translatePage('buttons.addItem');
+  const addItemFormTitle = customLabels?.formTitles?.addItem || translatePage('formTitles.addItem');
+  const editItemFormTitle = customLabels?.formTitles?.editItem || translatePage('formTitles.editItem');
   const addItemSuccessMessage = customLabels?.successMessages?.addItem !== undefined
     ? customLabels.successMessages.addItem
-    : "Item added successfully";
+    : translatePage('successMessages.addItem');
   const editItemSuccessMessage = customLabels?.successMessages?.editItem !== undefined
     ? customLabels.successMessages.editItem
-    : "Item updated successfully";
+    : translatePage('successMessages.editItem');
   const deleteItemSuccessMessage = customLabels?.successMessages?.deleteItem !== undefined
     ? customLabels.successMessages.deleteItem
-    : "Item deleted successfully";
+    : translatePage('successMessages.deleteItem');
   const customActionSuccessMessage = customLabels?.successMessages?.customActions !== undefined
     ? customLabels.successMessages.customActions
-    : "Action performed successfully";
+    : translatePage('successMessages.customActions');
   const { initQueryParams, initialPagination } =
     buildInitQueryParamsAndPaginationState(
       getAllConfig?.queryParams || [],
@@ -484,9 +486,7 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function deleteItem(item: any) {
-    const approved: boolean = window.confirm(
-      "Are you sure you want to delete this item?"
-    );
+    const approved: boolean = window.confirm(translatePage('common.confirmDelete'));
 
     if (!approved) {
       return;
@@ -958,8 +958,8 @@ const PageComp = ({ context }: IProps) => {
     <div className="app-page">
       <header className="app-page-header">
         <hgroup>
-          <h2>{activePage?.name}</h2>
-          {activePage?.description && <h4>{activePage?.description}</h4>}
+          <h2>{translatePage('title') || activePage?.name} </h2>
+          <h4>{translatePage('description') || activePage?.description}</h4>
         </hgroup>
         {postConfig && (
           <Button
@@ -982,6 +982,7 @@ const PageComp = ({ context }: IProps) => {
       {openedPopup && (
         <FormPopup
           title={openedPopup.title}
+          type={openedPopup.type}
           successMessage={openedPopup.successMessage}
           closeCallback={closeFormPopup}
           submitCallback={openedPopup.submitCallback}

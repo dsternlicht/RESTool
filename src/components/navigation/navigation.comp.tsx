@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
+import { usePageTranslation } from '../../hooks/usePageTranslation';
 import { IAppContext } from '../app.context';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Button } from '../button/button.comp';
@@ -14,15 +15,16 @@ interface IProps {
 const NavigationComp = ({ context: { config, authService, loggedInUsername, setLoggedInUsername } }: IProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
   const { replace } = useHistory();
+  const { translate } = usePageTranslation();
 
   async function logout() {
     try {
       await authService.logout();
       setLoggedInUsername(null);
-      toast.info('Logged out successfully');
+      toast.info(translate('auth.logoutSuccess'));
       replace('/login');
     } catch (error) {
-      toast.error('Logout failed');
+      toast.error(translate('auth.logoutFailed'));
     }
   }
 
@@ -40,20 +42,21 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
         <div className="app-nav-links">
           {
             (config?.pages || []).map((page, idx) => {
+              const pageName = translate(`pages.${page.id}.title`) || page.id;
               return page?.customLink ?
-                <a href={page?.customLink} target="_blank" key={`page_${idx}`}>{page.name}</a> :
+                <a href={page?.customLink} target="_blank" key={`page_${idx}`}>{pageName}</a> :
                 <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}
-                  onClick={() => setIsOpened(false)}>{page.name}</NavLink>
+                  onClick={() => setIsOpened(false)}>{pageName}</NavLink>
             })
           }
         </div>
         {!!loggedInUsername && (
           <div className="app-nav-logout">
             <NavLink to="/change-password" className="change-password-link">
-              Change Password
+              {translate('auth.changePassword')}
             </NavLink>
             <NavLink to="/login" onClick={logout} className="logout-link">
-              Logout ({loggedInUsername})
+              {translate('auth.logout')} ({loggedInUsername})
             </NavLink>
           </div>
         )}

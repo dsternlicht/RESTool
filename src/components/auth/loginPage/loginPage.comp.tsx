@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { usePageTranslation } from '../../../hooks/usePageTranslation';
 import { Button } from '../../button/button.comp';
 import { toast } from 'react-toastify';
 
@@ -15,6 +16,7 @@ export const LoginPage = withAppContext(
   ({ context }: IProps) => {
     const history = useHistory();
     const location = useLocation();
+    const { translate } = usePageTranslation();
     const queryParams = new URLSearchParams(location.search);
     const returnUrl = queryParams.get('return');
     const [user, setUser] = useState<string>('');
@@ -27,7 +29,7 @@ export const LoginPage = withAppContext(
         const { passwordChangeRequired } = await authService.login(user, pwd);
         setLoggedInUsername(user);
         if (passwordChangeRequired) {
-          toast.info('Password change required');
+          toast.info(translate('auth.passwordChangeRequired'));
           history.replace('/change-password');
           return;
         }
@@ -38,8 +40,7 @@ export const LoginPage = withAppContext(
           history.replace('/');
         }
       } catch (error) {
-        toast.error('Login failed');
-        console.error(error);
+        toast.error(translate('auth.loginFailed'));
         setPwd('');
         return;
       }
@@ -57,15 +58,27 @@ export const LoginPage = withAppContext(
       <div className="auth-page">
         <form className='form-content' onSubmit={submitForm}>
           <div className='form-row row'>
-            <label>User</label>
-            <input type="text" placeholder='Enter user....' value={user} onChange={handleUserChange} />
+            <label>{translate('auth.labels.user')}</label>
+            <input 
+              type="text" 
+              placeholder={translate('auth.placeholders.user')}
+              value={user} 
+              onChange={handleUserChange} 
+            />
           </div>
           <div className='form-row row'>
-            <label>Password</label>
-            <input type="password" placeholder='Enter password...' value={pwd} onChange={handlePwdChange} />
+            <label>{translate('auth.labels.password')}</label>
+            <input 
+              type="password" 
+              placeholder={translate('auth.placeholders.password')}
+              value={pwd} 
+              onChange={handlePwdChange} 
+            />
           </div>
           <div className="buttons-wrapper center">
-            <Button type="submit" onClick={submitForm} color="green">Submit</Button>
+            <Button type="submit" onClick={submitForm} color="green">
+              {translate('auth.login')}
+            </Button>
           </div>
         </form>
       </div>

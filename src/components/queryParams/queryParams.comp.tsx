@@ -3,20 +3,25 @@ import React, { useState, useEffect } from 'react';
 import { IConfigInputField, IConfigPagination } from '../../common/models/config.model';
 import { FormRow } from '../formRow/formRow.comp';
 import { Button } from '../button/button.comp';
+import { usePageTranslation } from '../../hooks/usePageTranslation';
+import { withAppContext } from '../withContext/withContext.comp';
+import { IAppContext } from '../app.context';
+import { dataHelpers } from "../../helpers/data.helpers";
 
 import './queryParams.scss';
-import {dataHelpers} from "../../helpers/data.helpers";
 
 interface IProps {
-  initialParams: IConfigInputField[]
-  paginationConfig?: IConfigPagination
-  submitCallback: (queryParams: IConfigInputField[], reset?: boolean) => void
+  context: IAppContext;
+  initialParams: IConfigInputField[];
+  paginationConfig?: IConfigPagination;
+  submitCallback: (queryParams: IConfigInputField[], reset?: boolean) => void;
 }
 
-export const QueryParams = ({ initialParams, paginationConfig, submitCallback }: IProps) => {
+const QueryParamsComp = ({ context, initialParams, paginationConfig, submitCallback }: IProps) => {
+  const { translatePage } = usePageTranslation(context.activePage?.id);
   const [queryParams, setQueryParams] = useState<IConfigInputField[]>(initialParams);
 
-  function submit(e?: any) {
+  function submit(e?: React.FormEvent) {
     if (e) {
       e.preventDefault();
     }
@@ -31,7 +36,7 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
   function formChanged(fieldName: string, value: any, submitAfterChange?: boolean) {
     const updatedQueryParams: IConfigInputField[] = [...queryParams];
 
-    dataHelpers.updateInputFieldFromFields(fieldName, value, updatedQueryParams)
+    dataHelpers.updateInputFieldFromFields(fieldName, value, updatedQueryParams);
 
     setQueryParams(updatedQueryParams);
 
@@ -55,7 +60,7 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
 
   return (
     <section className="query-params-form">
-      <h5>Query Params:</h5>
+      <h5>{translatePage('forms.queryParams.title')}</h5>
       <form onSubmit={submit}>
         {
           queryParams.map((queryParam, idx) => {
@@ -69,8 +74,10 @@ export const QueryParams = ({ initialParams, paginationConfig, submitCallback }:
             );
           })
         }
-        <Button type="submit" onClick={submit}>Submit</Button>
+        <Button type="submit" onClick={submit}>{translatePage('buttons.submitQuery')}</Button>
       </form>
     </section>
   );
 };
+
+export const QueryParams = withAppContext(QueryParamsComp);
