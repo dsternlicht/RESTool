@@ -1,7 +1,7 @@
 .form-row {
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 15px;
   position: relative;
 
@@ -86,21 +86,15 @@
     }
   }
   
-  .field-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    input[type=text], 
-    select, 
-    textarea, 
-    input[type=url], 
-    input[type=number], 
-    input[type=date], 
-    input[type=email], 
-    input[type=password], 
-    input[type=date] {
+  > input[type=text], 
+  > select, 
+  > textarea, 
+  > input[type=url], 
+  > input[type=number], 
+  > input[type=date], 
+  > input[type=email], 
+  > input[type=password], 
+  > input[type=date] {
     width: 100%;
     padding: 9px;
     border: 1px solid rgba(0,0,0,0.1);
@@ -126,52 +120,33 @@
       color: #c5c9d2;
     }
 
-      &::selection {
-        background-color: #AAB0BE;
-        color: #fff;
-      }
-      
-      &:focus {
-        color: #1d1e21;
-        box-shadow: 0 0 3px rgba(0,0,0,0.35);
-        outline: none;
-      }
+    &::selection {
+      background-color: #AAB0BE;
+      color: #fff;
     }
+    
+    &:focus {
+      color: #1d1e21;
+      box-shadow: 0 0 3px rgba(0,0,0,0.35);
+      outline: none;
+    }
+  }
 
-    textarea {
-      height: 120px;
-      min-height: 120px;
-    }
+  textarea {
+    height: 120px;
+    min-height: 120px;
+  }
 
-    input[type=text] {
-      padding-right: 25px;
-    }
+  input[type=text] {
+    padding-right: 25px;
+  }
 
-    input[type=date] {
-      font-family: 'Open Sans', sans-serif;
-    }
+  input[type=date] {
+    font-family: 'Open Sans', sans-serif;
+  }
 
-    input[type=checkbox] {
-      flex: 1;
-    }
-
-    .clear-input {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .help-text {
-      color: #666;
-      font-style: italic;
-      font-size: 12px;
-      margin-top: 2px;
-    }
-
-    .field-input {
-      position: relative;
-    }
+  input[type=checkbox] {
+    flex: 1;
   }
 
   .jsoneditor {
