@@ -70,6 +70,17 @@ export const FormRow = withAppContext(
       return field.originalName;
     };
 
+    const getHelpText = () => {
+      const pageId = activePage?.id;
+      if (pageId && field.originalName) {
+        const helpText = translatePage(`fields.${field.originalName}.helpText`, { returnNull: true });
+        if (helpText) {
+          return helpText;
+        }
+      }
+      return null;
+    };
+
     async function loadOptionSourceFromRemote(
       fieldName: string,
       optionSource: IConfigOptionSource,
@@ -503,18 +514,25 @@ export const FormRow = withAppContext(
             {field.required ? " *" : ""}
           </label>
         )}
-        {renderFieldInput(field, onChange)}
-        {showReset &&
-          !field.readonly &&
-          field.value &&
-          field.value.length > 0 && (
-            <i
-              title={clearLabel}
-              onClick={() => onChange(field.name, "", true)}
-              aria-label={translatePage('aria.clear')}
-              className="clear-input fa fa-times"
-            ></i>
+        <div className="field-container">
+          <div className="field-input">
+            {renderFieldInput(field, onChange)}
+            {showReset &&
+              !field.readonly &&
+              field.value &&
+              field.value.length > 0 && (
+                <i
+                  title={clearLabel}
+                  onClick={() => onChange(field.name, "", true)}
+                  aria-label={translatePage('aria.clear')}
+                  className="clear-input fa fa-times"
+                ></i>
+              )}
+          </div>
+          {getHelpText() && (
+            <div className="help-text">{getHelpText()}</div>
           )}
+        </div>
       </div>
     );
   }

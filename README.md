@@ -897,11 +897,11 @@ For example, for the "Characters" page:
 }
 ```
 
-##### Field labels
+##### Field labels and help texts
 
-Define the field labels in the language files under the namespace of the page.
+Define the field labels and optional help texts in the language files under the namespace of the page.
 Use the `id` of the page as defined in the configuration file.
-Then define the translations of the field labels under the `fields` property with the field `name` as the key.
+Then define the translations of the field labels and help texts under the `fields` property with the field `name` as the key.
 For example, for the "Characters" page:
 
 ```json
@@ -909,8 +909,14 @@ For example, for the "Characters" page:
   "pages": {
     "characters": {
       "fields": {
-        "name": "Nom",
-        "age": "Âge",
+        "name": {
+          "label": "Nom",
+          "helpText": "Entrez le nom complet du personnage"
+        },
+        "age": {
+          "label": "Âge",
+          "helpText": "Âge du personnage en années"
+        }
       }
     }
   }
