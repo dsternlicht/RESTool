@@ -486,9 +486,7 @@ const PageComp = ({ context }: IProps) => {
   }
 
   async function deleteItem(item: any) {
-    const approved: boolean = window.confirm(
-      "Are you sure you want to delete this item?"
-    );
+    const approved: boolean = window.confirm(translatePage('common.confirmDelete'));
 
     if (!approved) {
       return;
