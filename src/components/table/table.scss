@@ -3,7 +3,7 @@
 .table-wrapper {
   position: relative;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
 }
 
 .pure-table {
@@ -21,7 +21,6 @@
 
   tbody tr {
     transition: background 0.1s ease;
-    
     &:hover {
       background: #f7f7f7;
     }
@@ -40,10 +39,75 @@
     padding-top: 21px;
     padding-bottom: 21px;
     font-weight: 700;
-    position: sticky;
-    top: 0;
     background: #fff;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+    .th-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .help-icon {
+        position: relative;
+        display: inline-block;
+        color: #999;
+
+        .help-text {
+          visibility: hidden;
+          opacity: 0;
+          position: absolute;
+          min-width: 120px;
+          max-width: 250px;
+          left: 50%;
+          margin-left: -60px;
+          bottom: 100%;  /* Use half of the width (120/2 = 60), to center the tooltip */
+          z-index: 1000;
+
+          font-family: 'Open Sans', sans-serif;
+          color: black;
+          background-color: #e6e6e6;
+          padding: 8px 12px;
+          border-radius: 4px;
+          margin-bottom: 10px;
+          transition: opacity 0.5s ease, visibility 0.5s ease;
+
+          text-align: left;
+          white-space: normal;
+          line-height: 1.4;
+          font-size: 14px;
+          text-transform: none;
+
+          // After element vor triangle
+          &::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #e6e6e6 transparent transparent transparent;
+          }
+        }
+      }
+
+      .help-icon {
+        &:hover {
+          .help-text {
+            visibility: visible;
+            opacity: 1;
+          }
+
+          opacity: 1;
+        }
+
+        .help-text {
+          transition: opacity 0.15s ease-in-out;
+        }
+      }
+
+
+    }
   }
 
   td {
