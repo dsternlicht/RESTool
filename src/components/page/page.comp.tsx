@@ -984,6 +984,7 @@ const PageComp = ({ context }: IProps) => {
       {openedPopup && (
         <FormPopup
           title={openedPopup.title}
+          type={openedPopup.type}
           successMessage={openedPopup.successMessage}
           closeCallback={closeFormPopup}
           submitCallback={openedPopup.submitCallback}

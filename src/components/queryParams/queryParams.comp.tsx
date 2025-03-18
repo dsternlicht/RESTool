@@ -74,7 +74,7 @@ const QueryParamsComp = ({ context, initialParams, paginationConfig, submitCallb
             );
           })
         }
-        <Button type="submit" onClick={submit}>{translatePage('buttons.submit')}</Button>
+        <Button type="submit" onClick={submit}>{translatePage('buttons.submitQuery')}</Button>
       </form>
     </section>
   );

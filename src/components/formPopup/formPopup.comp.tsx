@@ -26,6 +26,7 @@ const unflatten = require('flat').unflatten;
 interface IProps {
   context: IAppContext
   title: string
+  type: string
   successMessage: string
   fields: IConfigInputField[]
   rawData?: any
@@ -35,7 +36,7 @@ interface IProps {
   submitCallback: (body: any, containFiles: boolean, queryParams: IQueryParam[]) => void
 }
 
-export const FormPopup = withAppContext(({ context, title, successMessage, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
+export const FormPopup = withAppContext(({ context, title, type, successMessage, fields, rawData, getSingleConfig, methodConfig, submitCallback, closeCallback }: IProps) => {
   const fieldsCopy: IConfigInputField[] = fields.map(field => ({
     ...field,
     showFieldWhen: field.showFieldWhen
@@ -290,7 +291,12 @@ export const FormPopup = withAppContext(({ context, title, successMessage, field
                 }
                 <div className="buttons-wrapper center">
                   <Button type="submit" onClick={submitForm}>
-                    {customLabels?.buttons?.submitItem || translatePage('buttons.submitItem')}
+                    {(customLabels?.buttons?.submitItem ||
+                      type === 'add' ? translatePage('buttons.submitAdd') :
+                      type === 'action' ? translatePage('buttons.submitAction') :
+                        type === 'update' ? translatePage('buttons.submitUpdate') :
+                          '')
+                    }
                   </Button>
                 </div>
               </form>

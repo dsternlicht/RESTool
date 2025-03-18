@@ -41,8 +41,10 @@
       "closeForm": "Close",
       "deleteItem": "Delete",
       "editItem": "Edit",
-      "submit": "Submit",
-      "submitItem": "Submit"
+      "submitAction": "Submit",
+      "submitAdd": "Submit",
+      "submitUpdate": "Submit",
+      "submitQuery": "Submit"
     },
     "common": {
       "actions": "Actions",
@@ -100,7 +102,7 @@
   "pages": {
     "<example-page-id>": {
       "buttons": {
-        "submit": "<submit>"
+        "submitAdd": "<submit>"
       },
       "description": "<description>",
       "title": "<title>"
