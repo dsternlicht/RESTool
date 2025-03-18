@@ -136,9 +136,9 @@ Each **page** is an object and represents a resource in your API. It should have
 
 | Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
-| name | `string` | true | The name of the page. This will be presented in the menu. <br> ⚠️ Deprecated. Define in i18n language files under the page's namespace. |
+| name | `string` | true | The name of the page. This will be presented in the menu. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
-| description | `string` | false | A short description about the page and its usage.  <br> ⚠️ Deprecated. Define in i18n language files under the page's namespace.|
+| description | `string` | false | A short description about the page and its usage. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
@@ -653,7 +653,7 @@ The list of fields you want to present in the main view of the app. Each one is 
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The property name of the field that contains the value in the API result. |
 | type | `string` | true | This will help RESTool to render the main view. See a list of available type below. |
-| label | `string` | false | ⚠️ Deprecated. Define field labels in i18n language files. See [Internationalization (i18n)](#internationalization-i18n) section. |
+| label | `string` | false | A label that describes the field. Will be presented as table headers in the main view. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | dataPath | `string` | false | Read more about dataPath [here](#data-path).
 | filterable | `boolean` | false | Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields. |
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
