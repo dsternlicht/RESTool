@@ -77,7 +77,7 @@ export const LoginPage = withAppContext(
           </div>
           <div className="buttons-wrapper center">
             <Button type="submit" onClick={submitForm} color="green">
-              {translate('buttons.login')}
+              {translate('auth.login')}
             </Button>
           </div>
         </form>
