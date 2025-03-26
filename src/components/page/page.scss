@@ -23,10 +23,17 @@
   }
 
   .add-item {
+    display: flex;
+    align-items: center;
     font-size: 18px;
     padding: 12px 30px;
     background-color: v(addButtonBackground, #1cb841);
     color: v(addButtonText, #ffffff);
+
+    i {
+      margin-right: 8px;
+      font-size: 10px;
+    }
 
     &:hover {
       background-color: v(addButtonHoverBackground, lighten(#1cb841, 10%));

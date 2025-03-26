@@ -36,7 +36,7 @@
     },
     "buttons": {
       "addArrayItem": "Add Item",
-      "addItem": "+ Add Item",
+      "addItem": "Add Item",
       "clearInput": "Clear",
       "closeForm": "Close",
       "deleteItem": "Delete",

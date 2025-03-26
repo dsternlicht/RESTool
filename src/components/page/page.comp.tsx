@@ -974,7 +974,7 @@ const PageComp = ({ context }: IProps) => {
               })
             }
           >
-            {addItemLabel}
+            <i className={`fa fa-${postConfig?.icon || 'plus'}`} aria-hidden="true"></i> {addItemLabel}
           </Button>
         )}
       </header>

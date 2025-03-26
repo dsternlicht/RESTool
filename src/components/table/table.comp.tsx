@@ -131,7 +131,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
           <div className="actions-wrapper">
             {callbacks.put && (
               <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
-                <i className="fa fa-pencil-square-o" aria-hidden="true" />
+                <i className={`fa fa-${context.activePage?.methods?.put?.icon || 'pencil-square-o'}`} aria-hidden="true" />
               </Button>
             )}
             {customActions &&
@@ -153,7 +153,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
                 onClick={() => callbacks.delete?.(item)}
                 title={deleteLabel}
               >
-                <i className="fa fa-times" aria-hidden="true"></i>
+                <i className={`fa fa-${context.activePage?.methods?.delete?.icon || 'times'}`} aria-hidden="true"></i>
               </Button>
             )}
           </div>
