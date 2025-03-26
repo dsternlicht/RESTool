@@ -71,14 +71,10 @@ export const FormRow = withAppContext(
     };
 
     const getHelpText = () => {
-      const pageId = activePage?.id;
-      if (pageId && field.originalName) {
-        const helpText = translatePage(`fields.${field.originalName}.helpText`, { returnNull: true });
-        if (helpText) {
-          return helpText;
-        }
+      if (!activePage?.id || !field.originalName) {
+        return null;
       }
-      return null;
+      return translatePage(`fields.${field.originalName}.helpText`, { returnNull: true });
     };
 
     async function loadOptionSourceFromRemote(
