@@ -687,6 +687,15 @@ Here's a list of available display field types:
 
 <br />
 
+#### Help text
+Help text provides additional context or instructions for fields in forms and tables. 
+Help text can be defined in your i18n language files under each page's namespace. The text appears differently depending on the layout:
+
+- In card layout: Displayed below the field name
+- In table layout: Shown when hovering over a help icon next to the field name
+
+To add help text for a field, define it in your language file under the page's fields namespace. See [Internationalization (i18n)](#internationalization-i18n) section.
+
 ### Input fields
 
 A list of fields you want us to send as the body of the request. Each one is an object and could have the following properties:
