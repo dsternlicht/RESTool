@@ -99,6 +99,10 @@
       "editItem": "Item updated successfully"
     }
   },
+  "navigation": {
+    "pages": "PAGES",
+    "userManagement": "USER MANAGEMENT"
+  },
   "pages": {
     "<example-page-id>": {
       "buttons": {
