@@ -139,6 +139,7 @@ Each **page** is an object and represents a resource in your API. It should have
 | name | `string` | true | The name of the page. This will be presented in the menu. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
 | description | `string` | false | A short description about the page and its usage. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
+| icon | `string` | false | Font Awesome icon name (without the 'fa-' prefix) to display next to the page name in navigation. For example: 'cog', 'user', 'key', etc. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |

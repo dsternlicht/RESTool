@@ -181,6 +181,10 @@
         "customLink": {
           "type": "string",
           "description": "External link to page"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Font Awesome icon name without the 'fa-' prefix to display next to the page name in navigation. For example: 'cog', 'user', 'key', etc."
         }
       },
       "required": [

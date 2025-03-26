@@ -8,6 +8,7 @@ export default {
       "name": "Cast & Characters",
       "id": "characters",
       "description": "Manage GOT characters location and budget.",
+      "icon": "users",
       "methods": {
         "getAll": {
           "label": "Get All",
@@ -165,6 +166,7 @@ export default {
       "name": "Employees",
       "id": "employees",
       "description": "Manage GOT employees, people and employees.",
+      "icon": "suitcase",
       "methods": {
         "getAll": {
           "label": "Get All",
@@ -260,6 +262,7 @@ export default {
       "name": "Deads",
       "id": "deads",
       "description": "Manage GOT deads 😵",
+      "icon": "frown-o",
       "methods": {
         "getAll": {
           "label": "Get All",

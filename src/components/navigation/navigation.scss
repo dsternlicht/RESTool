@@ -60,6 +60,16 @@
       margin: 0;
       font-size: 14px;
       line-height: 1.3em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        font-size: 14px;
+        width: 14px;
+        text-align: center;
+      }
+
       cursor: pointer;
       transition: 0.2s background-color ease 0s;
 
