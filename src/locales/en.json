@@ -105,7 +105,13 @@
         "submitAdd": "<submit>"
       },
       "description": "<description>",
-      "title": "<title>"
+      "title": "<title>",
+      "fields": {
+        "<field-name>": {
+          "label": "<label>",
+          "helpText": "<helpText>"
+        }
+      }
     }
   }
 }

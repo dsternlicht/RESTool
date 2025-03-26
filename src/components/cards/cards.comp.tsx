@@ -156,21 +156,28 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
               key={`card_${cardIdx}_${fieldIdx}`}
             >
               {field.type !== "image" && (
-                <label
-                  onClick={() => {
-                    if (field.queryShortcut) {
-                      callbacks.setQueryParam(
-                        field.queryShortcut.name,
-                        field.queryShortcut.value ||
-                          `${field.dataPath ? field.dataPath + "." : ""}${
-                            field.name
-                          }`
-                      );
-                    }
-                  }}
-                >
-                  {field.label || translatePage(`fields.${field.name}.label`) || field.name}:{" "}
-                </label>
+                <div className="card-row-header">
+                  <label
+                    onClick={() => {
+                      if (field.queryShortcut) {
+                        callbacks.setQueryParam(
+                          field.queryShortcut.name,
+                          field.queryShortcut.value ||
+                            `${field.dataPath ? field.dataPath + "." : ""}${
+                              field.name
+                            }`
+                        );
+                      }
+                    }}
+                  >
+                    {field.label || translatePage(`fields.${field.name}.label`) || field.name}:{" "}
+                  </label>
+                  {translatePage(`fields.${field.name}.helpText`, { returnNull: true }) && (
+                    <div className="help-text">
+                      {translatePage(`fields.${field.name}.helpText`)}
+                    </div>
+                  )}
+                </div>
               )}
               {renderRow(field, item, value)}
             </div>

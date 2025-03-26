@@ -29,8 +29,12 @@
   .card-row {
     margin: 0 20px 10px;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    
+    .card-row-header {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 4px;
+    }
 
     label {
       font-size: 14px;
@@ -39,7 +43,13 @@
       flex-shrink: 0;
     }
 
-    > *:not(label) {
+    .help-text {
+      color: #666;
+      font-style: italic;
+      font-size: 12px;
+    }
+
+    > *:not(.card-row-header) {
       flex: 1;
       word-break: break-word;
     }
