@@ -2,57 +2,54 @@
 @import '../common/styles/functions';
 
 .restool-app {
-  display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
-  min-height: 100vh;
-
   --nav-width: 260px;
 
-  @media screen and (max-width: 800px) {
-    flex-direction: column;
-  }
-
-  aside {
-    width: var(--nav-width);
-    background: v(navBackground, #3C3E6F);
-    color: v(navText, #fff);
-    box-shadow: inset -2px 0px 3px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    position: sticky;
-    top: 0;
-    height: 100vh;
+  .app-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
 
     @media screen and (max-width: 800px) {
-      height: auto;
-      width: 100%;
+      flex-direction: column;
     }
 
-    h1 {
-      padding: 20px;
-      margin: 0;
-      font-size: 20px;
-      font-weight: 300;
-      margin: 0;
-      height: 63px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      cursor: default;
+    aside {
+      width: var(--nav-width);
+      background: v(navBackground, #3C3E6F);
+      color: v(navText, #fff);
+      box-shadow: inset -2px 0px 3px rgba(0, 0, 0, 0.3);
+      z-index: 10;
 
       @media screen and (max-width: 800px) {
-        text-align: center;
+        height: auto;
+        width: 100%;
+      }
+
+      h1 {
+        padding: 20px;
+        margin: 0;
+        font-size: 20px;
+        font-weight: 300;
+        height: 63px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: default;
+
+        @media screen and (max-width: 800px) {
+          text-align: center;
+        }
       }
     }
-  }
-  
-  main {
-    position: relative;
-    flex: 1;
-    max-width: calc(100vw - 30px - var(--nav-width));
     
-    @media screen and (max-width: 800px) {
-      max-width: 100%;
+    main {
+      position: relative;
+      flex: 1;
+      max-width: calc(100vw - 30px - var(--nav-width));
+      
+      @media screen and (max-width: 800px) {
+        max-width: 100%;
+      }
     }
   }
 }

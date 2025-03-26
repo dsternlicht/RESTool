@@ -16,6 +16,33 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 
 <br />
 
+## Table of Contents
+
+- [What's New in V2?](#whats-new-in-v2)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+  - [Authorization](#auth-config)
+  - [Pages](#pages)
+  - [Methods](#methods)
+    - [`getAll` - additional properties](#getall---additional-properties)
+    - [`getSingle`](#getsingle)
+    - [`post`](#post)
+    - [`put` - additional properties](#put---additional-properties)
+    - [`delete`](#delete)
+  - [Pagination](#pagination)
+  - [Custom Actions](#custom-actions)
+  - [Custom Styles](#custom-styles)
+  - [Custom Labels](#custom-labels)
+  - [Display fields](#display-fields)
+  - [Input fields](#input-fields)
+  - [Logo Header](#logo-header)
+  - [Internationalization (i18n)](#internationalization-i18n)
+- [Development](#development)
+  - [Local Development](#local-development)
+  - [Consume from CDN](#consume-from-cdn)
+  - [Deploy](#deploy)
+- [Contributing](#contributing)
+
 ## What's New in V2?
 
 While RESTool originally was developed with Angular, we decided to rewrite it from scratch and move to **React**. The main reason we moved to React is the **community**. Since React is so popular we believe that choosing React over Angular will get a much wider **community support**.
@@ -528,6 +555,7 @@ Here's a list of variable names you may change:
 |--------------|-----|----------------------------------------------------------------|
 | appText | `string` | Root text color. |
 | appBackground | `string` | App background color. |
+| logoHeaderBackground | `string` | Logo header background color. |
 | navBackground | `string` | Navigation menu background color. |
 | navText | `string` | Navigation menu text color. |
 | navItemText | `string` | Navigation item text color. |
@@ -867,6 +895,14 @@ The field name will be `url`, the type will be `text`, and the data path will be
 
 
 <br />
+
+### Logo Header
+
+To add a logo at the top of the page:
+1. Add your logo image file named `logo.png` to this directory (`src/assets/images/`).
+2. The logo will automatically appear in the header when the file exists.
+3. The header will remain hidden if no logo file is present.
+
 
 ### Internationalization (i18n)
 
