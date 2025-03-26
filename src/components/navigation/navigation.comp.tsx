@@ -43,10 +43,17 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
           {
             (config?.pages || []).map((page, idx) => {
               const pageName = translate(`pages.${page.id}.title`) || page.id;
+              const icon = page.icon ? <i className={`fa fa-${page.icon}`} aria-hidden="true"></i> : null;
               return page?.customLink ?
-                <a href={page?.customLink} target="_blank" key={`page_${idx}`}>{pageName}</a> :
+                <a href={page?.customLink} target="_blank" key={`page_${idx}`}>
+                  {icon}
+                  <span className="nav-item-text">{pageName}</span>
+                </a> :
                 <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}
-                  onClick={() => setIsOpened(false)}>{pageName}</NavLink>
+                  onClick={() => setIsOpened(false)}>
+                  {icon}
+                  <span className="nav-item-text">{pageName}</span>
+                </NavLink>
             })
           }
         </div>

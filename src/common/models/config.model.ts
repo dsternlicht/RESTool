@@ -103,6 +103,7 @@ export interface IConfigPage {
   name: string;
   id: string;
   description: string;
+  icon?: string;
   requestHeaders?: any;
   methods?: IConfigMethods;
   customActions?: IConfigCustomAction[];
