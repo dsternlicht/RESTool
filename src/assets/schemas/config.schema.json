@@ -86,6 +86,10 @@
               "type": "string",
               "description": "App background color."
             },
+            "logoHeaderBackground": {
+              "type": "string",
+              "description": "Logo header bar background color."
+            },
             "navBackground": {
               "type": "string",
               "description": "Navigation menu background color."
