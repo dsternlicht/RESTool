@@ -120,7 +120,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
           );
           return (
             <td
-              className={field.truncate ? "truncate" : ""}
+              className={`${field.truncate ? "truncate" : ""} ${field.name}`}
               key={`td_${rowIdx}_${fieldIdx}`}
             >
               {renderTableCell(field, item, value)}
@@ -171,6 +171,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
               return (
                 <th
                   key={`th_${field.name}`}
+                  className={`${context.activePage?.id}-${field.name}`}
                   onClick={() => {
                     if (field.queryShortcut) {
                       callbacks.setQueryParam(
