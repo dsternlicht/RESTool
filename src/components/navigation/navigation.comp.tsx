@@ -66,9 +66,15 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
             )}
             <div className="app-nav-logout">
               <NavLink to="/change-password" className="change-password-link">
+                {config?.auth?.icons?.changePassword && (
+                  <i className={`fa fa-${config.auth.icons.changePassword}`} aria-hidden="true"></i>
+                )}{' '}
                 {translate('auth.changePassword')}
               </NavLink>
               <NavLink to="/login" onClick={logout} className="logout-link">
+                {config?.auth?.icons?.logout && (
+                  <i className={`fa fa-${config.auth.icons.logout}`} aria-hidden="true"></i>
+                )}{' '}
                 {translate('auth.logout')} ({loggedInUsername})
               </NavLink>
             </div>
