@@ -92,6 +92,7 @@ The `auth` property allows you to configure authentication endpoints. It has the
 | logoutEndpoint | `string` | true | The endpoint to send the logout request to. | Request: `POST` <br> Response: `200 OK` |
 | userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. | Request: `GET` <br> Response: `{ username: string }` |
 | changePasswordEndpoint | `string` | true | The endpoint to send password change requests to. | Request: `PUT { oldPassword: string, newPassword: string }` <br> Response: `200 OK` |
+| icons | `object` | false | Optional configuration for UI icons. Contains `changePassword` and `logout` properties that accept Font Awesome icon names. When not defined for an action, no icon will be shown. | Example: `{ changePassword: "retweet", logout: "sign-out" }` |
 
 Example auth configuration:
 ```json

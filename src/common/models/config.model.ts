@@ -14,6 +14,10 @@ export interface IAuthConfig {
   logoutEndpoint: string;
   userEndpoint: string;
   changePasswordEndpoint: string;
+  icons?: {
+    changePassword?: string;
+    logout?: string;
+  };
 }
 
 export interface IConfig {
