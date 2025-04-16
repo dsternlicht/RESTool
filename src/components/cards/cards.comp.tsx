@@ -51,22 +51,25 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
       }),
   };
 
-  function renderRow(
-    origField: IConfigDisplayField,
-    origItem: any,
-    value: any
-  ) {
-    if (origField.type === "boolean") {
-      value = value ? true : false;
-    }
+    function renderRow(
+      origField: IConfigDisplayField,
+      origItem: any,
+      value: any
+    ) {
+      if (origField.type === "boolean") {
+        value = value ? true : false;
+      }
 
-    if (value && typeof value === "object") {
-      return value.toString();
-    }
+      if (value && typeof value === "object") {
+        return value.toString();
+      }
 
-    switch (origField.type) {
-      case "text":
-        return <span>{value}</span>;
+      // Try to get translated value for text fields
+      const translatedValue = origField.name ? translatePage(`fields.${origField.name}.values.${value}`, { returnNull: true }) : null;
+      
+      switch (origField.type) {
+        case "text":
+          return <span>{translatedValue || value}</span>;
       case "boolean":
         return <div className={`bool ${value ? "true" : "false"}`}></div>;
       case "image":

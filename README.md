@@ -897,25 +897,45 @@ For example, for the "Characters" page:
 }
 ```
 
-##### Field labels
+##### Field labels and values
 
 Define the field labels in the language files under the namespace of the page.
 Use the `id` of the page as defined in the configuration file.
-Then define the translations of the field labels under the `fields` property with the field `name` as the key.
-For example, for the "Characters" page:
+Then define the translations under the `fields` property with the field `name` as the key.
+
+You can translate both field labels and field values:
 
 ```json
 {
   "pages": {
     "characters": {
       "fields": {
-        "name": "Nom",
-        "age": "Âge",
+        "name": {
+          "label": "Nom",  // Field label translation
+          "helpText": "Le nom du personnage"  // Optional help text
+        },
+        "age": {
+          "label": "Âge"
+        },
+        "confidentiality": {
+          "label": "Confidentialité",
+          "values": {  // Translates the actual field values
+            "public": "public",
+            "private": "privé"
+          }
+        }
       }
     }
   }
 }
 ```
+
+The `values` object allows you to translate the actual values that appear in select dropdowns and displays. For example, if you have a select field with options `["public", "private"]`, you can provide translations for those values. The original values will still be sent to the backend, but users will see the translated text in the UI.
+
+This works for:
+- Values displayed in tables (display field type: `text`)
+- Values displayed in cards (display field type: `text`)
+- Select dropdown options in forms (input field type: `select`). For this to work, the `options` property in the configuration file should be an array of value strings, not an array of objects containing `display` and `value` properties, as described in the [Input fields](#input-fields) section.
 
 ##### Other translations
 
