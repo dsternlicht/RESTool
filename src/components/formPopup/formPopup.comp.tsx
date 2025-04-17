@@ -165,16 +165,13 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
       // Add null value for fields that should not be visible
       if (!shouldFieldBeVisible(field, formFields)) {
         finalObject[field.name] = null;
-        if (containFiles) {
-          formData.append(field.name, '');
-        }
         return;
       }
 
       finalObject[field.name] = field.value;
 
       if (containFiles && !field.useInUrl) {
-        formData.append(field.name, field.value);
+        formData.append(field.name, field.value ?? '');
       }
 
       const isFieldValueEmpty = (field: IConfigInputField): boolean => {

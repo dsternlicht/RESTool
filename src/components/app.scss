@@ -14,6 +14,8 @@
   }
 
   aside {
+    display: flex;
+    flex-direction: column;
     width: var(--nav-width);
     background: v(navBackground, #3C3E6F);
     color: v(navText, #fff);

@@ -3,6 +3,7 @@
 .app-nav {
   text-align: left;
   overflow: auto;
+  height: 100%;
 
   .app-nav-opener {
     position: absolute;
@@ -26,6 +27,11 @@
   }
 
   .app-nav-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
     @media screen and (max-width: 800px) { 
       display: none;
       width: 100%;
@@ -35,14 +41,29 @@
       top: 0;
       overflow: auto;
       background: #3C3E6F;
-      justify-content: center;
-      align-items: center;
       text-align: center;
       padding: 40px;
     }
 
     &.opened {
       display: flex;
+    }
+
+    .app-nav-section {
+      width: 100%;
+
+      &:last-child {
+        margin-top: auto;
+      }
+    }
+
+    .app-nav-section-header {
+      color: v(navItemText, #fff);
+      font-size: 12px;
+      font-weight: bold;
+      padding: 10px 20px 10px 20px;
+      opacity: 0.7;
+      letter-spacing: 1px;
     }
 
     .app-nav-links {
@@ -94,7 +115,7 @@
     }
 
     .app-nav-logout {
-      padding-top: 2rem;
+      padding-bottom: 1rem;
     }
   }
 }

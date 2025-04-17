@@ -325,6 +325,10 @@
         },
         {
           "properties": {
+            "icon": {
+              "type": "string",
+              "description": "Font Awesome icon name for the add/create button. Defaults to 'plus' if not specified."
+            },
             "fields": {
               "type": "array",
               "items": {
@@ -346,6 +350,10 @@
         },
         {
           "properties": {
+            "icon": {
+              "type": "string",
+              "description": "Font Awesome icon name for the edit button. Defaults to 'pencil' if not specified."
+            },
             "fields": {
               "type": "array",
               "items": {
@@ -365,7 +373,19 @@
       "description": "The put method will be used to update an existing item in your API resource."
     },
     "delete": {
-      "$ref": "#/definitions/method",
+      "allOf": [
+        {
+          "$ref": "#/definitions/method"
+        },
+        {
+          "properties": {
+            "icon": {
+              "type": "string",
+              "description": "Font Awesome icon name for the delete button. Defaults to 'trash' if not specified."
+            }
+          }
+        }
+      ],
       "description": "The delete method will be used to delete an existing item in your API resource."
     },
     "inputField": {
