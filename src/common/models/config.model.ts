@@ -38,6 +38,7 @@ export interface ICustomStyles {
   vars?: {
     appText?: string;
     appBackground?: string;
+    logoHeaderBackground?: string;
     navBackground?: string;
     navText?: string;
     navItemText?: string;
