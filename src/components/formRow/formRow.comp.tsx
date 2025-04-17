@@ -267,9 +267,10 @@ export const FormRow = withAppContext(
               {finalOptions.map((option, idx) => {
                 const key = `option_${idx}_`;
                 if (typeof option !== "object") {
+                  const translatedValue = field.originalName ? translatePage(`fields.${field.originalName}.values.${option}`, { returnNull: true }) : null;
                   return (
                     <option key={`${key}_${option}`} value={option}>
-                      {option}
+                      {translatedValue || option}
                     </option>
                   );
                 }
