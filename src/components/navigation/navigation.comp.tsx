@@ -39,26 +39,49 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
       </Button>
 
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
-        <div className="app-nav-links">
-          {
-            (config?.pages || []).map((page, idx) => {
-              const pageName = translate(`pages.${page.id}.title`) || page.id;
-              return page?.customLink ?
-                <a href={page?.customLink} target="_blank" key={`page_${idx}`}>{pageName}</a> :
-                <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}
-                  onClick={() => setIsOpened(false)}>{pageName}</NavLink>
-            })
-          }
+        <div className="app-nav-section">
+          {!!translate('navigation.pages') && (
+            <div className="app-nav-section-header">
+              {translate('navigation.pages')}
+            </div>
+          )}
+          <div className="app-nav-links">
+            {
+              (config?.pages || []).map((page, idx) => {
+                const pageName = translate(`pages.${page.id}.title`) || page.id;
+                return page?.customLink ?
+                  <a href={page?.customLink} target="_blank" key={`page_${idx}`}>{pageName}</a> :
+                  <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}
+                    onClick={() => setIsOpened(false)}>{pageName}</NavLink>
+              })
+            }
+          </div>
         </div>
         {!!loggedInUsername && (
-          <div className="app-nav-logout">
-            <NavLink to="/change-password" className="change-password-link">
-              {translate('auth.changePassword')}
-            </NavLink>
-            <NavLink to="/login" onClick={logout} className="logout-link">
-              {translate('auth.logout')} ({loggedInUsername})
-            </NavLink>
+          <div className="app-nav-section">
+            {!!translate('navigation.userManagement') && (
+              <div className="app-nav-section-header">
+                {translate('navigation.userManagement')}
+              </div>
+            )}
+            <div className="app-nav-logout">
+              <NavLink to="/change-password" className="change-password-link">
+                {config?.auth?.icons?.changePassword && (
+                  <i className={`fa fa-${config.auth.icons.changePassword}`} aria-hidden="true"></i>
+                )}{' '}
+                {translate('auth.changePassword')}
+              </NavLink>
+              <NavLink to="/login" onClick={logout} className="logout-link">
+                {config?.auth?.icons?.logout && (
+                  <i className={`fa fa-${config.auth.icons.logout}`} aria-hidden="true"></i>
+                )}{' '}
+                {translate('auth.logout')} ({loggedInUsername})
+              </NavLink>
+            </div>
           </div>
+        )}
+        {!loggedInUsername && (
+          <div className="app-nav-section" />
         )}
       </div>
     </nav>
