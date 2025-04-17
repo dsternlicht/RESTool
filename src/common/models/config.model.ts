@@ -227,15 +227,19 @@ export interface IConfigGetSingleMethod extends IConfigMethod {
 export interface IConfigPostMethod extends IConfigMethod {
   fields: IConfigInputField[];
   dataTransform?: ConfigFunction;
+  icon?: string;
 }
 
 export interface IConfigPutMethod extends IConfigMethod {
   fields: IConfigInputField[];
   dataTransform?: ConfigFunction;
   includeOriginalFields?: boolean;
+  icon?: string;
 }
 
-export interface IConfigDeleteMethod extends IConfigMethod {}
+export interface IConfigDeleteMethod extends IConfigMethod {
+  icon?: string;
+}
 
 export interface IConfigCustomAction extends IConfigMethod {
   name: string;

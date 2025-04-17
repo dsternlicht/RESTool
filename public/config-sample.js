@@ -64,6 +64,7 @@ export default {
         },
         "put": {
           "url": "/character/:id",
+          "icon": "pencil",
           "fields": [
             {
               "name": "isAlive",
@@ -86,6 +87,7 @@ export default {
         },
         "post": {
           "url": "/character",
+          "icon": "plus-circle",
           "fields": [
             {
               "name": "thumbnail",
@@ -116,7 +118,8 @@ export default {
           ]
         },
         "delete": {
-          "url": "/character/:id"
+          "url": "/character/:id",
+          "icon": "trash"
         }
       },
       "customActions": [{
