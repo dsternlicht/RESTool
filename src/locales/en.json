@@ -36,7 +36,7 @@
     },
     "buttons": {
       "addArrayItem": "Add Item",
-      "addItem": "+ Add Item",
+      "addItem": "Add Item",
       "clearInput": "Clear",
       "closeForm": "Close",
       "deleteItem": "Delete",
@@ -98,6 +98,10 @@
       "deleteItem": "Item deleted successfully",
       "editItem": "Item updated successfully"
     }
+  },
+  "navigation": {
+    "pages": "PAGES",
+    "userManagement": "USER MANAGEMENT"
   },
   "pages": {
     "<example-page-id>": {

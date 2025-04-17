@@ -92,6 +92,7 @@ The `auth` property allows you to configure authentication endpoints. It has the
 | logoutEndpoint | `string` | true | The endpoint to send the logout request to. | Request: `POST` <br> Response: `200 OK` |
 | userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. | Request: `GET` <br> Response: `{ username: string }` |
 | changePasswordEndpoint | `string` | true | The endpoint to send password change requests to. | Request: `PUT { oldPassword: string, newPassword: string }` <br> Response: `200 OK` |
+| icons | `object` | false | Optional configuration for UI icons. Contains `changePassword` and `logout` properties that accept Font Awesome icon names. When not defined for an action, no icon will be shown. | Example: `{ changePassword: "retweet", logout: "sign-out" }` |
 
 Example auth configuration:
 ```json
@@ -162,6 +163,7 @@ Each method has the following common properties (which could be extended specifi
 |----------------|--------------|-----|----------------------------------------------------------------|
 | url | `string` | true | The url for making the request. The url could be either relative or absolute. If a ``baseUrl`` is defined then you should only provide a relative path. For example: ``/users/:id``. <br /><br />The url could contain parameters that will be extracted if needed. For example: ``https://website.com/users/:id`` - note that the parameter name in the url should match the one you're returning in your API. |
 | actualMethod | `string` ("get", "put", "post", "delete", "patch") | false | Since not everyone implements the RESTful standard, if you need to make a 'post' request in order to update an exiting document, you may use this property. |
+| icon | `string` | false | Font Awesome icon name for the operation button. Each method has a default icon if not specified:<br>- post: "plus"<br>- put: "pencil-square-o"<br>- delete: "times" |
 | requestHeaders | `object` | false | Same as above, but for specific method. |
 | queryParams | `array` | false | An array of query parameters fields that will be added to the request. <br /><br />If your url includes the name of the parameter, it will be used as part of the path rather than as a query parameter. For example if your url is ``/api/contact/234/address`` you might make a parameter called ``contactId`` then set the url as follows: ``/api/contact/:contactId/address``. <br /><br />Each query param item is an object. See [input fields](#input-fields) |
 | fields | `array` | false | A list of [Input fields](#input-fields) that will be used as the body of the request. <br /><br /> For the `getAll` request, the fields will be a list to [display fields](#display-fields) and will be used to render the main view. |
@@ -291,6 +293,7 @@ Example:
 ```
 {
   "url": "/character",
+  "icon": "plus",
   "fields": [
     {
       "name": "name",
@@ -347,6 +350,7 @@ Example:
     "url": "/character/:id",
     "actualMethod": "post",
     "includeOriginalFields": false,
+    "icon": "pencil",
     "fields": [
       {
         "name": "location",
@@ -399,7 +403,8 @@ Example:
 ```
 {
   "delete": {
-    "url": "/character/:id"
+    "url": "/character/:id",
+    "icon": "trash"
   }
 }
 ```
