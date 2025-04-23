@@ -53,22 +53,25 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
       }),
   };
 
-  function renderTableCell(
-    origField: IConfigDisplayField,
-    origItem: any,
-    value: any
-  ) {
-    if (origField.type === "boolean") {
-      value = value ? true : false;
-    }
+    function renderTableCell(
+      origField: IConfigDisplayField,
+      origItem: any,
+      value: any
+    ) {
+      if (origField.type === "boolean") {
+        value = value ? true : false;
+      }
 
-    if (value && typeof value === "object") {
-      return value.toString();
-    }
+      if (value && typeof value === "object") {
+        return value.toString();
+      }
 
-    switch (origField.type) {
-      case "text":
-        return <span>{value}</span>;
+      // Try to get translated value for text fields
+      const translatedValue = origField.name ? translatePage(`fields.${origField.name}.values.${value}`, { returnNull: true }) : null;
+      
+      switch (origField.type) {
+        case "text":
+          return <span>{translatedValue || value}</span>;
       case "boolean":
         return <div className={`bool ${value ? "true" : "false"}`}></div>;
       case "image":
@@ -131,7 +134,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
           <div className="actions-wrapper">
             {callbacks.put && (
               <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
-                <i className="fa fa-pencil-square-o" aria-hidden="true" />
+                <i className={`fa fa-${context.activePage?.methods?.put?.icon || 'pencil-square-o'}`} aria-hidden="true" />
               </Button>
             )}
             {customActions &&
@@ -153,7 +156,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
                 onClick={() => callbacks.delete?.(item)}
                 title={deleteLabel}
               >
-                <i className="fa fa-times" aria-hidden="true"></i>
+                <i className={`fa fa-${context.activePage?.methods?.delete?.icon || 'times'}`} aria-hidden="true"></i>
               </Button>
             )}
           </div>

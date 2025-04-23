@@ -14,6 +14,10 @@ export interface IAuthConfig {
   logoutEndpoint: string;
   userEndpoint: string;
   changePasswordEndpoint: string;
+  icons?: {
+    changePassword?: string;
+    logout?: string;
+  };
 }
 
 export interface IConfig {
@@ -34,6 +38,7 @@ export interface ICustomStyles {
   vars?: {
     appText?: string;
     appBackground?: string;
+    logoHeaderBackground?: string;
     navBackground?: string;
     navText?: string;
     navItemText?: string;
@@ -103,6 +108,7 @@ export interface IConfigPage {
   name: string;
   id: string;
   description: string;
+  icon?: string;
   requestHeaders?: any;
   methods?: IConfigMethods;
   customActions?: IConfigCustomAction[];
@@ -227,15 +233,19 @@ export interface IConfigGetSingleMethod extends IConfigMethod {
 export interface IConfigPostMethod extends IConfigMethod {
   fields: IConfigInputField[];
   dataTransform?: ConfigFunction;
+  icon?: string;
 }
 
 export interface IConfigPutMethod extends IConfigMethod {
   fields: IConfigInputField[];
   dataTransform?: ConfigFunction;
   includeOriginalFields?: boolean;
+  icon?: string;
 }
 
-export interface IConfigDeleteMethod extends IConfigMethod {}
+export interface IConfigDeleteMethod extends IConfigMethod {
+  icon?: string;
+}
 
 export interface IConfigCustomAction extends IConfigMethod {
   name: string;

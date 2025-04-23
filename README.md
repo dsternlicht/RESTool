@@ -16,6 +16,33 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 
 <br />
 
+## Table of Contents
+
+- [What's New in V2?](#whats-new-in-v2)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+  - [Authorization](#auth-config)
+  - [Pages](#pages)
+  - [Methods](#methods)
+    - [`getAll` - additional properties](#getall---additional-properties)
+    - [`getSingle`](#getsingle)
+    - [`post`](#post)
+    - [`put` - additional properties](#put---additional-properties)
+    - [`delete`](#delete)
+  - [Pagination](#pagination)
+  - [Custom Actions](#custom-actions)
+  - [Custom Styles](#custom-styles)
+  - [Custom Labels](#custom-labels)
+  - [Display fields](#display-fields)
+  - [Input fields](#input-fields)
+  - [Logo Header](#logo-header)
+  - [Internationalization (i18n)](#internationalization-i18n)
+- [Development](#development)
+  - [Local Development](#local-development)
+  - [Consume from CDN](#consume-from-cdn)
+  - [Deploy](#deploy)
+- [Contributing](#contributing)
+
 ## What's New in V2?
 
 While RESTool originally was developed with Angular, we decided to rewrite it from scratch and move to **React**. The main reason we moved to React is the **community**. Since React is so popular we believe that choosing React over Angular will get a much wider **community support**.
@@ -92,6 +119,7 @@ The `auth` property allows you to configure authentication endpoints. It has the
 | logoutEndpoint | `string` | true | The endpoint to send the logout request to. | Request: `POST` <br> Response: `200 OK` |
 | userEndpoint | `string` | true | The endpoint to get the user data from. It should return a JSON object with the property `username`. | Request: `GET` <br> Response: `{ username: string }` |
 | changePasswordEndpoint | `string` | true | The endpoint to send password change requests to. | Request: `PUT { oldPassword: string, newPassword: string }` <br> Response: `200 OK` |
+| icons | `object` | false | Optional configuration for UI icons. Contains `changePassword` and `logout` properties that accept Font Awesome icon names. When not defined for an action, no icon will be shown. | Example: `{ changePassword: "retweet", logout: "sign-out" }` |
 
 Example auth configuration:
 ```json
@@ -139,6 +167,7 @@ Each **page** is an object and represents a resource in your API. It should have
 | name | `string` | true | The name of the page. This will be presented in the menu. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
 | description | `string` | false | A short description about the page and its usage. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
+| icon | `string` | false | Font Awesome icon name (without the 'fa-' prefix) to display next to the page name in navigation. For example: 'cog', 'user', 'key', etc. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
@@ -162,6 +191,7 @@ Each method has the following common properties (which could be extended specifi
 |----------------|--------------|-----|----------------------------------------------------------------|
 | url | `string` | true | The url for making the request. The url could be either relative or absolute. If a ``baseUrl`` is defined then you should only provide a relative path. For example: ``/users/:id``. <br /><br />The url could contain parameters that will be extracted if needed. For example: ``https://website.com/users/:id`` - note that the parameter name in the url should match the one you're returning in your API. |
 | actualMethod | `string` ("get", "put", "post", "delete", "patch") | false | Since not everyone implements the RESTful standard, if you need to make a 'post' request in order to update an exiting document, you may use this property. |
+| icon | `string` | false | Font Awesome icon name for the operation button. Each method has a default icon if not specified:<br>- post: "plus"<br>- put: "pencil-square-o"<br>- delete: "times" |
 | requestHeaders | `object` | false | Same as above, but for specific method. |
 | queryParams | `array` | false | An array of query parameters fields that will be added to the request. <br /><br />If your url includes the name of the parameter, it will be used as part of the path rather than as a query parameter. For example if your url is ``/api/contact/234/address`` you might make a parameter called ``contactId`` then set the url as follows: ``/api/contact/:contactId/address``. <br /><br />Each query param item is an object. See [input fields](#input-fields) |
 | fields | `array` | false | A list of [Input fields](#input-fields) that will be used as the body of the request. <br /><br /> For the `getAll` request, the fields will be a list to [display fields](#display-fields) and will be used to render the main view. |
@@ -291,6 +321,7 @@ Example:
 ```
 {
   "url": "/character",
+  "icon": "plus",
   "fields": [
     {
       "name": "name",
@@ -347,6 +378,7 @@ Example:
     "url": "/character/:id",
     "actualMethod": "post",
     "includeOriginalFields": false,
+    "icon": "pencil",
     "fields": [
       {
         "name": "location",
@@ -399,7 +431,8 @@ Example:
 ```
 {
   "delete": {
-    "url": "/character/:id"
+    "url": "/character/:id",
+    "icon": "trash"
   }
 }
 ```
@@ -528,6 +561,7 @@ Here's a list of variable names you may change:
 |--------------|-----|----------------------------------------------------------------|
 | appText | `string` | Root text color. |
 | appBackground | `string` | App background color. |
+| logoHeaderBackground | `string` | Logo header background color. |
 | navBackground | `string` | Navigation menu background color. |
 | navText | `string` | Navigation menu text color. |
 | navItemText | `string` | Navigation item text color. |
@@ -868,6 +902,14 @@ The field name will be `url`, the type will be `text`, and the data path will be
 
 <br />
 
+### Logo Header
+
+To add a logo at the top of the page:
+1. Add your logo image file named `logo.png` to this directory (`src/assets/images/`).
+2. The logo will automatically appear in the header when the file exists.
+3. The header will remain hidden if no logo file is present.
+
+
 ### Internationalization (i18n)
 
 RESTool supports internationalization (i18n) of your application through language files. This allows you to provide your application in multiple languages.
@@ -897,25 +939,45 @@ For example, for the "Characters" page:
 }
 ```
 
-##### Field labels
+##### Field labels and values
 
 Define the field labels in the language files under the namespace of the page.
 Use the `id` of the page as defined in the configuration file.
-Then define the translations of the field labels under the `fields` property with the field `name` as the key.
-For example, for the "Characters" page:
+Then define the translations under the `fields` property with the field `name` as the key.
+
+You can translate both field labels and field values:
 
 ```json
 {
   "pages": {
     "characters": {
       "fields": {
-        "name": "Nom",
-        "age": "Âge",
+        "name": {
+          "label": "Nom",  // Field label translation
+          "helpText": "Le nom du personnage"  // Optional help text
+        },
+        "age": {
+          "label": "Âge"
+        },
+        "confidentiality": {
+          "label": "Confidentialité",
+          "values": {  // Translates the actual field values
+            "public": "public",
+            "private": "privé"
+          }
+        }
       }
     }
   }
 }
 ```
+
+The `values` object allows you to translate the actual values that appear in select dropdowns and displays. For example, if you have a select field with options `["public", "private"]`, you can provide translations for those values. The original values will still be sent to the backend, but users will see the translated text in the UI.
+
+This works for:
+- Values displayed in tables (display field type: `text`)
+- Values displayed in cards (display field type: `text`)
+- Select dropdown options in forms (input field type: `select`). For this to work, the `options` property in the configuration file should be an array of value strings, not an array of objects containing `display` and `value` properties, as described in the [Input fields](#input-fields) section.
 
 ##### Other translations
 
