@@ -16,6 +16,33 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 
 <br />
 
+## Table of Contents
+
+- [What's New in V2?](#whats-new-in-v2)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+  - [Authorization](#auth-config)
+  - [Pages](#pages)
+  - [Methods](#methods)
+    - [`getAll` - additional properties](#getall---additional-properties)
+    - [`getSingle`](#getsingle)
+    - [`post`](#post)
+    - [`put` - additional properties](#put---additional-properties)
+    - [`delete`](#delete)
+  - [Pagination](#pagination)
+  - [Custom Actions](#custom-actions)
+  - [Custom Styles](#custom-styles)
+  - [Custom Labels](#custom-labels)
+  - [Display fields](#display-fields)
+  - [Input fields](#input-fields)
+  - [Logo Header](#logo-header)
+  - [Internationalization (i18n)](#internationalization-i18n)
+- [Development](#development)
+  - [Local Development](#local-development)
+  - [Consume from CDN](#consume-from-cdn)
+  - [Deploy](#deploy)
+- [Contributing](#contributing)
+
 ## What's New in V2?
 
 While RESTool originally was developed with Angular, we decided to rewrite it from scratch and move to **React**. The main reason we moved to React is the **community**. Since React is so popular we believe that choosing React over Angular will get a much wider **community support**.
@@ -139,7 +166,8 @@ Each **page** is an object and represents a resource in your API. It should have
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The name of the page. This will be presented in the menu. For translation support, it's recommended to leave this empty and define it in the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
-| description | `string` | false | A short description about the page and its usage. For translation support, it's recommended to leave this empty and define it in the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
+| description | `string` | false | A short description about the page and its usage. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
+| icon | `string` | false | Font Awesome icon name (without the 'fa-' prefix) to display next to the page name in navigation. For example: 'cog', 'user', 'key', etc. |
 | requestHeaders | `object` | false | A list of key-value headers you wish to add to every request we're making. <br /><br /> For example: <br />``{ Authentication: 'SECRET_KEY', 'X-USER-ID': 'USER_ID' }``. |
 | methods | `object` | true | A list of all methods which are available in your RESTful API. |
 | customActions | `object[]` | false | A list of extra (non RESTful) endpoints available in your RESTful API. Specifically `customActions` is a list of PUT or POST method objects. <br /><br />Read more about custom actions [here](#custom-actions). |
@@ -533,6 +561,7 @@ Here's a list of variable names you may change:
 |--------------|-----|----------------------------------------------------------------|
 | appText | `string` | Root text color. |
 | appBackground | `string` | App background color. |
+| logoHeaderBackground | `string` | Logo header background color. |
 | navBackground | `string` | Navigation menu background color. |
 | navText | `string` | Navigation menu text color. |
 | navItemText | `string` | Navigation item text color. |
@@ -881,6 +910,14 @@ The field name will be `url`, the type will be `text`, and the data path will be
 
 
 <br />
+
+### Logo Header
+
+To add a logo at the top of the page:
+1. Add your logo image file named `logo.png` to this directory (`src/assets/images/`).
+2. The logo will automatically appear in the header when the file exists.
+3. The header will remain hidden if no logo file is present.
+
 
 ### Internationalization (i18n)
 

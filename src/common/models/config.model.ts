@@ -38,6 +38,7 @@ export interface ICustomStyles {
   vars?: {
     appText?: string;
     appBackground?: string;
+    logoHeaderBackground?: string;
     navBackground?: string;
     navText?: string;
     navItemText?: string;
@@ -107,6 +108,7 @@ export interface IConfigPage {
   name: string;
   id: string;
   description: string;
+  icon?: string;
   requestHeaders?: any;
   methods?: IConfigMethods;
   customActions?: IConfigCustomAction[];
