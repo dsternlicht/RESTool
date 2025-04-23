@@ -152,7 +152,7 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
           );
           return (
             <div
-              className={`card-row ${field.type} ${field.name}`}
+              className={`card-row card-row-${field.name} ${field.type}`}
               key={`card_${cardIdx}_${fieldIdx}`}
             >
               {field.type !== "image" && (
