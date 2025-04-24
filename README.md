@@ -164,7 +164,7 @@ Each **page** is an object and represents a resource in your API. It should have
 
 | Property | Type | Required? | Description |
 |----------------|--------------|-----|----------------------------------------------------------------|
-| name | `string` | true | The name of the page. This will be presented in the menu. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
+| name | `string` | true | The name of the page. This will be presented in the menu. For translation support, it's recommended to leave this empty and define it in the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | id | `string` | true | A unique identifier for the page. RESTool will use it to navigate between pages. |
 | description | `string` | false | A short description about the page and its usage. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | icon | `string` | false | Font Awesome icon name (without the 'fa-' prefix) to display next to the page name in navigation. For example: 'cog', 'user', 'key', etc. |
@@ -687,7 +687,7 @@ The list of fields you want to present in the main view of the app. Each one is 
 |----------------|--------------|-----|----------------------------------------------------------------|
 | name | `string` | true | The property name of the field that contains the value in the API result. |
 | type | `string` | true | This will help RESTool to render the main view. See a list of available type below. |
-| label | `string` | false | A label that describes the field. Will be presented as table headers in the main view. For translation support, it's recommended to leave this empty and define it in under the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
+| label | `string` | false | A label that describes the field. Will be presented as table headers in the main view. For translation support, it's recommended to leave this empty and define it in the page's and field's namespace instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | dataPath | `string` | false | Read more about dataPath [here](#data-path).
 | filterable | `boolean` | false | Set to `true` to enable a text control to do simple client-side filtering by values of this field. Can be specified for multiple fields. |
 | truncate | `boolean` | false | Causes long values to be truncated. By default, truncation is not enabled for fields. |
@@ -720,6 +720,15 @@ Here's a list of available display field types:
 * `boolean` - will render as a green or red dot
 
 <br />
+
+#### Help text
+Help text provides additional context or instructions for fields in forms and tables. 
+Help text can be defined in your i18n language files under each page's namespace. The text appears differently depending on the layout:
+
+- In card layout: Displayed below the field name
+- In table layout: Shown when hovering over a help icon next to the field name
+
+To add help text for a field, define it in your language file under the page's fields namespace. See [Internationalization (i18n)](#internationalization-i18n) section.
 
 ### Input fields
 
@@ -939,13 +948,16 @@ For example, for the "Characters" page:
 }
 ```
 
-##### Field labels and values
+##### Fields: Labels, Helptexts and Values
 
-Define the field labels in the language files under the namespace of the page.
+Define the field labels and optional help texts in the language files under the namespace of the page.
 Use the `id` of the page as defined in the configuration file.
 Then define the translations under the `fields` property with the field `name` as the key.
-
-You can translate both field labels and field values:
+For example, for the "Characters" page:
+You can translate the:
+- field labels
+- field helptexts
+- field values
 
 ```json
 {

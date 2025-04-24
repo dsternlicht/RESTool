@@ -179,14 +179,28 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
                       callbacks.setQueryParam(
                         field.queryShortcut.name,
                         field.queryShortcut.value ||
-                          `${field.dataPath ? field.dataPath + "." : ""}${
-                            field.name
-                          }`
+                        `${field.dataPath ? field.dataPath + "." : ""}${field.name}`
                       );
                     }
                   }}
                 >
-                  {field.label || translatePage(`fields.${field.name}.label`) || field.name}
+                  <div className="th-content">
+                    <span>{field.label || translatePage(`fields.${field.name}.label`) || field.name}</span>
+                    {translatePage(`fields.${field.name}.helpText`, { returnNull: true }) && (
+
+                      <i
+                        className="fa fa-question-circle help-icon"
+                        aria-hidden="true"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <span className="help-text">
+                          {translatePage(`fields.${field.name}.helpText`)}
+                        </span>
+                      </i>
+                    )}
+                  </div>
                 </th>
               );
             })}
