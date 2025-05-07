@@ -483,6 +483,10 @@ A list of extra (non RESTful) endpoints available in your RESTful API. Specifica
 
 > If `customActions` is not empty then for each action RESTool will generate an action button on each data row.
 
+> By default, clicking an action button opens a form dialog where users can input values for the configured fields.
+
+> The `suppressDialog` property can be used to skip showing the form dialog - in this case, no fields will be sent in the request body (an empty object is sent). You can combine this with `requireConfirmation` to show a confirmation dialog instead.
+
 > You may configure the icon of the action by adding an `icon` property. RESTool uses font-awesome and you may use any icon name you want from their collection.
 
 Here's an example for a configuration of 2 custom actions:
@@ -521,14 +525,9 @@ Here's an example for a configuration of 2 custom actions:
       "url": "/character/:id/disable",
       "actualMethod": "post",
       "icon": "minus-circle",
-      "fields": [
-        {
-          "name": "id",
-          "type": "text",
-          "label": "Contact ID",
-          "readonly": true
-        }
-      ]
+      "suppressDialog": true,       // no form dialog will be shown
+      "requireConfirmation": true,  // browser confirmation dialog will be shown
+      "fields": []
     }
   ]
 }

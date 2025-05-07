@@ -217,25 +217,21 @@ const PageComp = ({ context }: IProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("");
 
-  function closeFormPopup(refreshData: boolean = false) {
-    setOpenedPopup(null);
+  function refreshPageData() {
+    if (pagination?.type === "infinite-scroll") {
+      setItems([]);
+      const updatedParams = [...queryParams];
+      remove(updatedParams, (param) => ["page", "limit"].includes(param.name));
+      setQueryParams(buildInitQueryParamsAndPaginationState(updatedParams, paginationConfig).initQueryParams);
+    } else {
+      getAllRequest();
+    }
+  }
 
-    if (refreshData === true) {
-      if (pagination?.type === "infinite-scroll") {
-        setItems([]);
-        const updatedParams = [...queryParams];
-        remove(updatedParams, (param) =>
-          ["page", "limit"].includes(param.name)
-        );
-        setQueryParams(
-          buildInitQueryParamsAndPaginationState(
-            updatedParams,
-            paginationConfig
-          ).initQueryParams
-        );
-      } else {
-        getAllRequest();
-      }
+  function closeFormPopup(shouldRefresh: boolean = false) {
+    setOpenedPopup(null);
+    if (shouldRefresh === true) {
+      refreshPageData();
     }
   }
 
@@ -255,7 +251,32 @@ const PageComp = ({ context }: IProps) => {
     setOpenedPopup(params);
   }
 
-  function openCustomActionPopup(rawData: any, action: IConfigCustomAction) {
+  async function executeDirectAction(rawData: any, action: IConfigCustomAction) {
+    try {
+      const success = await performAction({}, rawData, action, false);
+      if (success) {
+        if (customActionSuccessMessage) {
+          toast.success(customActionSuccessMessage);
+        }
+        refreshPageData();
+      }
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }
+
+  async function openCustomActionPopup(rawData: any, action: IConfigCustomAction) {
+    if (action.suppressDialog) {
+      if (action.requireConfirmation) {
+        const approved: boolean = window.confirm(translatePage('common.confirmCustomAction'));
+        if (!approved) {
+          return;
+        }
+      }
+      await executeDirectAction(rawData, action);
+      return;
+    }
+
     const params: IPopupProps = {
       rawData,
       type: "action",
@@ -511,21 +532,7 @@ const PageComp = ({ context }: IProps) => {
           toast.success(deleteItemSuccessMessage);
         }
 
-        if (pagination?.type === "infinite-scroll") {
-          setItems([]);
-          const updatedParams = [...queryParams];
-          remove(updatedParams, (param) =>
-            ["page", "limit"].includes(param.name)
-          );
-          setQueryParams(
-            buildInitQueryParamsAndPaginationState(
-              updatedParams,
-              paginationConfig
-            ).initQueryParams
-          );
-        } else {
-          getAllRequest();
-        }
+        refreshPageData();
       }
     } catch (e) {
       toast.error((e as Error).message);

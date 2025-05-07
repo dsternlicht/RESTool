@@ -49,6 +49,7 @@
     "common": {
       "actions": "Actions",
       "confirmDelete": "Are you sure you want to delete this item?",
+      "confirmCustomAction": "Are you sure you want to perform this action?",
       "emptyResults": "Nothing to see here. Result is empty.",
       "error": "Error",
       "loading": "Loading...",
