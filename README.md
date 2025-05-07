@@ -64,7 +64,7 @@ Some new features and capabilities in V2:
 
 ## Getting started
 
-If you only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration), [deployment](#deploy), and [consuming RESTool from CDN](#consume-from-cdn).
+If you're only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration), [deployment](#deploy), and [consuming RESTool from CDN](#consume-from-cdn).
 
 If you wish to extend RESTool's functionality and develop on top of it, please go to the [development](#development) section.
 
@@ -449,8 +449,8 @@ Here's a list of variable names you may change:
 | ------ | ---------------------------- | ------------------------------------------------------------ |
 | type   | `'buttons' | 'infinite-scroll'` | Type of pagination. Buttons is the standard one. You can also have a "inifite scroll" with lazy loading. |
 | source | `'query'`                    | Where the pagination parameters are written to. Only supports query parameters for now. |
-| params | `object`                     | Parameters definition for pagniation purposes. See below.    |
-| fields | `object`                     | Definition of informations that will be returned by the API. See below. |
+| params | `object`                     | Parameters definition for pagination purposes. See below.    |
+| fields | `object`                     | Definition of information that will be returned by the API. See below. |
 
 <br />
 
@@ -553,7 +553,7 @@ Here is an example for changing payload to literal:
 
 ####  Custom Styles
 
-The `customStyles` property allows you to control the look & feel of your RESTool app. The object will contains a `vars` property where you'll be able to change the deafult colors of RESTool.
+The `customStyles` property allows you to control the look & feel of your RESTool app. The object will contains a `vars` property where you'll be able to change the default colors of RESTool.
 
 Here's a list of variable names you may change:
 
@@ -744,7 +744,7 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | arrayType | `string` | false | For `array` field type, you should specify another property called `arrayType` so RESTool will know how to present & send the data in the POST and PUT methods. Array type could be `object` or `text`. |
 | value | `any` | false | Set a default value to the field. |
 | required | `boolean` | false | If true, a field will be marked as required on PUT and POST forms. |
-| readOnly | `boolean` | false | If true, a field will be displayed, but not editable. It's data will still be added to the PUT and POST requests. |
+| readOnly | `boolean` | false | If true, a field will be displayed, but not editable. Its data will still be added to the PUT and POST requests. |
 | placeholder | `string` | false | Input field placeholder. |
 | accept | `string` | false | An optional setting for `file` type inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files. <br /><br />For example: `{ "accept": ".png,.jpeg,image/*" }`|
 | useInUrl | `boolean` | false | If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body. |
@@ -829,7 +829,7 @@ fields: [
   }
 ]
 ```
-Searhcing for `Arya` keyword results in the following request URL: `https://restool-sample-app.herokuapp.com/api/character?q=Arya`
+Searching for `Arya` keyword results in the following request URL: `https://restool-sample-app.herokuapp.com/api/character?q=Arya`
 
 #### Multiselect with custom search query alias:
 ```
@@ -879,7 +879,7 @@ And you want to present the `numberOfChildrens` field in the main view, the data
 ```
 [
   {
-    childrens: [
+    children: [
       {
         nickName: 'Spiderman'
       },
