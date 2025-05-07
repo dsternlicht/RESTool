@@ -245,7 +245,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
     // Find the changed field and execute its onChange callback if it exists
     const changedField = updatedFormFields.find(field => field.name === fieldName);
     if (changedField?.onChange) {
-      changedField.onChange(updatedFormFields, value);
+      changedField.onChange(value, updatedFormFields);
     }
 
     setFormFields(updatedFormFields);
