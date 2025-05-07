@@ -721,6 +721,14 @@
             "icon": {
               "type": "string",
               "description": "You may configure the icon of the action. RESTool uses font-awesome and you may use any icon name you want from their collection."
+            },
+            "suppressDialog": {
+              "type": "boolean",
+              "description": "When set to true, the form popup will be suppressed and the action will be executed immediately. Use with requireConfirmation to show a confirmation dialog instead."
+            },
+            "requireConfirmation": {
+              "type": "boolean",
+              "description": "When set to true and suppressDialog is true, shows a confirmation dialog before executing the action. Useful for potentially destructive actions."
             }
           }
         }

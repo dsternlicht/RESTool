@@ -252,6 +252,8 @@ export interface IConfigCustomAction extends IConfigMethod {
   icon: string;
   dataTransform?: ConfigFunction;
   fields: IConfigInputField[];
+  suppressDialog?: boolean;
+  requireConfirmation?: boolean;
 }
 
 export type IConfigPagination = IConfigQueryPagination | IConfigBodyPagination;
