@@ -939,6 +939,7 @@ For example, for the "Characters" page:
 
 ```json
 {
+  [...]
   "pages": {
     "characters": {
       "title": "Personnages",
@@ -959,20 +960,22 @@ You can translate the:
 - field helptexts
 - field values
 
+The `values` object allows you to translate the actual values that appear in input fields (for select dropdowns) and display fields. For example, if you have a select field with options `["public", "private"]`, you can provide translations for those values, as in the example below. The original values will still be sent to the backend, but users will see the translated text in the UI.
+
 ```json
 {
   "pages": {
     "characters": {
       "fields": {
         "name": {
-          "label": "Nom",  // Field label translation
-          "helpText": "Le nom du personnage"  // Optional help text
+          "label": "Nom",  // Field label
+          "helpText": "Le nom du personnage"  // Help text
         },
         "age": {
-          "label": "Âge"
+          "label": "Âge" // Field label
         },
         "confidentiality": {
-          "label": "Confidentialité",
+          "label": "Confidentialité", // Field label
           "values": {  // Translates the actual field values
             "public": "public",
             "private": "privé"
@@ -984,16 +987,9 @@ You can translate the:
 }
 ```
 
-The `values` object allows you to translate the actual values that appear in select dropdowns and displays. For example, if you have a select field with options `["public", "private"]`, you can provide translations for those values. The original values will still be sent to the backend, but users will see the translated text in the UI.
-
-This works for:
-- Values displayed in tables (display field type: `text`)
-- Values displayed in cards (display field type: `text`)
-- Select dropdown options in forms (input field type: `select`). For this to work, the `options` property in the configuration file should be an array of value strings, not an array of objects containing `display` and `value` properties, as described in the [Input fields](#input-fields) section.
-
 ##### Other translations
 
-You can also override all translations of the `global` namespace for a specific page.
+You can also override all translations of the 'global' namespace for a specific page. This allows you to customise the text for buttons, titles and other elements on a particular page without affecting the global translations.
 
 ```json
 {
