@@ -154,6 +154,7 @@ export type TConfigInputField =
   | "date";
 
 type showFieldWhen = (fields: IConfigInputField[]) => boolean;
+type onChangeCallback = (newValue: any, fields: IConfigInputField[]) => void;
 
 export interface IConfigInputField {
   originalName?: string;
@@ -174,6 +175,7 @@ export interface IConfigInputField {
   multi?: boolean;
   selectLimit?: number;
   showFieldWhen?: showFieldWhen;
+  onChange?: onChangeCallback;
 }
 
 export interface IConfigOptionSource {

@@ -64,7 +64,7 @@ Some new features and capabilities in V2:
 
 ## Getting started
 
-If you only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration), [deployment](#deploy), and [consuming RESTool from CDN](#consume-from-cdn).
+If you're only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration), [deployment](#deploy), and [consuming RESTool from CDN](#consume-from-cdn).
 
 If you wish to extend RESTool's functionality and develop on top of it, please go to the [development](#development) section.
 
@@ -449,8 +449,8 @@ Here's a list of variable names you may change:
 | ------ | ---------------------------- | ------------------------------------------------------------ |
 | type   | `'buttons' | 'infinite-scroll'` | Type of pagination. Buttons is the standard one. You can also have a "inifite scroll" with lazy loading. |
 | source | `'query'`                    | Where the pagination parameters are written to. Only supports query parameters for now. |
-| params | `object`                     | Parameters definition for pagniation purposes. See below.    |
-| fields | `object`                     | Definition of informations that will be returned by the API. See below. |
+| params | `object`                     | Parameters definition for pagination purposes. See below.    |
+| fields | `object`                     | Definition of information that will be returned by the API. See below. |
 
 <br />
 
@@ -552,7 +552,7 @@ Here is an example for changing payload to literal:
 
 ####  Custom Styles
 
-The `customStyles` property allows you to control the look & feel of your RESTool app. The object will contains a `vars` property where you'll be able to change the deafult colors of RESTool.
+The `customStyles` property allows you to control the look & feel of your RESTool app. The object will contains a `vars` property where you'll be able to change the default colors of RESTool.
 
 Here's a list of variable names you may change:
 
@@ -743,14 +743,15 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | arrayType | `string` | false | For `array` field type, you should specify another property called `arrayType` so RESTool will know how to present & send the data in the POST and PUT methods. Array type could be `object` or `text`. |
 | value | `any` | false | Set a default value to the field. |
 | required | `boolean` | false | If true, a field will be marked as required on PUT and POST forms. |
-| readOnly | `boolean` | false | If true, a field will be displayed, but not editable. It's data will still be added to the PUT and POST requests. |
+| readOnly | `boolean` | false | If true, a field will be displayed, but not editable. Its data will still be added to the PUT and POST requests. |
 | placeholder | `string` | false | Input field placeholder. |
 | accept | `string` | false | An optional setting for `file` type inputs. When set, the file input's [accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) property will perform file type filtering when browsing for files. <br /><br />For example: `{ "accept": ".png,.jpeg,image/*" }`|
 | useInUrl | `boolean` | false | If true, a field can be used as a parameter in a PUT url. Otherwise only fields retrieved in the original GET can be used as parameters. It's data will still be added to the PUT request body. |
 | optionSource| `object` | false | Use the `optionSource` field to load options for a select box from a REST service. If this is used with `options`, the items from `options` will be added to the select box before those fetched from the api. Read more about it [here](#option-source).|
 | multi | `boolean` | false | If true, select-multi dropdown will allow for multiple selections from a pre-defined list. Make sure defining the right input type first: `"type": "select-multi"`. |
 | selectLimit | `number` | unlimited | An optional setting for limiting the multiple selections from a pre-defined list. |
-| showFieldWhen | `function` | false |  A function that dynamically controls field visibility and inclusion in API requests. Only available when using dynamic (js) config. The function receives an array of all current form fields and must return a boolean value. When `true`, the field is displayed in the form and included in API requests. When `false`, the field is hidden and null value is sent with the API requests. Use the `originalName` property to reference other fields in your conditions. <br>Common use cases:<br>- Show additional fields based on a dropdown selection<br>- Show advanced options based on other field values<br>- Create dependent field relationships <br>Example:` "showFieldWhen": (fields) => { return fields.find(f => f.originalName === 'jobTitle')?.value === 'boss';}` |
+| showFieldWhen | `function` | false |  Only available when using dynamic (js) config.</br> A function that dynamically controls field visibility and inclusion in API requests. Only available when using dynamic (js) config. The function receives an array of all current form fields and must return a boolean value. When `true`, the field is displayed in the form and included in API requests. When `false`, the field is hidden and null value is sent with the API requests. Use the `originalName` property to reference other fields in your conditions. <br>Common use cases:<br>- Show additional fields based on a dropdown selection<br>- Show advanced options based on other field values<br>- Create dependent field relationships <br>Example:` "showFieldWhen": (fields) => { return fields.find(f => f.originalName === 'jobTitle')?.value === 'boss';}` |
+| onChange | `function` | false | Only available when using dynamic (js) config.</br> A custom callback function that is triggered when the field's value changes. The function receives the new value of the changed field and the array of all current form fields. Use this to implement field dependencies, such as resetting another field when a field changes to a particular value.<br>Example:` "onChange": (newValue, fields) => { if (newValue === "B") { const dependentField = fields.find(f => f.originalName === "dependentField"); if (dependentField) { dependentField.value = null; } } }` |
 
 <br />
 
@@ -827,7 +828,7 @@ fields: [
   }
 ]
 ```
-Searhcing for `Arya` keyword results in the following request URL: `https://restool-sample-app.herokuapp.com/api/character?q=Arya`
+Searching for `Arya` keyword results in the following request URL: `https://restool-sample-app.herokuapp.com/api/character?q=Arya`
 
 #### Multiselect with custom search query alias:
 ```
@@ -877,7 +878,7 @@ And you want to present the `numberOfChildrens` field in the main view, the data
 ```
 [
   {
-    childrens: [
+    children: [
       {
         nickName: 'Spiderman'
       },
@@ -938,6 +939,7 @@ For example, for the "Characters" page:
 
 ```json
 {
+  [...]
   "pages": {
     "characters": {
       "title": "Personnages",
@@ -958,20 +960,22 @@ You can translate the:
 - field helptexts
 - field values
 
+The `values` object allows you to translate the actual values that appear in input fields (for select dropdowns) and display fields. For example, if you have a select field with options `["public", "private"]`, you can provide translations for those values, as in the example below. The original values will still be sent to the backend, but users will see the translated text in the UI.
+
 ```json
 {
   "pages": {
     "characters": {
       "fields": {
         "name": {
-          "label": "Nom",  // Field label translation
-          "helpText": "Le nom du personnage"  // Optional help text
+          "label": "Nom",  // Field label
+          "helpText": "Le nom du personnage"  // Help text
         },
         "age": {
-          "label": "Âge"
+          "label": "Âge" // Field label
         },
         "confidentiality": {
-          "label": "Confidentialité",
+          "label": "Confidentialité", // Field label
           "values": {  // Translates the actual field values
             "public": "public",
             "private": "privé"
@@ -983,16 +987,9 @@ You can translate the:
 }
 ```
 
-The `values` object allows you to translate the actual values that appear in select dropdowns and displays. For example, if you have a select field with options `["public", "private"]`, you can provide translations for those values. The original values will still be sent to the backend, but users will see the translated text in the UI.
-
-This works for:
-- Values displayed in tables (display field type: `text`)
-- Values displayed in cards (display field type: `text`)
-- Select dropdown options in forms (input field type: `select`). For this to work, the `options` property in the configuration file should be an array of value strings, not an array of objects containing `display` and `value` properties, as described in the [Input fields](#input-fields) section.
-
 ##### Other translations
 
-You can also override all translations of the `global` namespace for a specific page.
+You can also override all translations of the 'global' namespace for a specific page. This allows you to customise the text for buttons, titles and other elements on a particular page without affecting the global translations.
 
 ```json
 {

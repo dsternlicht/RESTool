@@ -155,7 +155,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
       if (field.type === 'file') {
         const fileInput: any = document.querySelector(`input[name="${field.name || 'file'}"]`) as HTMLInputElement;
 
-        if (fileInput.files.length > 0) {
+        if (fileInput && fileInput.files.length > 0) {
           const firstFile = fileInput.files[0];
           formData.append(field.name || 'file', firstFile, firstFile.name);
         }
@@ -238,8 +238,15 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
 
   function formChanged(fieldName: string, value: any) {
     let updatedFormFields: IConfigInputField[] = [...formFields];
-
-    updatedFormFields = dataHelpers.updateInputFieldFromFields(fieldName, value, updatedFormFields)
+    
+    // First update the field value
+    updatedFormFields = dataHelpers.updateInputFieldFromFields(fieldName, value, updatedFormFields);
+    
+    // Find the changed field and execute its onChange callback if it exists
+    const changedField = updatedFormFields.find(field => field.name === fieldName);
+    if (changedField?.onChange) {
+      changedField.onChange(value, updatedFormFields);
+    }
 
     setFormFields(updatedFormFields);
   }

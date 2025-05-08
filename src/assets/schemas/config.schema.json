@@ -428,6 +428,9 @@
         "showFieldWhen": {
           "description": "A function that determines if the field should be visible. The function receives an array of all form fields as its argument and should return a boolean. Example: `(fields) => fields.find(f => f.originalName === 'status')?.value === 'active'`"
         },
+        "onChange": {
+          "description": "A callback function that is triggered when the field's value changes. The function receives the new value and the array of all form fields as arguments. Example: `(value, fields) => { if (value === 'B') { const dependentField = fields.find(f => f.originalName === 'dependentField'); if (dependentField) { dependentField.value = null; } } }`"
+        },
         "label": {
           "type": "string",
           "description": "A label that describes the field. This will act as a label in RESTool's forms."
