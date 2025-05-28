@@ -557,7 +557,7 @@ const PageComp = ({ context }: IProps) => {
     }
 
     updatedParams.forEach((queryParam, idx) => {
-      if (queryParam.type === "select" && queryParam.value === "-- Select --") {
+      if (queryParam.type === "select" && queryParam.value === translatePage('forms.select')) {
         // default value means nothing was selected and thus we explicitly
         // empty out the value in this case; otherwise the string '-- Select --'
         // is used as the value for the given queryParams
