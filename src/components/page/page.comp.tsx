@@ -717,7 +717,9 @@ const PageComp = ({ context }: IProps) => {
 
     if (!filteredItems.length) {
       return (
-        <div className="app-error">Nothing to see here. Result is empty.</div>
+        <div className="app-error">
+          { translatePage('common.emptyResults') }
+        </div>
       );
     }
 
