@@ -7,6 +7,8 @@
     max-width: 100%;
     overflow: auto;
     min-height: 100vh;
+    gap: 20px;
+
     .form-content {
       width: 90%;
       max-width: 540px;
@@ -177,6 +179,7 @@
           padding: 7px 15px;
           text-transform: uppercase;
           font-weight: 400;
+          margin-top: 20px;
         }
       }
     }

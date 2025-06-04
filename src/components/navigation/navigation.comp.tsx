@@ -21,10 +21,14 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
     try {
       await authService.logout();
       setLoggedInUsername(null);
-      toast.info(translate('auth.logoutSuccess'));
+      const successMessage = translate('auth.logoutSuccess');
+      if (successMessage) {
+        toast.info(successMessage);
+      }
       replace('/login');
-    } catch (error) {
-      toast.error(translate('auth.logoutFailed'));
+    } catch (e) {
+      const errorMessage = translate('auth.logoutFailed') + (e instanceof Error ? `: ${e.message}` : '');
+      toast.error(errorMessage);
     }
   }
 
