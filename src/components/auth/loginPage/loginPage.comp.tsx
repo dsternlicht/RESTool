@@ -29,7 +29,10 @@ export const LoginPage = withAppContext(
         const { passwordChangeRequired } = await authService.login(user, pwd);
         setLoggedInUsername(user);
         if (passwordChangeRequired) {
-          toast.info(translate('auth.passwordChangeRequired'));
+          const passwordChangeMessage = translate('auth.passwordChangeRequired');
+          if (passwordChangeMessage) {
+            toast.info(passwordChangeMessage);
+          }
           history.replace('/change-password');
           return;
         }
@@ -39,8 +42,9 @@ export const LoginPage = withAppContext(
         } else {
           history.replace('/');
         }
-      } catch (error) {
-        toast.error(translate('auth.loginFailed'));
+      } catch (e) {
+        const errorMessage = translate('auth.loginFailed') + (e instanceof Error ? `: ${e.message}` : '');
+        toast.error(errorMessage);
         setPwd('');
         return;
       }

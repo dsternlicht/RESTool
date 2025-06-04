@@ -50,7 +50,7 @@
     main {
       position: relative;
       flex: 1;
-      max-width: calc(100vw - 30px - var(--nav-width));
+      max-width: calc(100vw - var(--nav-width));
 
       @media screen and (max-width: 800px) {
         max-width: 100%;

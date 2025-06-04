@@ -33,7 +33,8 @@ class AuthService {
         if (response.ok) {
             return { success: true, passwordChangeRequired };
         } else {
-            throw new Error("Login failed");
+            const responseText = await response.text();
+            throw new Error(responseText);
         }
     }
 
@@ -47,7 +48,8 @@ class AuthService {
         if (response.ok) {
             return true;
         } else {
-            throw new Error("Logout failed");
+            const responseText = await response.text();
+            throw new Error(responseText);
         }
     }
 
@@ -76,7 +78,8 @@ class AuthService {
         if (response.ok) {
             return true;
         } else {
-            throw new Error("Password change failed");
+            const responseText = await response.text();
+            throw new Error(responseText);
         }
     }
 }

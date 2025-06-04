@@ -29,10 +29,14 @@ export const ChangePasswordPage = withAppContext(
       }
       try {
         await authService.changePassword(oldPwd, newPwd);
-        toast.success(translate('auth.passwordChanged'));
+        const successMessage = translate('auth.passwordChangeSuccess');
+        if (successMessage) {
+          toast.success(successMessage);
+        }
         replace('/');
-      } catch (error) {
-        toast.error(translate('auth.passwordChangeFailed'));
+      } catch (e) {
+          const errorMessage = translate('auth.passwordChangeFailed') + (e instanceof Error ? `: ${e.message}` : '');
+          toast.error(errorMessage);
       }
     }
 
@@ -50,6 +54,7 @@ export const ChangePasswordPage = withAppContext(
 
     return (
       <div className="change-pwd-page">
+        <h3>{translate('auth.changePasswordHeading')}</h3>
         <form className='form-content' onSubmit={submitForm}>
           <div className='form-row row'>
             <label>{translate('auth.labels.oldPassword')}</label>
