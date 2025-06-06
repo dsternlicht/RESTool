@@ -4,6 +4,10 @@ import { querystringHelpers } from "../helpers/querystring.helpers";
 
 export type ResponseType = 'json' | 'text' | 'boolean' | 'status';
 
+interface UnauthorizedHandler {
+  onUnauthorizedRequest: (currentPath: string) => void;
+}
+
 export interface IFetchParams {
   origUrl: string
   method?: TConfigMethod
@@ -19,12 +23,17 @@ class HttpService {
   public errorMessageDataPath: string | string[];
   public unauthorizedRedirectUrl: string;
   public requestHeaders: any;
+  private unauthorizedHandler?: UnauthorizedHandler;
 
   constructor(baseUrl: string = '', unauthorizedRedirectUrl: string = '', errorMessageDataPath: string = '') {
     this.baseUrl = baseUrl || '';
     this.errorMessageDataPath = errorMessageDataPath || '';
     this.unauthorizedRedirectUrl = unauthorizedRedirectUrl || '';
     this.requestHeaders = {}
+  }
+
+  setUnauthorizedHandler(handler: UnauthorizedHandler) {
+    this.unauthorizedHandler = handler;
   }
 
   private urlIsAbsolute(url: string) {
@@ -119,19 +128,8 @@ class HttpService {
     if (res.status === 401) {
       const currentPath = document.location.hash.substring(1); // Remove the # from the hash
       const basePath = currentPath.split('?')[0]; // Extract base path without query parameters
-
-      // Use legacy unauthorizedRedirectUrl if set
-      if (this.unauthorizedRedirectUrl) {
-        const redirectUrl = this.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(basePath));
-        document.location.href = redirectUrl;
-        return;
-      }
-
-      // Fall back to built-in auth if we're not already on the login page
-      if (!currentPath.startsWith('/login')) {
-        document.location.href = `#/login?return=${encodeURIComponent(basePath)}`;
-        return;
-      }
+      this.unauthorizedHandler?.onUnauthorizedRequest(basePath);
+      return;
     }
 
     throw new Error(await this.getErrorMessage(res));
