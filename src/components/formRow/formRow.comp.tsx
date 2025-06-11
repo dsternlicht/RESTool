@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { orderBy } from "natural-orderby";
-import { toast } from "react-toastify";
+import { notificationService } from "../../services/notification.service";
 import { Multiselect } from "multiselect-react-dropdown";
 
 import {
@@ -143,7 +143,7 @@ export const FormRow = withAppContext(
           });
         }
       } catch (e) {
-        toast.error((e as Error).message);
+        notificationService.error((e as Error).message);
       }
     }
 

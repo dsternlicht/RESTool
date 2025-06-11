@@ -29,6 +29,12 @@
       "type": "string",
       "description": "Path to navigate to when the api returns a 401 (Unauthorized) error. You can use :returnUrl to pass a return location. For example: \"/login/myLoginPage?return=:returnUrl\""
     },
+    "notificationStyle": {
+      "type": "string",
+      "enum": ["banner", "toast"],
+      "default": "toast",
+      "description": "The style of notifications to use throughout the application. Use 'banner' for fixed banner at top of page, or 'toast' for temporary pop-up notifications"
+    },
     "auth": {
       "loginEndpoint": {
         "type": "string",

@@ -10,6 +10,10 @@
     .form-content {
       width: 90%;
       max-width: 540px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
   
       section {
         padding: 20px;

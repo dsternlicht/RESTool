@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { usePageTranslation } from '../../../hooks/usePageTranslation';
 import { Button } from '../../button/button.comp';
-import { toast } from 'react-toastify';
+import { notificationService } from '../../../services/notification.service';
 
 import './loginPage.scss';
 import { withAppContext } from '../../withContext/withContext.comp';
+import { NotificationBanner } from '../../notificationBanner/notificationBanner.comp';
 import { IAppContext } from '../../app.context';
 
 interface IProps {
@@ -29,7 +30,7 @@ export const LoginPage = withAppContext(
         const { passwordChangeRequired } = await authService.login(user, pwd);
         setLoggedInUsername(user);
         if (passwordChangeRequired) {
-          toast.info(translate('auth.passwordChangeRequired'));
+          notificationService.info(translate('auth.passwordChangeRequired'));
           history.replace('/change-password');
           return;
         }
@@ -40,7 +41,7 @@ export const LoginPage = withAppContext(
           history.replace('/');
         }
       } catch (error) {
-        toast.error(translate('auth.loginFailed'));
+        notificationService.error(translate('auth.loginFailed'));
         setPwd('');
         return;
       }
@@ -56,6 +57,7 @@ export const LoginPage = withAppContext(
 
     return (
       <div className="auth-page">
+        {context.config?.notificationStyle === 'banner' && <NotificationBanner />}
         <form className='form-content' onSubmit={submitForm}>
           <div className='form-row row'>
             <label>{translate('auth.labels.user')}</label>

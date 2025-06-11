@@ -1,6 +1,28 @@
 @import '../../common/styles//functions.scss';
 
 .form-popup {
+  .form-notification-banner {
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 16px;  
+
+    &.error {
+      background-color: #f8d7da;
+      color: dc3545;
+    }
+
+    .banner-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .fa {
+      margin-right: 4px;
+    }
+  }
+
   .popup-content {
     width: 90%;
     max-width: 740px;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { usePageTranslation } from "../../hooks/usePageTranslation";
 import { useParams, useHistory } from "react-router-dom";
 import * as QueryString from "query-string";
-import { toast } from "react-toastify";
+import { notificationService } from "../../services/notification.service";
 import { orderBy } from "natural-orderby";
 import { find, get, remove } from "lodash";
 
@@ -26,6 +26,7 @@ import {
   IBodyPaginationState,
 } from "../../common/models/states.model";
 import { withAppContext } from "../withContext/withContext.comp";
+import { NotificationBanner } from "../notificationBanner/notificationBanner.comp";
 import { Loader } from "../loader/loader.comp";
 import { dataHelpers } from "../../helpers/data.helpers";
 import { paginationHelpers } from "../../helpers/pagination.helpers";
@@ -256,12 +257,12 @@ const PageComp = ({ context }: IProps) => {
       const success = await performAction({}, rawData, action, false);
       if (success) {
         if (customActionSuccessMessage) {
-          toast.success(customActionSuccessMessage);
+          notificationService.success(customActionSuccessMessage);
         }
         refreshPageData();
       }
     } catch (e) {
-      toast.error((e as Error).message);
+      notificationService.error((e as Error).message);
     }
   }
 
@@ -529,13 +530,13 @@ const PageComp = ({ context }: IProps) => {
 
       if (success) {
         if (deleteItemSuccessMessage) {
-          toast.success(deleteItemSuccessMessage);
+          notificationService.success(deleteItemSuccessMessage);
         }
 
         refreshPageData();
       }
     } catch (e) {
-      toast.error((e as Error).message);
+      notificationService.error((e as Error).message);
     }
   }
 
@@ -923,6 +924,7 @@ const PageComp = ({ context }: IProps) => {
 
     return (
       <React.Fragment>
+        {config?.notificationStyle === 'banner' && <NotificationBanner />}
         <QueryParams
           initialParams={queryParams}
           paginationConfig={paginationConfig}

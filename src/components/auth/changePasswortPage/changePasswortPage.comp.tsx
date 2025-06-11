@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePageTranslation } from '../../../hooks/usePageTranslation';
 import { Button } from '../../button/button.comp';
-import { toast } from 'react-toastify';
+import { notificationService } from '../../../services/notification.service';
 
 import './changePasswortPage.scss';
 import { withAppContext } from '../../withContext/withContext.comp';
+import { NotificationBanner } from '../../notificationBanner/notificationBanner.comp';
 import { IAppContext } from '../../app.context';
 
 interface IProps {
@@ -24,15 +25,15 @@ export const ChangePasswordPage = withAppContext(
     async function submitForm(e: React.FormEvent<HTMLFormElement>) {
       e.preventDefault();
       if (newPwd !== confirmPwd) {
-        toast.error(translate('auth.passwordMismatch'));
+        notificationService.error(translate('auth.passwordMismatch'));
         return;
       }
       try {
         await authService.changePassword(oldPwd, newPwd);
-        toast.success(translate('auth.passwordChanged'));
+        notificationService.success(translate('auth.passwordChanged'));
         replace('/');
       } catch (error) {
-        toast.error(translate('auth.passwordChangeFailed'));
+        notificationService.error(translate('auth.passwordChangeFailed'));
       }
     }
 
@@ -50,6 +51,7 @@ export const ChangePasswordPage = withAppContext(
 
     return (
       <div className="change-pwd-page">
+        {context.config?.notificationStyle === 'banner' && <NotificationBanner />}
         <form className='form-content' onSubmit={submitForm}>
           <div className='form-row row'>
             <label>{translate('auth.labels.oldPassword')}</label>
