@@ -21,7 +21,6 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
     try {
       await authService.logout();
       setLoggedInUsername(null);
-      notificationService.info(translate('auth.logoutSuccess'));
       replace('/login');
     } catch (e) {
       const errorMessage = translate('auth.logoutFailed') + (e instanceof Error ? `: ${e.message}` : '');

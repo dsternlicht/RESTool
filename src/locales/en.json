@@ -13,9 +13,7 @@
     "loginFailed": "Login failed",
     "logout": "Logout",
     "logoutFailed": "Logout failed",
-    "logoutSuccess": "Logged out successfully",
     "passwordChangeRequired": "Password change required",
-    "passwordChanged": "Password changed successfully",
     "passwordChangeFailed": "Password change failed",
     "passwordMismatch": "Confirmed password does not match",
     "placeholders": {

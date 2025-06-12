@@ -30,8 +30,7 @@ export const LoginPage = withAppContext(
         const { passwordChangeRequired } = await authService.login(user, pwd);
         setLoggedInUsername(user);
         if (passwordChangeRequired) {
-          notificationService.info(translate('auth.passwordChangeRequired'));
-          history.replace('/change-password');
+          history.replace('/change-password?showPasswordMessage=true');
           return;
         }
         // Only redirect if returnUrl exists and is not /login
@@ -41,7 +40,7 @@ export const LoginPage = withAppContext(
           history.replace('/');
         }
       } catch (error) {
-        const errorMessage = translate('auth.loginFailed') + (e instanceof Error ? `: ${e.message}` : '');
+        const errorMessage = translate('auth.loginFailed') + (error instanceof Error ? `: ${error.message}` : '');
         notificationService.error(errorMessage);
         setPwd('');
         return;
