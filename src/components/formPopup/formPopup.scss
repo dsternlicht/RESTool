@@ -3,8 +3,6 @@
 .form-popup {
   .form-notification-banner {
     padding: 16px;
-    text-align: center;
-    margin-bottom: 16px;  
 
     &.error {
       background-color: #f8d7da;
@@ -14,7 +12,6 @@
     .banner-content {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
     }
 

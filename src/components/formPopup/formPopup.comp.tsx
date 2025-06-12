@@ -295,6 +295,14 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
             loading ?
               <Loader /> :
               <form onSubmit={submitForm}>
+                {config?.notificationStyle === 'banner' && formErrorMessage && (
+                  <div className="form-notification-banner error">
+                    <div className="banner-content">
+                      <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
+                      <span>{formErrorMessage}</span>
+                    </div>
+                  </div>
+                )}
                 {
                   formFields.map((field, idx) => {
                     if (!shouldFieldBeVisible(field, formFields)) return null;
@@ -308,14 +316,6 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
                     );
                   })
                 }
-                {config?.notificationStyle === 'banner' && formErrorMessage && (
-                  <div className="form-notification-banner error">
-                    <div className="banner-content">
-                      <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
-                      <span>{formErrorMessage}</span>
-                    </div>
-                  </div>
-                )}
                 <div className="buttons-wrapper center">
                   <Button type="submit" onClick={submitForm}>
                     {(customLabels?.buttons?.submitItem ||
