@@ -1,6 +1,7 @@
 {
   "auth": {
     "changePassword": "Change Password",
+    "changePasswordHeading": "Please change your password",
     "labels": {
       "confirmPassword": "Confirm New Password",
       "newPassword": "New Password",

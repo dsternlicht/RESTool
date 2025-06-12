@@ -33,7 +33,8 @@ export const ChangePasswordPage = withAppContext(
         notificationService.success(translate('auth.passwordChanged'));
         replace('/');
       } catch (error) {
-        notificationService.error(translate('auth.passwordChangeFailed'));
+        const errorMessage = translate('auth.passwordChangeFailed') + (e instanceof Error ? `: ${e.message}` : '');
+        notificationService.error(errorMessage);
       }
     }
 
@@ -51,7 +52,6 @@ export const ChangePasswordPage = withAppContext(
 
     return (
       <div className="change-pwd-page">
-        {context.config?.notificationStyle === 'banner' && <NotificationBanner />}
         <form className='form-content' onSubmit={submitForm}>
           <div className='form-row row'>
             <label>{translate('auth.labels.oldPassword')}</label>

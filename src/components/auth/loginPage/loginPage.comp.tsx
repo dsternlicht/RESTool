@@ -41,7 +41,8 @@ export const LoginPage = withAppContext(
           history.replace('/');
         }
       } catch (error) {
-        notificationService.error(translate('auth.loginFailed'));
+        const errorMessage = translate('auth.loginFailed') + (e instanceof Error ? `: ${e.message}` : '');
+        notificationService.error(errorMessage);
         setPwd('');
         return;
       }

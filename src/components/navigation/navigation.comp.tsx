@@ -23,8 +23,9 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
       setLoggedInUsername(null);
       notificationService.info(translate('auth.logoutSuccess'));
       replace('/login');
-    } catch (error) {
-      notificationService.error(translate('auth.logoutFailed'));
+    } catch (e) {
+      const errorMessage = translate('auth.logoutFailed') + (e instanceof Error ? `: ${e.message}` : '');
+      notificationService.error(errorMessage);
     }
   }
 
