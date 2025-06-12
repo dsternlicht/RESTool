@@ -15,6 +15,10 @@ class NotificationService extends EventTarget {
 
   private notify(type: NotificationType, message: string) {
     if (this.useToast) {
+      if (!message) {
+        toast.dismiss(); // Clear all toasts if message is empty
+        return;
+      }
       switch (type) {
         case 'success':
           toast.success(message);

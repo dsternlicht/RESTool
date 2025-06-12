@@ -256,9 +256,7 @@ const PageComp = ({ context }: IProps) => {
     try {
       const success = await performAction({}, rawData, action, false);
       if (success) {
-        if (customActionSuccessMessage) {
-          notificationService.success(customActionSuccessMessage);
-        }
+        notificationService.success(customActionSuccessMessage);
         refreshPageData();
       }
     } catch (e) {
@@ -529,10 +527,7 @@ const PageComp = ({ context }: IProps) => {
       });
 
       if (success) {
-        if (deleteItemSuccessMessage) {
-          notificationService.success(deleteItemSuccessMessage);
-        }
-
+        notificationService.success(deleteItemSuccessMessage);
         refreshPageData();
       }
     } catch (e) {
