@@ -46,7 +46,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [formErrorMessage, setFormErrorMessage] = useState<string | null>(null);
   const pageHeaders: any = activePage?.requestHeaders || {};
   const customLabels: ICustomLabels | undefined = { ...config?.customLabels, ...activePage?.customLabels };
 
@@ -77,7 +77,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
       } catch (e) {
         console.error(translatePage('forms.errors.loadItemFailed'), e);
         if (config?.notificationStyle === 'banner') {
-          setErrorMessage(translatePage('forms.errors.loadItemFailed'));
+          setFormErrorMessage(translatePage('forms.errors.loadItemFailed'));
         } else {
           notificationService.error(translatePage('forms.errors.loadItemFailed'));
         }
@@ -146,7 +146,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
   }
 
   async function submitForm(e: any) {
-    setErrorMessage(null);
+    setFormErrorMessage(null);
     e.preventDefault();
 
     const finalObject: any = (methodConfig as IConfigPutMethod).includeOriginalFields ? Object.assign({}, finalRawData) : {};
@@ -222,7 +222,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
 
     if (validationError) {
       if (config?.notificationStyle === 'banner') {
-        setErrorMessage(validationError);
+        setFormErrorMessage(validationError);
       } else {
         notificationService.error(validationError);
       }
@@ -234,14 +234,11 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
     try {
       let body = containFiles ? formData : unflatten(finalObject);
       await submitCallback(body, containFiles, queryParams);
-      if (successMessage) {
-        notificationService.success(successMessage);
-      }
-
+      notificationService.success(successMessage);
       closeCallback(true);
     } catch (e) {
       if (config?.notificationStyle === 'banner') {
-        setErrorMessage((e as Error).message);
+        setFormErrorMessage((e as Error).message);
       } else {
         notificationService.error((e as Error).message);
       }
@@ -251,7 +248,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
   }
 
   function formChanged(fieldName: string, value: any) {
-    setErrorMessage(null);
+    setFormErrorMessage(null);
     let updatedFormFields: IConfigInputField[] = [...formFields];
     
     // First update the field value
@@ -286,7 +283,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
       show={true}
       className="form-popup"
       closeCallback={() => {
-        setErrorMessage(null);
+        setFormErrorMessage(null);
         closeCallback(false);
       }}
       customLabels={customLabels}
@@ -311,11 +308,11 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
                     );
                   })
                 }
-                {config?.notificationStyle === 'banner' && errorMessage && (
+                {config?.notificationStyle === 'banner' && formErrorMessage && (
                   <div className="form-notification-banner error">
                     <div className="banner-content">
                       <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
-                      <span>{errorMessage}</span>
+                      <span>{formErrorMessage}</span>
                     </div>
                   </div>
                 )}
