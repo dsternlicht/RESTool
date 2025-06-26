@@ -60,6 +60,20 @@ function App() {
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
       httpService.unauthorizedRedirectUrl = remoteConfig.unauthorizedRedirectUrl || '';
       httpService.requestHeaders = remoteConfig.requestHeaders || {};
+      httpService.setUnauthorizedHandler({
+        onUnauthorizedRequest: (currentPath) => {
+          // Clear context before navigation
+          setActivePage(null);
+
+          if (httpService.unauthorizedRedirectUrl) {
+            // Legacy flow takes precedence
+            const redirectUrl = httpService.unauthorizedRedirectUrl.replace(':returnUrl', encodeURIComponent(currentPath));
+            document.location.href = redirectUrl;
+          } else if (!currentPath.startsWith('/login')) {
+            document.location.href = `#/login?return=${encodeURIComponent(currentPath)}`;
+          }
+        }
+      });
       
       authService.baseUrl = remoteConfig.baseUrl || '';
       if (remoteConfig.auth) {
