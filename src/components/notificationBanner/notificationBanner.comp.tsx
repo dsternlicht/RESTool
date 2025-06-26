@@ -47,7 +47,7 @@ export const NotificationBanner = () => {
     <div className={`notification-banner ${notification.type} ${visible ? 'visible' : ''}`}>
       <div className="banner-content">
         <i className={`fa fa-${getIcon()}`} aria-hidden="true"></i>
-        <span>{notification.message}</span>
+        <span className="banner-message">{notification.message}</span>
       </div>
     </div>
   );
