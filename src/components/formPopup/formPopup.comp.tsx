@@ -299,7 +299,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
                   <div className="form-notification-banner error">
                     <div className="banner-content">
                       <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
-                      <span>{formErrorMessage}</span>
+                      <span className="banner-message">{formErrorMessage}</span>
                     </div>
                   </div>
                 )}
