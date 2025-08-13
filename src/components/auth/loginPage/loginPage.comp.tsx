@@ -62,6 +62,7 @@ export const LoginPage = withAppContext(
           <div className='form-row row'>
             <label>{translate('auth.labels.user')}</label>
             <input 
+              id="username"
               type="text" 
               placeholder={translate('auth.placeholders.user')}
               value={user} 
@@ -71,6 +72,7 @@ export const LoginPage = withAppContext(
           <div className='form-row row'>
             <label>{translate('auth.labels.password')}</label>
             <input 
+              id="password"
               type="password" 
               placeholder={translate('auth.placeholders.password')}
               value={pwd} 
