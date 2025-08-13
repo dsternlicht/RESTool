@@ -8,7 +8,7 @@ import './i18n';
 import './index.scss';
 
 ReactDOM.render(
-    <Suspense fallback="Loading...">
+    <Suspense fallback={null}>
         <App />
     </Suspense>,
     document.getElementById('root')
