@@ -20,6 +20,8 @@ export interface IAuthConfig {
   };
 }
 
+export type NotificationStyle = 'toast' | 'banner';
+
 export interface IConfig {
   remoteUrl?: string;
   name: string;
@@ -32,6 +34,7 @@ export interface IConfig {
   pages: IConfigPage[];
   customStyles?: ICustomStyles;
   customLabels?: ICustomLabels;
+  notificationStyle?: NotificationStyle;
 }
 
 export interface ICustomStyles {

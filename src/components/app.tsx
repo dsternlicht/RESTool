@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import ConfigService from '../services/config.service';
+import { notificationService } from '../services/notification.service';
 import { IConfig, IConfigPage } from '../common/models/config.model';
 import { Page } from '../components/page/page.comp';
 import { Navigation } from '../components/navigation/navigation.comp';
@@ -55,6 +56,8 @@ function App() {
       } else {
         remoteConfig = url ? await ConfigService.getRemoteConfig(url) : await ConfigService.loadDefaultConfig();
       }
+
+      notificationService.setMode(remoteConfig.notificationStyle !== 'banner');
 
       httpService.baseUrl = remoteConfig.baseUrl || '';
       httpService.errorMessageDataPath = remoteConfig.errorMessageDataPath || '';
@@ -135,9 +138,9 @@ function App() {
   useEffect(() => {
     const { isValid, errorMessage } = ConfigService.validateConfig(config);
 
-    if (!isValid) {
+    if (!isValid && errorMessage) {
       setError(errorMessage);
-      toast.error(errorMessage);
+      notificationService.error(errorMessage);
       return;
     }
   }, [config]);
@@ -169,7 +172,9 @@ function App() {
                     <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
                   </Switch>
               </div>
-              <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} draggable={false} />
+              {config.notificationStyle !== 'banner' && (
+                <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} draggable={false} />
+              )}
             </Router>
           </AppContext.Provider>
       }

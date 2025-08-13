@@ -90,6 +90,7 @@ Here's a detailed list of properties you could add to your configuration file (j
 | unauthorizedRedirectUrl | `string` | false | Legacy option that takes priority over `auth` config: URL to redirect to when the API returns a 401 (Unauthorized) error. Use `:returnUrl` to pass a return location. For example: `"/login?return=:returnUrl"` |
 | auth | `object` | false | Built-in authentication configuration (used only if `unauthorizedRedirectUrl` is not set). See [Auth Config](#auth-config) below. |
 | favicon | `string` | false | A URL for you app's favicon. |
+| notificationStyle | `string` ("banner" \| "toast") | false | Controls how notifications (success/error messages) are displayed. `"banner"` shows a fixed banner within the content area, while `"toast"` shows floating notifications in the top-center. Default is `"toast"`. |
 | customStyles | `object` | false | [Custom styles](#custom-styles) |
 | customLabels | `object` | false | [Custom labels](#custom-labels) <br> ⚠️ Deprecated. Use i18n language files instead. See [Internationalization (i18n)](#internationalization-i18n) section. |
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |
