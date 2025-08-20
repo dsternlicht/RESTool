@@ -4,7 +4,7 @@ import { usePageTranslation } from '../../hooks/usePageTranslation';
 import { IAppContext } from '../app.context';
 import { withAppContext } from '../withContext/withContext.comp';
 import { Button } from '../button/button.comp';
-import { toast } from 'react-toastify';
+import { notificationService } from '../../services/notification.service';
 
 import './navigation.scss';
 
@@ -21,10 +21,10 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
     try {
       await authService.logout();
       setLoggedInUsername(null);
-      toast.info(translate('auth.logoutSuccess'));
       replace('/login');
-    } catch (error) {
-      toast.error(translate('auth.logoutFailed'));
+    } catch (e) {
+      const errorMessage = translate('auth.logoutFailed') + (e instanceof Error ? `: ${e.message}` : '');
+      notificationService.error(errorMessage);
     }
   }
 
