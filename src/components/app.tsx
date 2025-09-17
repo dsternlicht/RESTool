@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch, Redirect, useLocation, useHistory } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import ConfigService from '../services/config.service';
 import { notificationService } from '../services/notification.service';
@@ -18,10 +18,65 @@ import { ChangePasswordPage } from './auth/changePasswortPage/changePasswortPage
 import AuthService from '../services/auth.service';
 import { usePageTranslation } from '../hooks/usePageTranslation';
 import { Header } from './header/header.comp';
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute';
 
 const httpService = new HttpService();
 const authService = new AuthService();
 const defaultAppName: string = 'RESTool App';
+
+// Component to handle content with location-aware sidebar
+function AppContent({ config, appName, scrollToTop, authChecked }: {
+  config: IConfig,
+  appName: string,
+  scrollToTop: () => void,
+  authChecked: boolean
+}) {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+  const requiresAuth = !!config?.auth?.userEndpoint;
+
+  // Show loading state while checking auth (only for non-login page)  
+  if (!authChecked && !isLoginPage && requiresAuth) {
+    return (
+      <>
+        <Header />
+        <div className="app-error">
+          Loading...
+        </div>
+      </>
+    );
+  }
+
+  // Render main content
+  return (
+    <>
+      <Header />
+      <div className="app-content">
+        {!isLoginPage && authChecked && (
+          <aside>
+            <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
+            <Navigation />
+          </aside>
+        )}
+        <Switch>
+          <Route exact path='/login' component={LoginPage} />
+          <Route exact path='/change-password'>
+            <ProtectedRoute authChecked={authChecked} requiresAuth={requiresAuth}>
+              <ChangePasswordPage />
+            </ProtectedRoute>
+          </Route>
+          <Route exact path="/:page">
+            <ProtectedRoute authChecked={authChecked} requiresAuth={requiresAuth}>
+              <Page />
+            </ProtectedRoute>
+          </Route>
+          <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
+        </Switch>
+      </div>
+      <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} draggable={false} />
+    </>
+  );
+}
 
 function changeFavicon(src: string) {
   const link = document.createElement('link');
@@ -41,6 +96,7 @@ function App() {
   const [activePage, setActivePage] = useState<IConfigPage | null>(config?.pages?.[0] || null);
   const [error, setError] = useState<string | null>(null);
   const [loggedInUsername, setLoggedInUsername] = useState<string | null>(null);
+  const [authChecked, setAuthChecked] = useState<boolean>(false);
   const { translate } = usePageTranslation();
 
   const appName: string = config?.name || defaultAppName;
@@ -77,7 +133,7 @@ function App() {
           }
         }
       });
-      
+
       authService.baseUrl = remoteConfig.baseUrl || '';
       if (remoteConfig.auth) {
         authService.loginEndpoint = remoteConfig.auth.loginEndpoint || '';
@@ -128,12 +184,31 @@ function App() {
   }
 
   useEffect(() => {
-    loadConfig().then(() => {
-      authService.getLoggedInUser().then((username) => {
+    loadConfig();
+  }, []);
+
+  // Check auth after config is loaded
+  useEffect(() => {
+    if (!config) return;
+
+    const checkAuth = async () => {
+      if (!config.auth?.userEndpoint) {
+        setAuthChecked(true);
+        return;
+      }
+
+      try {
+        const username = await authService.getLoggedInUser();
         setLoggedInUsername(username);
-      });
-    });
-  }, [loadConfig]);
+      } catch (error) {
+        setLoggedInUsername(null);
+      } finally {
+        setAuthChecked(true);
+      }
+    };
+
+    checkAuth();
+  }, [config]);
 
   useEffect(() => {
     const { isValid, errorMessage } = ConfigService.validateConfig(config);
@@ -150,28 +225,20 @@ function App() {
       {
         !config ?
           <div className="app-error">
-             {firstLoad ? translate('configuration.loadingConfiguration') : translate('configuration.loadingConfigurationFailed')}
-          
-            </div> :
+            {firstLoad ? translate('configuration.loadingConfiguration') : translate('configuration.loadingConfigurationFailed')}
+          </div> :
           <AppContext.Provider value={{ config, activePage, setActivePage, error, setError, httpService, authService, loggedInUsername, setLoggedInUsername }}>
             {
               config.customStyles &&
               <CustomStyles styles={config.customStyles} />
             }
             <Router>
-              <Header />
-              <div className="app-content">
-                <aside>
-                  <h1 title={appName} onClick={() => scrollToTop()}>{appName}</h1>
-                  <Navigation />
-                </aside>
-                  <Switch>
-                    <Route exact path='/login' component={LoginPage} />
-                    <Route exact path='/change-password' component={ChangePasswordPage} />
-                    <Route exact path="/:page" component={Page} />
-                    <Redirect path="/" to={`/${config?.pages?.[0]?.id || '1'}`} />
-                  </Switch>
-              </div>
+              <AppContent
+                config={config}
+                appName={appName}
+                scrollToTop={scrollToTop}
+                authChecked={authChecked}
+              />
               {config.notificationStyle !== 'banner' && (
                 <ToastContainer position={toast.POSITION.TOP_CENTER} autoClose={4000} draggable={false} />
               )}

@@ -62,8 +62,17 @@ class AuthService {
         if (response.ok) {
             const userData = await response.json();
             return userData.username;
+        } else if (response.status === 401) {
+            // User is not authenticated - this is expected when not logged in
+            return null;
+        } else if (response.status === 404) {
+            // Endpoint not found - configuration issue
+            console.warn('User endpoint not found. Check auth configuration.');
+            return null;
         } else {
-            throw new Error("User not found");
+            // Other errors (500, network issues, etc.) - these are actual problems
+            console.error(`Failed to get user: ${response.status} ${response.statusText}`);
+            return null;
         }
     }
 
