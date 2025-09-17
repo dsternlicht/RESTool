@@ -63,8 +63,20 @@
       font-size: 14px;
       line-height: 1.5em;
 
-      @media screen and (max-width: 800px) { 
+      @media screen and (max-width: 800px) {
         margin-top: 5px;
+      }
+
+      .page-help-icon {
+        margin-left: 8px;
+        color: #999;
+        font-size: 16px;
+        transition: color 0.2s ease;
+        cursor: pointer;
+
+        &:hover {
+          color: #666;
+        }
       }
     }
   }
