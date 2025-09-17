@@ -112,6 +112,7 @@ export interface IConfigPage {
   id: string;
   description: string;
   icon?: string;
+  helpUrl?: string;
   requestHeaders?: any;
   methods?: IConfigMethods;
   customActions?: IConfigCustomAction[];

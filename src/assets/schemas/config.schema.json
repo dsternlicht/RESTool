@@ -172,6 +172,10 @@
           "type": "string",
           "description": "A short description about the page and its usage."
         },
+        "helpUrl": {
+          "type": "string",
+          "description": "URL to external documentation or help page. When set, displays a help icon after the page description that opens the URL in a new tab."
+        },
         "requestHeaders": {
           "$ref": "#/definitions/requestHeaders"
         },
