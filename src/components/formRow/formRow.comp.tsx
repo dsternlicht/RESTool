@@ -17,6 +17,7 @@ import "./formRow.scss";
 import "jsoneditor-react/es/editor.min.css";
 import { usePageTranslation } from "../../hooks/usePageTranslation";
 
+// @ts-ignore - No TypeScript definitions available for jsoneditor-react
 import { JsonEditor } from "jsoneditor-react";
 
 interface IProps {
