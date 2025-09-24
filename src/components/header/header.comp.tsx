@@ -5,30 +5,22 @@ import './header.scss';
 
 export const Header: React.FC = () => {
   const { config } = useContext(AppContext);
-  const [logoImage, setLogoImage] = useState<string | undefined>(undefined);
+  const [logoLoaded, setLogoLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    // Try to load logo from public directory
-    const loadLogo = async () => {
-      try {
-        // Try to fetch logo from public directory
-        const response = await fetch('/assets/images/logo.png');
-        if (response.ok) {
-          setLogoImage('/assets/images/logo.png');
-        } else {
-          setLogoImage(undefined);
-        }
-      } catch (e) {
-        // Logo doesn't exist, keep undefined
-        setLogoImage(undefined);
-      }
+    // Try to load logo image
+    const img = new Image();
+    img.onload = () => {
+      setLogoLoaded(true);
     };
-
-    loadLogo();
+    img.onerror = () => {
+      setLogoLoaded(false);
+    };
+    img.src = '/assets/images/logo.png';
   }, []);
 
-  // Only show header if logo exists
-  if (!logoImage) {
+  // Only show header if logo loaded successfully
+  if (!logoLoaded) {
     return null;
   }
 
@@ -36,7 +28,7 @@ export const Header: React.FC = () => {
     <header className="restool-header">
       <div className="header-content">
         <div className="logo-container">
-          <img src={logoImage} alt={config?.name} className="logo" />
+          <img src="/assets/images/logo.png" alt={config?.name} className="logo" />
         </div>
       </div>
     </header>
