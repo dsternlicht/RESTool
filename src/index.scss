@@ -1,7 +1,6 @@
+@use "common/styles/functions" as *;
+@use "common/styles";
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap');
-@import "common/styles";
-@import "common/styles/vars";
-@import "common/styles/functions";
 
 * {
   box-sizing: border-box;

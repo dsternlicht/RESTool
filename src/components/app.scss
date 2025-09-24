@@ -1,5 +1,4 @@
-@import '../common/styles/vars';
-@import '../common/styles/functions';
+@use '../common/styles/functions' as *;
 
 .restool-app {
   --nav-width: 260px;

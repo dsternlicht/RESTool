@@ -1,4 +1,5 @@
-@import '../../common/styles/functions';
+@use "sass:color";
+@use '../../common/styles/functions' as *;
 
 .app-page {
   flex: 1;
@@ -36,7 +37,7 @@
     }
 
     &:hover {
-      background-color: v(addButtonHoverBackground, lighten(#1cb841, 10%));
+      background-color: v(addButtonHoverBackground, color.adjust(#1cb841, $lightness: 10%));
     }
 
     @media screen and (max-width: 800px) { 
