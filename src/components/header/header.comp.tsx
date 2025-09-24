@@ -3,14 +3,8 @@ import { useContext } from 'react';
 import { AppContext } from '../app.context';
 import './header.scss';
 
-// Logo will be imported when it exists
-let logoImage: string | undefined;
-try {
-  // Dynamic import for logo - will throw if file doesn't exist
-  logoImage = require('../../assets/images/logo.png');
-} catch (e) {
-  logoImage = undefined;
-}
+// Logo will be automatically imported if it exists at src/assets/images/logo.png
+import logoImage from '../../assets/images/logo.png';
 
 export const Header: React.FC = () => {
   const { config } = useContext(AppContext);
