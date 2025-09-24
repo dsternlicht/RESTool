@@ -62,6 +62,34 @@ Some new features and capabilities in V2:
 
 <br />
 
+## Breaking Change: Vite Migration - Config.js Format Update
+
+If you use `config.js` (JavaScript configuration), you need to update the format:
+
+**Before:**
+```javascript
+export default {
+  "name": "My App",
+  // ... config
+}
+```
+
+**After:**
+```javascript
+window.config = {
+  "name": "My App",
+  // ... config
+};
+```
+
+**Location:** Keep your `config.js` file in the same location (`/public/config.js` or root of your deployment).
+
+**Note:** `config.json` files are unaffected and work as before.
+
+This change ensures configuration files work properly in both development and production builds with Vite.
+
+<br />
+
 ## Getting started
 
 If you're only interested in using **RESTool** on its latest version as a management tool for your RESTful API, read the docs about [configuration](#configuration), [deployment](#deploy), and [consuming RESTool from CDN](#consume-from-cdn).
