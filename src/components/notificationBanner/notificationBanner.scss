@@ -8,6 +8,7 @@
   align-self: center;
   transition: opacity 0.3s ease-in-out;
   opacity: 0;
+  z-index: 10;
   
   &.visible {
     opacity: 1;
