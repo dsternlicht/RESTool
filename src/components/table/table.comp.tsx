@@ -189,9 +189,10 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
                     <span>{field.label || translatePage(`fields.${field.name}.label`) || field.name}</span>
                     {translatePage(`fields.${field.name}.helpText`, { returnNull: true }) && (
 
-                      <i
+                      <button
+                        type="button"
                         className="fa fa-question-circle help-icon"
-                        aria-hidden="true"
+                        aria-label={`Help: ${translatePage(`fields.${field.name}.helpText`)}`}
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
@@ -199,7 +200,7 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
                         <span className="help-text">
                           {translatePage(`fields.${field.name}.helpText`)}
                         </span>
-                      </i>
+                      </button>
                     )}
                   </div>
                 </th>

@@ -21,6 +21,11 @@
     outline: none;
   }
 
+  &:focus-visible {
+    outline: 2px solid #3C3E6F;
+    outline-offset: 2px;
+  }
+
   &:hover {
     background-color: #ebebeb;
   }
