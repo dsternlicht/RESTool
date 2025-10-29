@@ -955,7 +955,10 @@ For example, for the "Characters" page:
 
 Define the field labels and optional help texts in the language files under the namespace of the page.
 Use the `id` of the page as defined in the configuration file.
-Then define the translations under the `fields` property with the field `name` as the key.
+Then define the translations under the `fields` property with the field path as the key.
+
+**Important**: The field key in translations should match the **full path** of the field, including any `dataPath`. If a field has `dataPath: "config.auth"` and `name: "password"`, use `"config.auth.password"` as the translation key. This allows you to have different translations for fields with the same name but different data paths.
+
 For example, for the "Characters" page:
 You can translate the:
 - field labels
@@ -982,6 +985,11 @@ The `values` object allows you to translate the actual values that appear in inp
             "public": "public",
             "private": "privé"
           }
+        },
+        // Example with dataPath: field has dataPath="settings.user" and name="email"
+        "settings.user.email": {
+          "label": "Email de l'utilisateur",
+          "helpText": "L'adresse email de l'utilisateur"
         }
       }
     }

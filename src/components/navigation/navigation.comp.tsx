@@ -41,9 +41,9 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
       <div className={`app-nav-wrapper ${isOpened ? 'opened' : ''}`}>
         <div className="app-nav-section">
           {!!translate('navigation.pages') && (
-            <div className="app-nav-section-header">
+            <h2 className="app-nav-section-header">
               {translate('navigation.pages')}
-            </div>
+            </h2>
           )}
           <div className="app-nav-links">
             {
@@ -55,12 +55,12 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
                   <a href={page?.customLink} target="_blank" key={`page_${idx}`} className={`app-nav-link app-nav-link-${page.id}`}>
                     {icon}
                     <span className="nav-item-text">
-                  {pageName}
-                </span>
+                      {pageName}
+                    </span>
                   </a> :
                   <NavLink to={`/${page.id || idx + 1}`} activeClassName="active" key={`page_${idx}`}
                     className={`app-nav-link app-nav-link-${page.id}`}
-                  onClick={() => setIsOpened(false)}>
+                    onClick={() => setIsOpened(false)}>
                     {icon}
                     <span className="nav-item-text">{pageName}</span>
                   </NavLink>
@@ -71,9 +71,9 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
         {!!loggedInUsername && (
           <div className="app-nav-section">
             {!!translate('navigation.userManagement') && (
-              <div className="app-nav-section-header">
+              <h2 className="app-nav-section-header">
                 {translate('navigation.userManagement')}
-              </div>
+              </h2>
             )}
             <div className="app-nav-logout">
               <NavLink to="/change-password" className="app-nav-link app-nav-link-change-password">

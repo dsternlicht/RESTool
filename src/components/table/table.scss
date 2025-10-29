@@ -50,7 +50,12 @@
       .help-icon {
         position: relative;
         display: inline-block;
-        color: #999;
+        color: #727272;
+        border: none;
+        background: none;
+        padding: 0;
+        cursor: pointer;
+        font-size: inherit;
 
         .help-text {
           visibility: hidden;
@@ -92,13 +97,21 @@
       }
 
       .help-icon {
-        &:hover {
+        &:hover,
+        &:focus {
           .help-text {
             visibility: visible;
             opacity: 1;
           }
 
           opacity: 1;
+          outline: none;
+        }
+
+        &:focus-visible {
+          outline: 2px solid #3C3E6F;
+          outline-offset: 2px;
+          border-radius: 3px;
         }
 
         .help-text {

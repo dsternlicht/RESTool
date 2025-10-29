@@ -76,6 +76,11 @@
     z-index: 2;
     right: 8px;
     opacity: 0.6;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
 
     @media screen and (max-width: 800px) {
       bottom: 18px;
@@ -83,6 +88,11 @@
 
     &:hover {
       opacity: 0.85;
+    }
+
+    &:focus {
+      outline: 2px solid #3C3E6F;
+      outline-offset: 2px;
     }
   }
   
@@ -103,7 +113,7 @@
     input[type=date] {
     width: 100%;
     padding: 9px;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid #0000006b;
     color: #7f848e;
     background-color: #fff;
     font-size: 14px;

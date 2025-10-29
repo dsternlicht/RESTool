@@ -42,26 +42,31 @@ export const FormRow = withAppContext(
     const [optionSources, setOptionSources] = useState<any>({});
     const [originalOptions, setOriginalOptions] = useState<any>({});
     const { httpService, activePage, config } = context;
-    const { translatePage } = usePageTranslation(activePage?.id);
+    const { translate, translatePage } = usePageTranslation(activePage?.id);
     const pageHeaders: any = activePage?.requestHeaders || {};
     const customLabels: ICustomLabels | undefined = {
       ...config?.customLabels,
       ...activePage?.customLabels,
     };
     const clearLabel = customLabels?.buttons?.clearInput || translatePage('buttons.clearInput');
+    const fieldId = `field-${field.name}`;
+    const helpTextId = `${fieldId}-help`;
 
     const getFieldLabel = () => {
       // Try to get label in this order:
-      // 1. Field's label property (backward compatibility)
-      // 2. i18n field label from current page
+      // 1. Field's label property
+      // 2. i18n field label with full path from field.name
       // 3. Field's original name
       if (field.label) {
         return field.label;
       }
 
-      const pageId = activePage?.id;
-      if (pageId && field.name) {
-        const i18nLabel = translatePage(`fields.${field.originalName}.label`, { returnNull: true, });
+      const pageId = (field as any).pageId || activePage?.id;
+      if (pageId && field.originalName) {
+        // Use field.name which already includes full path (e.g., "config.auth.password")
+        // Falls back to originalName if no dataPath was set
+        const fieldPath = field.name || field.originalName;
+        const i18nLabel = translate(`pages.${pageId}.fields.${fieldPath}.label`, { returnNull: true });
         if (i18nLabel) {
           return i18nLabel;
         }
@@ -71,10 +76,14 @@ export const FormRow = withAppContext(
     };
 
     const getHelpText = () => {
-      if (!activePage?.id || !field.originalName) {
+      const pageId = (field as any).pageId || activePage?.id;
+      if (!pageId || !field.originalName) {
         return null;
       }
-      return translatePage(`fields.${field.originalName}.helpText`, { returnNull: true });
+
+      // Use field.name which already includes full path
+      const fieldPath = field.name || field.originalName;
+      return translate(`pages.${pageId}.fields.${fieldPath}.helpText`, { returnNull: true });
     };
 
     async function loadOptionSourceFromRemote(
@@ -210,13 +219,17 @@ export const FormRow = withAppContext(
         submitAfterChange?: boolean
       ) => void
     ) {
+      const helpText = getHelpText();
+
       const inputProps = (defaultPlaceholder: string = "") => {
         return {
+          id: fieldId,
           value: field.value,
           placeholder: field.placeholder || defaultPlaceholder,
           disabled: field.readonly,
           required: field.required,
           onChange: (e: any) => changeCallback(field.name, e.target.value),
+          ...(helpText ? { "aria-describedby": helpTextId } : {}),
         };
       };
 
@@ -267,7 +280,15 @@ export const FormRow = withAppContext(
               {finalOptions.map((option, idx) => {
                 const key = `option_${idx}_`;
                 if (typeof option !== "object") {
-                  const translatedValue = field.originalName ? translatePage(`fields.${field.originalName}.values.${option}`, { returnNull: true }) : null;
+                  const pageId = (field as any).pageId || activePage?.id;
+                  let translatedValue = null;
+
+                  if (field.originalName && pageId) {
+                    // Use field.name which already includes full path
+                    const fieldPath = field.name || field.originalName;
+                    translatedValue = translate(`pages.${pageId}.fields.${fieldPath}.values.${option}`, { returnNull: true });
+                  }
+
                   return (
                     <option key={`${key}_${option}`} value={option}>
                       {translatedValue || option}
@@ -506,7 +527,7 @@ export const FormRow = withAppContext(
     return (
       <div className={`form-row ${direction || "row"} form-row-${field.name}`}>
         {field.type !== "hidden" && (
-          <label>
+          <label htmlFor={fieldId}>
             {getFieldLabel()}
             {field.required ? " *" : ""}
           </label>
@@ -518,16 +539,19 @@ export const FormRow = withAppContext(
               !field.readonly &&
               field.value &&
               field.value.length > 0 && (
-                <i
+                <button
+                  type="button"
                   title={clearLabel}
                   onClick={() => onChange(field.name, "", true)}
                   aria-label={translatePage('aria.clear')}
-                  className="clear-input fa fa-times"
-                ></i>
+                  className="clear-input"
+                >
+                  <i className="fa fa-times" aria-hidden="true"></i>
+                </button>
               )}
           </div>
           {getHelpText() && (
-            <div className="help-text">{getHelpText()}</div>
+            <div className="help-text" id={helpTextId}>{getHelpText()}</div>
           )}
         </div>
       </div>

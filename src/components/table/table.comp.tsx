@@ -53,25 +53,29 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
       }),
   };
 
-    function renderTableCell(
-      origField: IConfigDisplayField,
-      origItem: any,
-      value: any
-    ) {
-      if (origField.type === "boolean") {
-        value = value ? true : false;
-      }
+  function renderTableCell(
+    origField: IConfigDisplayField,
+    origItem: any,
+    value: any
+  ) {
+    if (origField.type === "boolean") {
+      value = value ? true : false;
+    }
 
-      if (value && typeof value === "object") {
-        return value.toString();
-      }
+    if (value && typeof value === "object") {
+      return value.toString();
+    }
 
-      // Try to get translated value for text fields
-      const translatedValue = origField.name ? translatePage(`fields.${origField.name}.values.${value}`, { returnNull: true }) : null;
-      
-      switch (origField.type) {
-        case "text":
-          return <span>{translatedValue || value}</span>;
+    // Try to get translated value for text fields
+    // Build full path including dataPath for translation lookup
+    const fieldPath = origField.dataPath
+      ? `${origField.dataPath}.${origField.name}`
+      : origField.name;
+    const translatedValue = fieldPath ? translatePage(`fields.${fieldPath}.values.${value}`, { returnNull: true }) : null;
+
+    switch (origField.type) {
+      case "text":
+        return <span>{translatedValue || value}</span>;
       case "boolean":
         return <div className={`bool ${value ? "true" : "false"}`}></div>;
       case "image":
@@ -171,6 +175,11 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
         <thead>
           <tr>
             {fields.map((field) => {
+              // Build translation key based on dataPath (same logic as FormRow)
+              const fieldPath = field.dataPath
+                ? `${field.dataPath}.${field.name}`
+                : field.name;
+
               return (
                 <th
                   key={`th_${field.name}`}
@@ -186,20 +195,21 @@ export const Table = withAppContext(({ context, items, fields, pagination, callb
                   }}
                 >
                   <div className="th-content">
-                    <span>{field.label || translatePage(`fields.${field.name}.label`) || field.name}</span>
-                    {translatePage(`fields.${field.name}.helpText`, { returnNull: true }) && (
+                    <span>{field.label || translatePage(`fields.${fieldPath}.label`) || field.name}</span>
+                    {translatePage(`fields.${fieldPath}.helpText`, { returnNull: true }) && (
 
-                      <i
+                      <button
+                        type="button"
                         className="fa fa-question-circle help-icon"
-                        aria-hidden="true"
+                        aria-label={`Help: ${translatePage(`fields.${fieldPath}.helpText`)}`}
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
                       >
                         <span className="help-text">
-                          {translatePage(`fields.${field.name}.helpText`)}
+                          {translatePage(`fields.${fieldPath}.helpText`)}
                         </span>
-                      </i>
+                      </button>
                     )}
                   </div>
                 </th>

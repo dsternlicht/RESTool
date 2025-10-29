@@ -1,5 +1,7 @@
 {
   "auth": {
+    "signInHeading": "Sign In",
+    "resetPasswordHeading": "Reset password",
     "changePassword": "Change Password",
     "changePasswordHeading": "Please change your password",
     "labels": {
@@ -113,7 +115,14 @@
       "fields": {
         "<field-name>": {
           "label": "<label>",
-          "helpText": "<helpText>"
+          "helpText": "<helpText>",
+          "values": {
+            "<option-value>": "<translated-option-text>"
+          }
+        },
+        "<dataPath>.<field-name>": {
+          "label": "<label for field with dataPath>",
+          "helpText": "<helpText>",
         }
       }
     }

@@ -11,12 +11,12 @@
 .app-page-header {
   position: relative;
   padding: 30px;
-  background: rgba(255,255,255,0.4);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
 
-  @media screen and (max-width: 800px) { 
+  @media screen and (max-width: 800px) {
     padding: 15px;
     flex-direction: column;
     text-align: center;
@@ -39,7 +39,7 @@
       background-color: v(addButtonHoverBackground, lighten(#1cb841, 10%));
     }
 
-    @media screen and (max-width: 800px) { 
+    @media screen and (max-width: 800px) {
       margin-top: 15px;
       font-size: 14px;
       padding: 7px 15px;
@@ -57,6 +57,11 @@
       line-height: 1.5em;
     }
 
+    .page-subheader {
+      display: flex;
+      align-items: baseline;
+    }
+
     h4 {
       margin: 15px 0 0;
       font-weight: 300;
@@ -66,19 +71,30 @@
       @media screen and (max-width: 800px) {
         margin-top: 5px;
       }
+    }
 
-      .page-help-icon {
-        margin-left: 8px;
-        color: #999;
-        font-size: 16px;
-        transition: color 0.2s ease;
-        cursor: pointer;
+    .page-help-icon {
+      margin-left: 8px;
+      color: #727272;
+      font-size: 16px;
+      transition: color 0.2s ease;
+      cursor: pointer;
+      border-radius: 3px;
 
-        &:hover {
-          color: #666;
-        }
+      &:hover {
+        color: #72727290;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #3C3E6F;
+        outline-offset: 2px;
       }
     }
+
   }
 }
 
@@ -90,8 +106,10 @@
     margin: 20px 0;
   }
 
-  @media screen and (max-width: 800px) { 
-    .app-loader, .app-error {
+  @media screen and (max-width: 800px) {
+
+    .app-loader,
+    .app-error {
       position: relative;
     }
 
@@ -105,7 +123,8 @@
   }
 }
 
-.app-error, .app-loader {
+.app-error,
+.app-loader {
   position: absolute;
   left: 50%;
   top: 50%;

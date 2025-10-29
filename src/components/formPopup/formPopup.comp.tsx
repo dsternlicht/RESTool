@@ -287,16 +287,17 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
         closeCallback(false);
       }}
       customLabels={customLabels}
+      ariaLabelledby="popup-title"
     >
       <React.Fragment>
-        <h2>{title}</h2>
+        <h2 id="popup-title">{title}</h2>
         <section>
           {
             loading ?
               <Loader /> :
               <form onSubmit={submitForm}>
                 {config?.notificationStyle === 'banner' && formErrorMessage && (
-                  <div className="form-notification-banner error">
+                  <div className="form-notification-banner error" role="alert">
                     <div className="banner-content">
                       <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
                       <span className="banner-message">{formErrorMessage}</span>
