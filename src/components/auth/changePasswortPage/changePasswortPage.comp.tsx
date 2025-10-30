@@ -62,28 +62,41 @@ export const ChangePasswordPage = withAppContext(
       <div className="change-pwd-page">
         {context.config?.notificationStyle === 'banner' && <NotificationBanner />}
         <form className='form-content' onSubmit={submitForm}>
+          <h1 className="form-title">{translate('auth.changePassword')}</h1>
           <div className='form-row row'>
-            <label>{translate('auth.labels.oldPassword')}</label>
-            <input 
-              type="password" 
+            <label htmlFor="old-password">{translate('auth.labels.oldPassword')}</label>
+            <input
+              id="old-password"
+              type="password"
               placeholder={translate('auth.placeholders.oldPassword')}
-              onChange={handleOldPwdChange} 
+              value={oldPwd}
+              onChange={handleOldPwdChange}
+              autoComplete="current-password"
+              required
             />
           </div>
           <div className='form-row row'>
-            <label>{translate('auth.labels.newPassword')}</label>
-            <input 
-              type="password" 
+            <label htmlFor="new-password">{translate('auth.labels.newPassword')}</label>
+            <input
+              id="new-password"
+              type="password"
               placeholder={translate('auth.placeholders.newPassword')}
-              onChange={handleNewPwdChange} 
+              value={newPwd}
+              onChange={handleNewPwdChange}
+              autoComplete="new-password"
+              required
             />
           </div>
           <div className='form-row row'>
-            <label>{translate('auth.labels.confirmPassword')}</label>
-            <input 
-              type="password" 
+            <label htmlFor="confirm-password">{translate('auth.labels.confirmPassword')}</label>
+            <input
+              id="confirm-password"
+              type="password"
               placeholder={translate('auth.placeholders.confirmPassword')}
-              onChange={handleConfirmPwdChange} 
+              value={confirmPwd}
+              onChange={handleConfirmPwdChange}
+              autoComplete="new-password"
+              required
             />
           </div>
           <div className="buttons-wrapper center">

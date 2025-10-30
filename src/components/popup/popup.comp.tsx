@@ -14,8 +14,8 @@ interface IProps {
   show: boolean;
   closeCallback: any;
   children: ReactChild;
-  refCallback?: string | ((instance: HTMLDivElement | null) => void) | RefObject<HTMLDivElement> | null | undefined;
   customLabels?: ICustomLabels;
+  ariaLabelledby?: string;
 }
 
 let portalRoot: HTMLDivElement = document.getElementById('popup-portal') as HTMLDivElement;
@@ -46,10 +46,11 @@ class PortalPopup extends Component {
   }
 }
 
-const PopupComp = ({ context, className, style, show, closeCallback, children, refCallback, customLabels }: IProps) => {
+const PopupComp = ({ context, className, style, show, closeCallback, children, customLabels, ariaLabelledby }: IProps) => {
   const { translatePage } = usePageTranslation(context.activePage?.id);
   const finalStyle: any = Object.assign({}, { display: show ? 'block' : 'none' }, style || {});
   const closeLabel = customLabels?.buttons?.closeForm || translatePage('buttons.closeForm');
+  const popupContentRef = React.useRef<HTMLDivElement>(null);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (show && e.keyCode === 27) {
@@ -64,17 +65,30 @@ const PopupComp = ({ context, className, style, show, closeCallback, children, r
     };
   }, [show]);
 
+  React.useEffect(() => {
+    if (show && popupContentRef.current) {
+      popupContentRef.current.focus();
+    }
+  }, [show]);
+
   return (
     <PortalPopup>
       {
         show ?
           <div className={`popup ${className || ''}`} style={finalStyle}>
             <div className="overlay" onClick={(e: any) => closeCallback(e)}></div>
-            <div className="popup-content" ref={refCallback}>
+            <div
+              className="popup-content"
+              ref={popupContentRef}
+              tabIndex={-1}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={ariaLabelledby}
+            >
               {children}
-              <button 
+              <button
                 title={closeLabel}
-                className="close-popup" 
+                className="close-popup"
                 onClick={(e: any) => closeCallback(e)}
                 aria-label={translatePage('aria.close')}
               >

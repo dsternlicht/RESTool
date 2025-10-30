@@ -8,7 +8,8 @@
   align-self: center;
   transition: opacity 0.3s ease-in-out;
   opacity: 0;
-  
+  z-index: 5;
+
   &.visible {
     opacity: 1;
   }
@@ -20,7 +21,7 @@
 
   &.error {
     background-color: #f8d7da;
-    color: #dc3545;
+    color: #b72c39;
   }
 
   &.info {

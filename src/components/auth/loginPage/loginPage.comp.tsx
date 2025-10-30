@@ -59,24 +59,29 @@ export const LoginPage = withAppContext(
       <div className="auth-page">
         {context.config?.notificationStyle === 'banner' && <NotificationBanner />}
         <form className='form-content' onSubmit={submitForm}>
+          <h1 className="form-title">{translate('auth.login')}</h1>
           <div className='form-row row'>
-            <label>{translate('auth.labels.user')}</label>
-            <input 
+            <label htmlFor="username">{translate('auth.labels.user')}</label>
+            <input
               id="username"
-              type="text" 
+              type="text"
               placeholder={translate('auth.placeholders.user')}
-              value={user} 
-              onChange={handleUserChange} 
+              value={user}
+              onChange={handleUserChange}
+              autoComplete="username"
+              required
             />
           </div>
           <div className='form-row row'>
-            <label>{translate('auth.labels.password')}</label>
-            <input 
+            <label htmlFor="password">{translate('auth.labels.password')}</label>
+            <input
               id="password"
-              type="password" 
+              type="password"
               placeholder={translate('auth.placeholders.password')}
-              value={pwd} 
-              onChange={handlePwdChange} 
+              value={pwd}
+              onChange={handlePwdChange}
+              autoComplete="current-password"
+              required
             />
           </div>
           <div className="buttons-wrapper center">

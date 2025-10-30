@@ -51,25 +51,29 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
       }),
   };
 
-    function renderRow(
-      origField: IConfigDisplayField,
-      origItem: any,
-      value: any
-    ) {
-      if (origField.type === "boolean") {
-        value = value ? true : false;
-      }
+  function renderRow(
+    origField: IConfigDisplayField,
+    origItem: any,
+    value: any
+  ) {
+    if (origField.type === "boolean") {
+      value = value ? true : false;
+    }
 
-      if (value && typeof value === "object") {
-        return value.toString();
-      }
+    if (value && typeof value === "object") {
+      return value.toString();
+    }
 
-      // Try to get translated value for text fields
-      const translatedValue = origField.name ? translatePage(`fields.${origField.name}.values.${value}`, { returnNull: true }) : null;
-      
-      switch (origField.type) {
-        case "text":
-          return <span>{translatedValue || value}</span>;
+    // Try to get translated value for text fields
+    // Build full path including dataPath for translation lookup
+    const fieldPath = origField.dataPath
+      ? `${origField.dataPath}.${origField.name}`
+      : origField.name;
+    const translatedValue = fieldPath ? translatePage(`fields.${fieldPath}.values.${value}`, { returnNull: true }) : null;
+
+    switch (origField.type) {
+      case "text":
+        return <span data-value={value}>{translatedValue || value}</span>;
       case "boolean":
         return <div className={`bool ${value ? "true" : "false"}`}></div>;
       case "image":
@@ -118,7 +122,7 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
       <div className="actions-wrapper">
         {callbacks.put && (
           <Button onClick={() => callbacks.put?.(item)} title={editLabel}>
-                <i className={`fa fa-${context.activePage?.methods?.put?.icon || 'pencil-square-o'}`} aria-hidden="true"></i>
+            <i className={`fa fa-${context.activePage?.methods?.put?.icon || 'pencil-square-o'}`} aria-hidden="true"></i>
           </Button>
         )}
         {customActions &&
@@ -137,7 +141,7 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
           ))}
         {callbacks.delete && (
           <Button onClick={() => callbacks.delete?.(item)} title={deleteLabel}>
-              <i className={`fa fa-${context.activePage?.methods?.delete?.icon || 'times'}`} aria-hidden="true"></i>
+            <i className={`fa fa-${context.activePage?.methods?.delete?.icon || 'times'}`} aria-hidden="true"></i>
           </Button>
         )}
       </div>
@@ -153,6 +157,12 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
             field.dataPath,
             field.name
           );
+
+          // Build translation key based on dataPath
+          const fieldPath = field.dataPath
+            ? `${field.dataPath}.${field.name}`
+            : field.name;
+
           return (
             <div
               className={`card-row card-row-${field.name} ${field.type}`}
@@ -166,18 +176,17 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
                         callbacks.setQueryParam(
                           field.queryShortcut.name,
                           field.queryShortcut.value ||
-                            `${field.dataPath ? field.dataPath + "." : ""}${
-                              field.name
-                            }`
+                          `${field.dataPath ? field.dataPath + "." : ""}${field.name
+                          }`
                         );
                       }
                     }}
                   >
-                    {field.label || translatePage(`fields.${field.name}.label`) || field.name}:{" "}
+                    {field.label || translatePage(`fields.${fieldPath}.label`) || field.name}{" "}
                   </label>
-                  {translatePage(`fields.${field.name}.helpText`, { returnNull: true }) && (
+                  {translatePage(`fields.${fieldPath}.helpText`, { returnNull: true }) && (
                     <div className="help-text">
-                      {translatePage(`fields.${field.name}.helpText`)}
+                      {translatePage(`fields.${fieldPath}.helpText`)}
                     </div>
                   )}
                 </div>
@@ -195,13 +204,18 @@ export const Cards = withAppContext(({ context, items, fields, callbacks, custom
     return (
       <div className="card" key={`card_${cardIdx}`}>
         {fields.map((field, fieldIdx) => {
+          // Build translation key based on dataPath
+          const fieldPath = field.dataPath
+            ? `${field.dataPath}.${field.name}`
+            : field.name;
+
           return (
             <div
               className={`card-row ${field.type}`}
               key={`card_${cardIdx}_${fieldIdx}`}
             >
               {field.type !== "image" && (
-                <label>{field.label || translatePage(`fields.${field.name}.label`) || field.name}: </label>
+                <label>{field.label || translatePage(`fields.${fieldPath}.label`) || field.name}: </label>
               )}
               <Skeleton duration={0.6} />
             </div>

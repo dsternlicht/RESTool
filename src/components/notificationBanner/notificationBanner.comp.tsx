@@ -44,7 +44,8 @@ export const NotificationBanner = () => {
   };
 
   return (
-    <div className={`notification-banner ${notification.type} ${visible ? 'visible' : ''}`}>
+    <div className={`notification-banner ${notification.type} ${visible ? 'visible' : ''}`}
+    role={notification.type === 'error' ? 'alert' : 'status'}>
       <div className="banner-content">
         <i className={`fa fa-${getIcon()}`} aria-hidden="true"></i>
         <span className="banner-message">{notification.message}</span>
