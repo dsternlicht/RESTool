@@ -41,8 +41,10 @@
 
     @media screen and (max-width: 800px) {
       margin-top: 15px;
-      font-size: 14px;
-      padding: 7px 15px;
+      font-size: 16px;
+      padding: 12px 20px;
+      width: 100%;
+      justify-content: center;
     }
   }
 
@@ -107,6 +109,7 @@
   }
 
   @media screen and (max-width: 800px) {
+    overflow-x: hidden; // Prevent page-wide horizontal scroll
 
     .app-loader,
     .app-error {

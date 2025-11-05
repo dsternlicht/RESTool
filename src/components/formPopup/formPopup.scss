@@ -24,7 +24,7 @@
   .popup-content {
     width: 90%;
     max-width: 740px;
-    
+
     section {
       padding: 20px;
     }
@@ -50,6 +50,21 @@
 
       &:last-child {
         margin-bottom: 0;
+      }
+
+      // Force all inputs to full width on mobile
+      @media screen and (max-width: 800px) {
+        .field-container {
+          width: 100%;
+
+          input,
+          select,
+          textarea {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+          }
+        }
       }
     }
 
@@ -81,6 +96,12 @@
           &::after {
             opacity: 1;
           }
+        }
+
+        @media screen and (max-width: 800px) {
+          width: 100%;
+          padding: 12px 20px;
+          margin: 0;
         }
       }
     }

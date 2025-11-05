@@ -27,36 +27,57 @@
   }
 
   .card-row {
-    margin: 0 20px 10px;
+    margin: 0 20px 15px;
     display: flex;
-    
+    flex-wrap: wrap;
+
     .card-row-header {
       display: flex;
       flex-direction: column;
-      margin-bottom: 4px;
+      flex: 0 0 50%;
+      min-width: 120px;
+      margin-right: 10px;
+
+      @media screen and (max-width: 800px) {
+        flex: 0 0 100%;
+        min-width: 0;
+        margin-bottom: 5px;
+      }
     }
 
     label {
       font-size: 14px;
       font-weight: 700;
-      width: 120px;
-      flex-shrink: 0;
+      margin-bottom: 2px;
     }
 
     .help-text {
       color: #666;
       font-style: italic;
       font-size: 12px;
+      width: 100%;
+      flex-basis: 100%;
+      margin-top: 4px;
+      order: 3;
     }
 
-    > *:not(.card-row-header) {
+    > *:not(.card-row-header):not(.help-text) {
       flex: 1;
       word-break: break-word;
+
+      @media screen and (max-width: 800px) {
+        width: 100%;
+      }
     }
 
     &.image {
       margin: 0 0 10px;
       min-height: $image-height;
+    }
+
+    // Mobile: stack everything vertically like form popup
+    @media screen and (max-width: 800px) {
+      flex-direction: column;
     }
   }
 
@@ -77,8 +98,17 @@
     max-width: 15px;
     width: 15px;
     height: 15px;
+    min-height: 15px;
     display: inline-block;
     border-radius: 50em;
+    flex-shrink: 0;
+
+    @media screen and (max-width: 800px) {
+      display: block;
+      margin-top: 5px;
+      height: 15px !important;
+      min-height: 15px !important;
+    }
 
     &.true {
       background-color: #118711;

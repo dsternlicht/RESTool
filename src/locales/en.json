@@ -122,7 +122,7 @@
         },
         "<dataPath>.<field-name>": {
           "label": "<label for field with dataPath>",
-          "helpText": "<helpText>",
+          "helpText": "<helpText>"
         }
       }
     }

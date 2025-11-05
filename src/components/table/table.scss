@@ -184,3 +184,16 @@
     }
   }
 }
+
+// Mobile responsive: table scrolls independently
+@media screen and (max-width: 800px) {
+  .table-wrapper {
+    overflow-x: auto;
+    overflow-y: visible; // No vertical scroll, use page scroll
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pure-table {
+    min-width: 600px; // Force table to be scrollable
+  }
+}
