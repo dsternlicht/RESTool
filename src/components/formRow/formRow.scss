@@ -82,9 +82,6 @@
     color: inherit;
     font: inherit;
 
-    @media screen and (max-width: 800px) {
-      bottom: 18px;
-    }
 
     &:hover {
       opacity: 0.85;
@@ -163,6 +160,19 @@
 
     input[type=checkbox] {
       flex: 1;
+
+      @media screen and (max-width: 800px) {
+        flex: 0;
+        width: auto;
+      }
+    }
+
+    // Checkbox wrapper alignment on mobile
+    span:has(input[type=checkbox]) {
+      @media screen and (max-width: 800px) {
+        display: flex;
+        justify-content: flex-start;
+      }
     }
 
     .clear-input {

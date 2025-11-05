@@ -550,9 +550,12 @@ export const FormRow = withAppContext(
                 </button>
               )}
           </div>
-          {getHelpText() && (
-            <div className="help-text" id={helpTextId}>{getHelpText()}</div>
-          )}
+          {
+            field.type !== "hidden" &&
+            getHelpText() && (
+              <div className="help-text" id={helpTextId}>{getHelpText()}</div>
+            )
+          }
         </div>
       </div>
     );
