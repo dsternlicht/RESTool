@@ -13,6 +13,7 @@ interface IProps {
   style?: any;
   show: boolean;
   closeCallback: any;
+  shouldClose?: () => boolean;
   children: ReactChild;
   customLabels?: ICustomLabels;
   ariaLabelledby?: string;
@@ -46,15 +47,26 @@ class PortalPopup extends Component {
   }
 }
 
-const PopupComp = ({ context, className, style, show, closeCallback, children, customLabels, ariaLabelledby }: IProps) => {
+const PopupComp = ({ context, className, style, show, closeCallback, shouldClose, children, customLabels, ariaLabelledby }: IProps) => {
   const { translatePage } = usePageTranslation(context.activePage?.id);
   const finalStyle: any = Object.assign({}, { display: show ? 'block' : 'none' }, style || {});
   const closeLabel = customLabels?.buttons?.closeForm || translatePage('buttons.closeForm');
   const popupContentRef = React.useRef<HTMLDivElement>(null);
 
+  const handleClose = (e?: any) => {
+    // If shouldClose callback is provided, check if closing is allowed
+    if (shouldClose) {
+      const allowed = shouldClose();
+      if (!allowed) {
+        return;
+      }
+    }
+    closeCallback(e);
+  };
+
   const handleKeyDown = (e: KeyboardEvent) => {
     if (show && e.keyCode === 27) {
-      closeCallback(e);
+      handleClose(e);
     }
   };
 
@@ -76,7 +88,7 @@ const PopupComp = ({ context, className, style, show, closeCallback, children, c
       {
         show ?
           <div className={`popup ${className || ''}`} style={finalStyle}>
-            <div className="overlay" onClick={(e: any) => closeCallback(e)}></div>
+            <div className="overlay" onClick={(e: any) => handleClose(e)}></div>
             <div
               className="popup-content"
               ref={popupContentRef}
@@ -89,7 +101,7 @@ const PopupComp = ({ context, className, style, show, closeCallback, children, c
               <button
                 title={closeLabel}
                 className="close-popup"
-                onClick={(e: any) => closeCallback(e)}
+                onClick={(e: any) => handleClose(e)}
                 aria-label={translatePage('aria.close')}
               >
                 <i className="fa fa-times" aria-hidden="true"></i>

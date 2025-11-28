@@ -62,6 +62,7 @@
       "title": "Filter:"
     },
     "forms": {
+      "confirmCloseWithUnsavedChanges": "You have unsaved changes. Close without saving?",
       "defaultOption": "Option {index}",
       "errors": {
         "invalidJson": "Invalid JSON for field \"{field}\"",
@@ -122,7 +123,7 @@
         },
         "<dataPath>.<field-name>": {
           "label": "<label for field with dataPath>",
-          "helpText": "<helpText>",
+          "helpText": "<helpText>"
         }
       }
     }
