@@ -16,6 +16,7 @@ import { Button } from '../button/button.comp';
 import { Loader } from '../loader/loader.comp';
 import { dataHelpers } from '../../helpers/data.helpers';
 import { fileHelpers } from '../../helpers/file.helpers';
+import { formHelpers } from '../../helpers/form.helpers';
 import { IAppContext } from '../app.context';
 import { withAppContext } from '../withContext/withContext.comp';
 
@@ -45,6 +46,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
   const { translatePage } = usePageTranslation(activePage?.id);
   const [loading, setLoading] = useState<boolean>(true);
   const [formFields, setFormFields] = useState<IConfigInputField[]>([]);
+  const [initialFormFields, setInitialFormFields] = useState<IConfigInputField[]>([]);
   const [finalRawData, setFinalRawData] = useState<any>(null);
   const [formErrorMessage, setFormErrorMessage] = useState<string | null>(null);
   const pageHeaders: any = activePage?.requestHeaders || {};
@@ -142,6 +144,8 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
       return field;
     }));
 
+    // Store a deep copy of initial fields for dirty checking
+    setInitialFormFields(JSON.parse(JSON.stringify(fieldsCopy)));
     setLoading(false);
   }
 
@@ -273,6 +277,16 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
     return field.showFieldWhen(fields);
   }
 
+  // Check if form should close (validates no unsaved changes or user confirmation)
+  function shouldClose(): boolean {
+    const isDirty = formHelpers.isFormDirty(initialFormFields, formFields);
+    if (isDirty) {
+      const confirmed = window.confirm(translatePage('forms.confirmCloseWithUnsavedChanges'));
+      return confirmed;
+    }
+    return true;
+  }
+
   useEffect(() => {
     initFormFields();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -286,6 +300,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
         setFormErrorMessage(null);
         closeCallback(false);
       }}
+      shouldClose={shouldClose}
       customLabels={customLabels}
       ariaLabelledby="popup-title"
     >

@@ -76,7 +76,8 @@ const NavigationComp = ({ context: { config, authService, loggedInUsername, setL
               </h2>
             )}
             <div className="app-nav-logout">
-              <NavLink to="/change-password" className="app-nav-link app-nav-link-change-password">
+              <NavLink to="/change-password" className="app-nav-link app-nav-link-change-password"
+                onClick={() => setIsOpened(false)}>
                 {config?.auth?.icons?.changePassword && (
                   <i className={`fa fa-${config.auth.icons.changePassword}`} aria-hidden="true"></i>
                 )}{' '}
