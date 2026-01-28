@@ -263,6 +263,15 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
     setFormFields(updatedFormFields);
   }
 
+  function fieldBlurred(fieldName: string) {
+    const field = formFields.find(f => f.name === fieldName);
+    if (field?.onBlur) {
+      field.onBlur(field.value, formFields);
+      // Trigger re-render to reflect any changes made by the callback
+      setFormFields([...formFields]);
+    }
+  }
+
   // Check if field should be visible based on showFieldWhen condition
   function shouldFieldBeVisible(field: IConfigInputField, fields: IConfigInputField[]): boolean {
     if (!field.showFieldWhen) return true;
@@ -312,6 +321,7 @@ export const FormPopup = withAppContext(({ context, title, type, successMessage,
                         key={`field_${idx}`}
                         field={field}
                         onChange={formChanged}
+                        onBlur={fieldBlurred}
                         showReset={!field.type || field.type === 'text'}
                       />
                     );

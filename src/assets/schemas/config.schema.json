@@ -439,7 +439,10 @@
           "description": "A function that determines if the field should be visible. The function receives an array of all form fields as its argument and should return a boolean. Example: `(fields) => fields.find(f => f.originalName === 'status')?.value === 'active'`"
         },
         "onChange": {
-          "description": "A callback function that is triggered when the field's value changes. The function receives the new value and the array of all form fields as arguments. Example: `(value, fields) => { if (value === 'B') { const dependentField = fields.find(f => f.originalName === 'dependentField'); if (dependentField) { dependentField.value = null; } } }`"
+          "description": "A callback function that is triggered when the field's value changes. The function receives the new value and the array of all form fields as arguments. Best for checkboxes, dropdowns, and other inputs where each change is a deliberate action. Example: `(value, fields) => { if (value === 'B') { const dependentField = fields.find(f => f.originalName === 'dependentField'); if (dependentField) { dependentField.value = null; } } }`"
+        },
+        "onBlur": {
+          "description": "A callback function that is triggered when the field loses focus (after editing completes). The function receives the current value and the array of all form fields as arguments. Best for text, number, email inputs - when you want to react after the user finishes typing rather than on every keystroke. Example: `(value, fields) => { if (value) { const dependentField = fields.find(f => f.originalName === 'dependentField'); if (dependentField) { dependentField.value = 'default'; } } }`"
         },
         "label": {
           "type": "string",

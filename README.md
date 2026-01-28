@@ -753,7 +753,19 @@ A list of fields you want us to send as the body of the request. Each one is an 
 | multi | `boolean` | false | If true, select-multi dropdown will allow for multiple selections from a pre-defined list. Make sure defining the right input type first: `"type": "select-multi"`. |
 | selectLimit | `number` | unlimited | An optional setting for limiting the multiple selections from a pre-defined list. |
 | showFieldWhen | `function` | false |  Only available when using dynamic (js) config.</br> A function that dynamically controls field visibility and inclusion in API requests. Only available when using dynamic (js) config. The function receives an array of all current form fields and must return a boolean value. When `true`, the field is displayed in the form and included in API requests. When `false`, the field is hidden and null value is sent with the API requests. Use the `originalName` property to reference other fields in your conditions. <br>Common use cases:<br>- Show additional fields based on a dropdown selection<br>- Show advanced options based on other field values<br>- Create dependent field relationships <br>Example:` "showFieldWhen": (fields) => { return fields.find(f => f.originalName === 'jobTitle')?.value === 'boss';}` |
-| onChange | `function` | false | Only available when using dynamic (js) config.</br> A custom callback function that is triggered when the field's value changes. The function receives the new value of the changed field and the array of all current form fields. Use this to implement field dependencies, such as resetting another field when a field changes to a particular value.<br>Example:` "onChange": (newValue, fields) => { if (newValue === "B") { const dependentField = fields.find(f => f.originalName === "dependentField"); if (dependentField) { dependentField.value = null; } } }` |
+| onChange | `function` | false | Only available when using dynamic (js) config.</br> A custom callback function that is triggered when the field's value changes. Fires on every keystroke for text inputs - for text fields, consider using `onBlur` instead. The function receives the new value and the array of all current form fields.<br>Example:` "onChange": (newValue, fields) => { if (newValue === "B") { const dependentField = fields.find(f => f.originalName === "dependentField"); if (dependentField) { dependentField.value = null; } } }` |
+| onBlur | `function` | false | Only available when using dynamic (js) config.</br> A custom callback function that is triggered when the field loses focus (after editing completes). The function receives the current value of the field and the array of all current form fields. Useful for actions that should only run after the user finishes editing, like fetching dependent data based on completed input.<br>Example:` "onBlur": (value, fields) => { if (value) { const portField = fields.find(f => f.originalName === "port"); if (portField) { portField.value = 8080; } } }` |
+
+#### Field Callbacks: onChange vs onBlur
+
+Both callbacks receive the field value and all form fields, but fire at different times:
+
+| Callback | Fires when | Best for |
+|----------|-----------|----------|
+| `onChange` | Every change (each keystroke for text inputs) | Checkboxes, dropdowns, toggles - inputs where each change is a deliberate action |
+| `onBlur` | Field loses focus (user clicks away or tabs out) | Text, number, email inputs - when you want to react after user finishes typing |
+
+**Recommendation**: Use `onBlur` for text-based inputs to avoid running your callback on every keystroke. Use `onChange` for checkboxes and select dropdowns where each interaction is intentional.
 
 <br />
 
