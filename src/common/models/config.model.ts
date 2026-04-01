@@ -159,6 +159,7 @@ export type TConfigInputField =
 
 type showFieldWhen = (fields: IConfigInputField[]) => boolean;
 type onChangeCallback = (newValue: any, fields: IConfigInputField[]) => void;
+type onBlurCallback = (value: any, fields: IConfigInputField[]) => void;
 
 export interface IConfigInputField {
   originalName?: string;
@@ -180,6 +181,7 @@ export interface IConfigInputField {
   selectLimit?: number;
   showFieldWhen?: showFieldWhen;
   onChange?: onChangeCallback;
+  onBlur?: onBlurCallback;
 }
 
 export interface IConfigOptionSource {

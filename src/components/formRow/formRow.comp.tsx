@@ -28,6 +28,7 @@ interface IProps {
     value: any,
     submitAfterChange?: boolean
   ) => void;
+  onBlur?: (fieldName: string) => void;
   showReset?: boolean;
   direction?: "row" | "column";
 }
@@ -39,7 +40,7 @@ interface IOption {
 }
 
 export const FormRow = withAppContext(
-  ({ context, field, direction, showReset, onChange }: IProps) => {
+  ({ context, field, direction, showReset, onChange, onBlur }: IProps) => {
     const [optionSources, setOptionSources] = useState<any>({});
     const [originalOptions, setOriginalOptions] = useState<any>({});
     const { httpService, activePage, config } = context;
@@ -230,6 +231,7 @@ export const FormRow = withAppContext(
           disabled: field.readonly,
           required: field.required,
           onChange: (e: any) => changeCallback(field.name, e.target.value),
+          onBlur: () => onBlur?.(field.name),
           ...(helpText ? { "aria-describedby": helpTextId } : {}),
         };
       };
