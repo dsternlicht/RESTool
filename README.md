@@ -19,6 +19,7 @@ The idea behind it is simple. Given the fact that each entity in your API has a 
 ## Table of Contents
 
 - [What's New in V2?](#whats-new-in-v2)
+- [Migration Guide (CRA to Vite)](./MIGRATION.md)
 - [Getting started](#getting-started)
 - [Configuration](#configuration)
   - [Authorization](#auth-config)
@@ -62,31 +63,11 @@ Some new features and capabilities in V2:
 
 <br />
 
-## Breaking Change: Vite Migration - Config.js Format Update
+## Vite Migration
 
-If you use `config.js` (JavaScript configuration), you need to update the format:
+RESTool has migrated from Create React App to **Vite** for faster builds and modern tooling. If you are upgrading from a previous version, please see the **[Migration Guide](./MIGRATION.md)** for details.
 
-**Before:**
-```javascript
-export default {
-  "name": "My App",
-  // ... config
-}
-```
-
-**After:**
-```javascript
-window.config = {
-  "name": "My App",
-  // ... config
-};
-```
-
-**Location:** Keep your `config.js` file in the same location (`/public/config.js` or root of your deployment).
-
-**Note:** `config.json` files are unaffected and work as before.
-
-This change ensures configuration files work properly in both development and production builds with Vite.
+**Key change:** If you use `config.js`, update the format from `export default {...}` to `window.config = {...};`. Users of `config.json` are not affected.
 
 <br />
 
@@ -124,16 +105,16 @@ Here's a detailed list of properties you could add to your configuration file (j
 | customLink | `string` | false | External Link for navigation item (instead of default page app) |
 
 #### Dynamic configuration file
-RESTool also support dynamic js configuration file.
-Just replace the `config.json` file with `config.js` file with this content:
+RESTool also supports a dynamic JavaScript configuration file.
+Just replace the `config.json` file with a `config.js` file with this content:
 
-```
-export default {
+```javascript
+window.config = {
   // Content is the same as the json config file
-}
+};
 ```
 
-**NOTE:** In case you're using the `build` folder, the config.js must be placed in the folder `/build/static/js`.
+**NOTE:** Place the `config.js` file in the `public/` directory. It will be automatically copied to the `build/` root during `npm run build`.
 <br />
 
 
@@ -1059,7 +1040,7 @@ In order to start developing:
 
 * Make sure you copy the `/public/config-sample.json` to `/public/config.json`.
 * Start the mocks server by running `npm run server`.
-* Start the development server by running `npm start`.
+* Start the development server by running `npm run dev` (or `npm start`).
 * Browse to `http://localhost:3000/`.
 * The app will automatically reload on changes.
 
