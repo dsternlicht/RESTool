@@ -22,7 +22,7 @@ import { withAppContext } from '../withContext/withContext.comp';
 
 import './formPopup.scss';
 
-const unflatten = require('flat').unflatten;
+import { unflatten } from 'flat';
 
 interface IProps {
   context: IAppContext

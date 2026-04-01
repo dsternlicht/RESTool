@@ -1,5 +1,5 @@
 // A dynamic config sample
-export default {
+window.config = {
   "name": "RESTool App",
   "favicon": "https://www.commoninja.com/public/favicon.ico",
   "baseUrl": "https://restool-sample-app.herokuapp.com/api",
@@ -405,4 +405,4 @@ export default {
       }
     }
   ]
-}
+};

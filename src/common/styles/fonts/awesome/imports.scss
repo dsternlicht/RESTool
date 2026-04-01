@@ -1,4 +1,5 @@
-@import "variables";
-@import "path";
-@import "core";
-@import "icons";
+@use "variables" as *;
+@forward "variables";
+@use "path";
+@use "core";
+@use "icons";

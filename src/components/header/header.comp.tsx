@@ -1,22 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useContext } from 'react';
 import { AppContext } from '../app.context';
 import './header.scss';
 
-// Logo will be imported when it exists
-let logoImage: string | undefined;
-try {
-  // Dynamic import for logo - will throw if file doesn't exist
-  logoImage = require('../../assets/images/logo.png');
-} catch (e) {
-  logoImage = undefined;
-}
-
 export const Header: React.FC = () => {
   const { config } = useContext(AppContext);
+  const [logoLoaded, setLogoLoaded] = useState<boolean>(false);
 
-  // Only show header if logo exists
-  if (!logoImage) {
+  useEffect(() => {
+    // Try to load logo image
+    const img = new Image();
+    img.onload = () => {
+      setLogoLoaded(true);
+    };
+    img.onerror = () => {
+      setLogoLoaded(false);
+    };
+    img.src = '/assets/images/logo.png';
+  }, []);
+
+  // Only show header if logo loaded successfully
+  if (!logoLoaded) {
     return null;
   }
 
@@ -24,7 +28,7 @@ export const Header: React.FC = () => {
     <header className="restool-header">
       <div className="header-content">
         <div className="logo-container">
-          <img src={logoImage} alt={config?.name} className="logo" />
+          <img src="/assets/images/logo.png" alt={config?.name} className="logo" />
         </div>
       </div>
     </header>

@@ -17,7 +17,8 @@ import "./formRow.scss";
 import "jsoneditor-react/es/editor.min.css";
 import { usePageTranslation } from "../../hooks/usePageTranslation";
 
-const { JsonEditor } = require("jsoneditor-react");
+// @ts-ignore - No TypeScript definitions available for jsoneditor-react
+import { JsonEditor } from "jsoneditor-react";
 
 interface IProps {
   context: IAppContext;

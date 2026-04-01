@@ -1,4 +1,4 @@
-@import '../../common/styles//functions.scss';
+@use '../../common/styles/functions' as *;
 
 .form-popup {
   .form-notification-banner {

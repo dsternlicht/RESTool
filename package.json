@@ -23,21 +23,19 @@
     "react-infinite-scroll-component": "^5.0.4",
     "react-loading-skeleton": "^2.0.1",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "^5.0.0",
     "react-toastify": "^5.4.1",
-    "sass": "^1.47.0",
-    "typescript": "^3.7.4"
+    "sass": "^1.47.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "vite build",
     "build-lib": "tsc --project ./tsconfig.lib.json",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "test": "echo 'Tests not configured for Vite yet'",
     "prepare": "npm run build && tsc --project ./tsconfig.lib.json",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "server": "json-server --watch mocks.js --port 3001"
+    "server": "json-server --watch mocks.js --port 3001",
+    "dev": "vite"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -69,8 +67,16 @@
   "jsnext:main": "build/restool.es.js",
   "homepage": ".",
   "devDependencies": {
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@types/flat": "^5.0.5",
     "@types/lodash": "^4.14.150",
+    "@types/node": "^22.15.19",
+    "@vitejs/plugin-react": "^4.6.0",
     "gh-pages": "^5.0.0",
-    "json-server": "^0.17.3"
+    "json-server": "^0.17.3",
+    "typescript": "^4.9.5",
+    "vite": "^7.0.0",
+    "vite-tsconfig-paths": "^4.3.2"
   }
 }
